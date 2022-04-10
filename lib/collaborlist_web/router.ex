@@ -11,7 +11,7 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
-  pipeline :view do
+  pipeline :catalog do
     :fetch_lists
   end
 
@@ -43,7 +43,7 @@ defmodule CollaborlistWeb.Router do
 
   scope "/", CollaborlistWeb do
     pipe_through :browser
-    pipe_through :view
+    pipe_through :catalog
 
     get "/", PageController, :index
     resources "/lists", ListController
