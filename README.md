@@ -42,8 +42,9 @@ This also means that, a `ListItem` belongs to a `List`.
 - [ ] Delete items from lists
 - [ ] Strikethrough lists
 - [ ] Undo deleting items
-- [ ] Invite to collaborate on list via link.
-- [ ] Invite to collaborate on list via QR code.
+- [ ] Drag and drop to reorder list items
+- [ ] Invite to collaborate on list via link
+- [ ] Invite to collaborate on list via QR code
 
 ## Future Todos
 
