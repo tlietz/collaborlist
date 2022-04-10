@@ -18,9 +18,9 @@ Postgres is used to persist data.
 
 There are many different parts of the system that need to be split up into their own context so that the application has isolated functionality.
 Lists that a user is working on are shown to that user, along with its name and potentially other metadata such as how many collaborators there are on a certain list. 
-Along with the standard creating and deleting lists on an individual user, doing crud operations on list items need to be supported. 
-Managing the showcasing of lists is different from a user working on a list.
-A `Catalog` context is a good place for the management of showcasing lists that a user is working on.
+Along with the standard crud operations on lists themselves, doing crud operations on list items need to be supported. 
+Managing the CRUD operations on lists is different from managing the CRUD operations on list items when a user is working on a list.
+A `Catalog` context is a good place for the management of CRUD operations on lists. 
 
 
 

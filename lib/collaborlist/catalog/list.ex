@@ -12,6 +12,5 @@ defmodule Collaborlist.Catalog.List do
   def changeset(list, attrs) do
     list
     |> cast(attrs, [:title])
-    |> validate_required([:title])
   end
 end
