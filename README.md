@@ -21,3 +21,4 @@ The Postgres database has 3 main resources; `User`, `List`, and `ListItem`.
 The relationship between a `User` and a `List` is `many-to-many` because a `List` can have multiple users working on it, and a `User` can work on multiple lists.
 
 The relationship between a `List` and a `ListItem` is `one-to-many` because a `List` can have multiple list items, but each `ListItem` is associated to only one `List`.
+This also means that, a `ListItem` belongs to a `List`.
