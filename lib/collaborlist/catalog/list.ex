@@ -5,7 +5,7 @@ defmodule Collaborlist.Catalog.List do
   schema "lists" do
     field :title, :string
 
-    has_many :items, Collaborlist.List.ListItem
+    has_many :list_items, Collaborlist.List.ListItem
 
     timestamps()
   end
