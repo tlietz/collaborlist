@@ -11,8 +11,8 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
+  pipeline :view do
+    :fetch_lists
   end
 
   defp fetch_current_user(conn, _) do
@@ -27,11 +27,31 @@ defmodule CollaborlistWeb.Router do
     end
   end
 
+  defp fetch_lists(conn, _) do
+  end
+
+  pipeline :collab do
+    :fetch_current_list
+    :fetch_list_items
+  end
+
+  defp fetch_current_list(conn, _) do
+  end
+
+  defp fetch_list_items(conn, _) do
+  end
+
   scope "/", CollaborlistWeb do
     pipe_through :browser
+    pipe_through :view
 
     get "/", PageController, :index
     resources "/lists", ListController
+  end
+
+  scope "/collab", CollaborlistWeb do
+    pipe_through :browser
+    pipe_through :collab
   end
 
   # Other scopes may use custom stacks.
