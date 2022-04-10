@@ -7,6 +7,11 @@
 # General application configuration
 import Config
 
+if Mix.env() == :dev do
+  config :mix_test_watch,
+    clear: true
+end
+
 config :collaborlist,
   ecto_repos: [Collaborlist.Repo]
 
