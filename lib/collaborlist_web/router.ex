@@ -8,10 +8,23 @@ defmodule CollaborlistWeb.Router do
     plug :put_root_layout, {CollaborlistWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  defp fetch_current_user(conn, _) do
+    if user_uuid = get_session(conn, :current_uuid) do
+      assign(conn, :current_uuid, user_uuid)
+    else
+      new_uuid = Ecto.UUID.generate()
+
+      conn
+      |> assign(:current_uuid, new_uuid)
+      |> put_session(:current_uuid, new_uuid)
+    end
   end
 
   scope "/", CollaborlistWeb do
