@@ -1,6 +1,6 @@
 # Collaborlist
 
-Make lists for personal use, or collaborate on them with others.
+Make lists for personal use, or collaborate on them with others all within a browser.
 You can check items off on the list, or strikethrough them.
 The list is updated in real time if someone adds an item.
 
@@ -19,6 +19,30 @@ Postgres is used to persist data.
 The Postgres database has 3 main resources; `User`, `List`, and `ListItem`. 
 
 The relationship between a `User` and a `List` is `many-to-many` because a `List` can have multiple users working on it, and a `User` can work on multiple lists.
+A `List` is not deleted from the database unless all `User`s working on it have deleted it.
 
 The relationship between a `List` and a `ListItem` is `one-to-many` because a `List` can have multiple list items, but each `ListItem` is associated to only one `List`.
 This also means that, a `ListItem` belongs to a `List`.
+
+## Features
+
+- [ ] Create lists
+- [ ] Delete lists
+- [ ] Add items to lists
+- [ ] Delete items from lists
+- [ ] Strikethrough lists
+- [ ] Undo deleting items
+- [ ] Invite to collaborate on list via link.
+- [ ] Invite to collaborate on list via QR code.
+
+## Future Todos
+
+- [ ] Login with gmail account
+- [ ] Reset lists
+- [ ] Make copies of lists
+- [ ] Encrypt of lists stored in database
+- [ ] Undo deleting lists
+- [ ] List owners with permissions (for example, delete list for all)
+- [ ] Export lists as text file
+- [ ] Search for lists and list items
+- [ ] Email options such as notifying upon list changing
