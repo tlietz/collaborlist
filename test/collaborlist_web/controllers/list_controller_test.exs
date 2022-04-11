@@ -5,7 +5,7 @@ defmodule CollaborlistWeb.ListControllerTest do
 
   @create_attrs %{title: "some title"}
   @update_attrs %{title: "some updated title"}
-  @invalid_attrs %{title: nil}
+  @invalid_attrs %{title: 4, checked: "foo", striked: "bar"}
 
   describe "index" do
     test "lists all lists", %{conn: conn} do
@@ -34,6 +34,7 @@ defmodule CollaborlistWeb.ListControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.list_path(conn, :create), list: @invalid_attrs)
+
       assert html_response(conn, 200) =~ "New List"
     end
   end

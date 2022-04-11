@@ -53,7 +53,6 @@ defmodule Collaborlist.Catalog do
     %List{}
     |> List.changeset(attrs)
     |> Repo.insert()
-    |> IO.inspect()
   end
 
   @doc """

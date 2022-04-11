@@ -8,7 +8,7 @@ defmodule Collaborlist.CatalogTest do
 
     import Collaborlist.CatalogFixtures
 
-    @invalid_attrs %{title: nil}
+    @invalid_attrs %{title: 42, checked: "foo", striked: "bar"}
 
     test "list_lists/0 returns all lists" do
       list = list_fixture()

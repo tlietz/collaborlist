@@ -12,33 +12,28 @@ defmodule CollaborlistWeb.Router do
   end
 
   pipeline :catalog do
-    :fetch_lists
+    plug :fetch_lists
   end
 
   defp fetch_current_user(conn, _) do
-    if user_uuid = get_session(conn, :current_uuid) do
-      assign(conn, :current_uuid, user_uuid)
-    else
-      new_uuid = Ecto.UUID.generate()
-
-      conn
-      |> assign(:current_uuid, new_uuid)
-      |> put_session(:current_uuid, new_uuid)
-    end
+    conn
   end
 
   defp fetch_lists(conn, _) do
+    conn
   end
 
   pipeline :collab do
-    :fetch_current_list
-    :fetch_list_items
+    plug :fetch_current_list
+    plug :fetch_list_items
   end
 
   defp fetch_current_list(conn, _) do
+    conn
   end
 
   defp fetch_list_items(conn, _) do
+    conn
   end
 
   scope "/", CollaborlistWeb do

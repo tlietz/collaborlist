@@ -8,7 +8,7 @@ defmodule Collaborlist.ListTest do
 
     import Collaborlist.ListFixtures
 
-    @invalid_attrs %{content: nil, order: nil}
+    @invalid_attrs %{content: nil}
 
     test "list_list_items/0 returns all list_items" do
       list_item = list_item_fixture()
@@ -21,11 +21,13 @@ defmodule Collaborlist.ListTest do
     end
 
     test "create_list_item/1 with valid data creates a list_item" do
-      valid_attrs = %{content: "some content", order: 42}
+      valid_attrs = %{content: "some content", striked: false, checked: false}
 
       assert {:ok, %ListItem{} = list_item} = List.create_list_item(valid_attrs)
+
       assert list_item.content == "some content"
-      assert list_item.order == 42
+      assert list_item.striked == false
+      assert list_item.checked == false
     end
 
     test "create_list_item/1 with invalid data returns error changeset" do
@@ -34,11 +36,12 @@ defmodule Collaborlist.ListTest do
 
     test "update_list_item/2 with valid data updates the list_item" do
       list_item = list_item_fixture()
-      update_attrs = %{content: "some updated content", order: 43}
+      update_attrs = %{content: "some updated content", striked: true, checked: true}
 
       assert {:ok, %ListItem{} = list_item} = List.update_list_item(list_item, update_attrs)
       assert list_item.content == "some updated content"
-      assert list_item.order == 43
+      assert list_item.striked == true
+      assert list_item.checked == true
     end
 
     test "update_list_item/2 with invalid data returns error changeset" do

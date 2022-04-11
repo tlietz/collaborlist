@@ -12,7 +12,8 @@ defmodule Collaborlist.ListFixtures do
       attrs
       |> Enum.into(%{
         content: "some content",
-        order: 42
+        checked: false,
+        striked: false
       })
       |> Collaborlist.List.create_list_item()
 
