@@ -7,6 +7,7 @@ defmodule Collaborlist.List do
   alias Collaborlist.Repo
 
   alias Collaborlist.List.ListItem
+  alias Collaborlist.Catalog.List
 
   @doc """
   Returns the list of list_items.
@@ -38,20 +39,12 @@ defmodule Collaborlist.List do
   def get_list_item!(id), do: Repo.get!(ListItem, id)
 
   @doc """
-  Creates a list_item.
-
-  ## Examples
-
-      iex> create_list_item(%{field: value})
-      {:ok, %ListItem{}}
-
-      iex> create_list_item(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
+  Creates a list_item and adds it to a list.
   """
-  def create_list_item(attrs \\ %{}) do
+  def create_list_item(attrs \\ %{}, %List{} = list) do
     %ListItem{}
     |> ListItem.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:list, list)
     |> Repo.insert()
   end
 

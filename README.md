@@ -21,7 +21,7 @@ Lists that a user is working on are shown to that user, along with its name and 
 Along with the standard crud operations on lists themselves, doing crud operations on list items need to be supported. 
 Managing the CRUD operations on lists is different from managing the CRUD operations on list items when a user is working on a list.
 A `Catalog` context is a good place for the management of CRUD operations on lists. 
-
+This leaves a `List` context to mange the list items. 
 
 
 ## Database

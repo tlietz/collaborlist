@@ -4,10 +4,14 @@ defmodule Collaborlist.ListFixtures do
   entities via the `Collaborlist.List` context.
   """
 
+  import Collaborlist.CatalogFixtures
+
   @doc """
-  Generate a list_item.
+  Generates a list_item and a list, then adds the list_item to that list.
   """
   def list_item_fixture(attrs \\ %{}) do
+    list = list_fixture()
+
     {:ok, list_item} =
       attrs
       |> Enum.into(%{
@@ -15,7 +19,7 @@ defmodule Collaborlist.ListFixtures do
         checked: false,
         striked: false
       })
-      |> Collaborlist.List.create_list_item()
+      |> Collaborlist.List.create_list_item(list)
 
     list_item
   end

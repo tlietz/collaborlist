@@ -6,6 +6,7 @@ defmodule Collaborlist.ListTest do
   describe "list_items" do
     alias Collaborlist.List.ListItem
 
+    import Collaborlist.CatalogFixtures
     import Collaborlist.ListFixtures
 
     @invalid_attrs %{content: nil}
@@ -59,6 +60,13 @@ defmodule Collaborlist.ListTest do
     test "change_list_item/1 returns a list_item changeset" do
       list_item = list_item_fixture()
       assert %Ecto.Changeset{} = List.change_list_item(list_item)
+    end
+
+    test "add_item_to_list/2 adds an item to the list" do
+      list_item = list_item_fixture()
+      list = list_fixture()
+
+      List.add_item_to_list(list, list_item)
     end
   end
 end
