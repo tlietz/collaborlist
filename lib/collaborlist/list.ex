@@ -18,8 +18,8 @@ defmodule Collaborlist.List do
       [%ListItem{}, ...]
 
   """
-  def list_list_items do
-    Repo.all(ListItem)
+  def list_list_items(list_id) do
+    Repo.all(from li in ListItem, where: li.list_id == ^list_id)
   end
 
   @doc """

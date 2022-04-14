@@ -14,7 +14,7 @@ defmodule Collaborlist.ListTest do
     test "list_list_items/0 returns all list_items" do
       list_item = list_item_fixture()
 
-      Enum.zip(List.list_list_items(), [list_item])
+      Enum.zip(List.list_list_items(list_item.list_id), [list_item])
       |> Enum.each(fn {got, want} ->
         unless got.id == want.id do
           raise "expected a database read of all list items to be the same as the created list items"
