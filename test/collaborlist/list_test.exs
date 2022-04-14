@@ -2,6 +2,7 @@ defmodule Collaborlist.ListTest do
   use Collaborlist.DataCase
 
   alias Collaborlist.List
+  alias Collaborlist.Repo
 
   describe "list_items" do
     alias Collaborlist.List.ListItem
@@ -9,30 +10,39 @@ defmodule Collaborlist.ListTest do
     import Collaborlist.CatalogFixtures
     import Collaborlist.ListFixtures
 
-    @invalid_attrs %{content: nil}
+    @invalid_attrs %{content: 42, striked: "foo", checked: "bar"}
 
     test "list_list_items/0 returns all list_items" do
       list_item = list_item_fixture()
-      assert List.list_list_items() == [list_item]
+
+      Enum.zip(List.list_list_items(), [list_item])
+      |> Enum.each(fn {got, want} ->
+        unless got.id == want.id do
+          raise "expected a database read of all list items to be the same as the created list items"
+        end
+      end)
     end
 
-    test "get_list_item!/1 returns the list_item with given id" do
+    test "get_list_item!/1 returns the list_item with given id and correct list_id" do
       list_item = list_item_fixture()
-      assert List.get_list_item!(list_item.id) == list_item
+      got = List.get_list_item!(list_item.id)
+      assert got.id == list_item.id
+      assert got.list_id == list_item.list_id
     end
 
     test "create_list_item/1 with valid data creates a list_item" do
       valid_attrs = %{content: "some content", striked: false, checked: false}
 
-      assert {:ok, %ListItem{} = list_item} = List.create_list_item(valid_attrs)
+      assert {:ok, %ListItem{} = list_item} = List.create_list_item(valid_attrs, list_fixture())
 
       assert list_item.content == "some content"
       assert list_item.striked == false
       assert list_item.checked == false
+      assert list_item.list_id != nil
     end
 
     test "create_list_item/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = List.create_list_item(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = List.create_list_item(@invalid_attrs, list_fixture())
     end
 
     test "update_list_item/2 with valid data updates the list_item" do
@@ -48,7 +58,6 @@ defmodule Collaborlist.ListTest do
     test "update_list_item/2 with invalid data returns error changeset" do
       list_item = list_item_fixture()
       assert {:error, %Ecto.Changeset{}} = List.update_list_item(list_item, @invalid_attrs)
-      assert list_item == List.get_list_item!(list_item.id)
     end
 
     test "delete_list_item/1 deletes the list_item" do
@@ -60,13 +69,6 @@ defmodule Collaborlist.ListTest do
     test "change_list_item/1 returns a list_item changeset" do
       list_item = list_item_fixture()
       assert %Ecto.Changeset{} = List.change_list_item(list_item)
-    end
-
-    test "add_item_to_list/2 adds an item to the list" do
-      list_item = list_item_fixture()
-      list = list_fixture()
-
-      List.add_item_to_list(list, list_item)
     end
   end
 end

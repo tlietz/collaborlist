@@ -53,7 +53,7 @@ defmodule Collaborlist.CatalogTest do
       assert_raise Ecto.NoResultsError, fn -> Catalog.get_list!(list.id) end
     end
 
-    test "delete_list/1 deletes all list items of deleted list" do
+    test "delete_list/1 deletes the list and all list items of that list" do
       # TODO
       list = list_fixture()
       list_item = list_item_fixture()
