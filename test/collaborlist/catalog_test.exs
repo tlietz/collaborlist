@@ -53,7 +53,6 @@ defmodule Collaborlist.CatalogTest do
     end
 
     test "delete_list/1 deletes the list and all list items of that list" do
-      # TODO
       list = list_fixture()
       list_item = list_item_fixture(%{}, list)
 
