@@ -9,9 +9,7 @@ defmodule Collaborlist.ListFixtures do
   @doc """
   Generates a list_item and a list, then adds the list_item to that list.
   """
-  def list_item_fixture(attrs \\ %{}) do
-    list = list_fixture()
-
+  def list_item_fixture(attrs \\ %{}, list \\ list_fixture()) do
     {:ok, list_item} =
       attrs
       |> Enum.into(%{

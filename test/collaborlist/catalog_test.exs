@@ -2,7 +2,6 @@ defmodule Collaborlist.CatalogTest do
   use Collaborlist.DataCase
 
   alias Collaborlist.Catalog
-  alias Collaborlist.List
 
   describe "lists" do
     alias Collaborlist.Catalog.List
@@ -56,9 +55,10 @@ defmodule Collaborlist.CatalogTest do
     test "delete_list/1 deletes the list and all list items of that list" do
       # TODO
       list = list_fixture()
-      list_item = list_item_fixture()
+      list_item = list_item_fixture(%{}, list)
+
       assert {:ok, %List{}} = Catalog.delete_list(list)
-      assert_raise Ecto.NoResultsError, fn -> Catalog.get_list!(list.id) end
+      assert_raise Ecto.NoResultsError, fn -> Collaborlist.List.get_list_item!(list_item.id) end
     end
 
     test "change_list/1 returns a list changeset" do
