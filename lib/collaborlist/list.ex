@@ -10,7 +10,7 @@ defmodule Collaborlist.List do
   alias Collaborlist.Catalog.List
 
   @doc """
-  Returns the list of list_items.
+  Returns the list of list_items that belong to a list.
 
   ## Examples
 

@@ -40,7 +40,6 @@ defmodule CollaborlistWeb.Router do
     pipe_through :browser
     pipe_through :catalog
 
-    get "/", PageController, :index
     resources "/lists", ListController
   end
 
