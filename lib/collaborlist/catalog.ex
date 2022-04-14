@@ -1,6 +1,6 @@
 defmodule Collaborlist.Catalog do
   @moduledoc """
-  The Catalog context.
+  The Catalog context. It deals with lists as a whole without knowing the details of individual items.
   """
 
   import Ecto.Query, warn: false

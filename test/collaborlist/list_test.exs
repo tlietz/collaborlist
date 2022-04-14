@@ -2,7 +2,6 @@ defmodule Collaborlist.ListTest do
   use Collaborlist.DataCase
 
   alias Collaborlist.List
-  alias Collaborlist.Repo
 
   describe "list_items" do
     alias Collaborlist.List.ListItem
