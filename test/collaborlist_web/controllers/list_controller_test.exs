@@ -22,13 +22,13 @@ defmodule CollaborlistWeb.ListControllerTest do
   end
 
   describe "create list" do
-    test "redirects to show when data is valid", %{conn: conn} do
+    test "redirects to collab index of list when data is valid", %{conn: conn} do
       conn = post(conn, Routes.list_path(conn, :create), list: @create_attrs)
 
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.list_path(conn, :show, id)
+      assert %{list_id: id} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.collab_path(conn, :index, id)
 
-      conn = get(conn, Routes.list_path(conn, :show, id))
+      conn = get(conn, Routes.collab_path(conn, :index, id))
       assert html_response(conn, 200) =~ "Show List"
     end
 
@@ -53,9 +53,9 @@ defmodule CollaborlistWeb.ListControllerTest do
 
     test "redirects when data is valid", %{conn: conn, list: list} do
       conn = put(conn, Routes.list_path(conn, :update, list), list: @update_attrs)
-      assert redirected_to(conn) == Routes.list_path(conn, :show, list)
+      assert redirected_to(conn) == Routes.collab_path(conn, :index, list)
 
-      conn = get(conn, Routes.list_path(conn, :show, list))
+      conn = get(conn, Routes.collab_path(conn, :index, list))
       assert html_response(conn, 200) =~ "some updated title"
     end
 
@@ -73,7 +73,7 @@ defmodule CollaborlistWeb.ListControllerTest do
       assert redirected_to(conn) == Routes.list_path(conn, :index)
 
       assert_error_sent 404, fn ->
-        get(conn, Routes.list_path(conn, :show, list))
+        get(conn, Routes.collab_path(conn, :index, list))
       end
     end
   end

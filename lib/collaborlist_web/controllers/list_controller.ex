@@ -19,16 +19,11 @@ defmodule CollaborlistWeb.ListController do
       {:ok, list} ->
         conn
         |> put_flash(:info, "List created successfully.")
-        |> redirect(to: Routes.list_path(conn, :show, list))
+        |> redirect(to: Routes.collab_path(conn, :index, list))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
-  end
-
-  def show(conn, %{"id" => id}) do
-    list = Catalog.get_list!(id)
-    render(conn, "show.html", list: list)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -44,7 +39,7 @@ defmodule CollaborlistWeb.ListController do
       {:ok, list} ->
         conn
         |> put_flash(:info, "List updated successfully.")
-        |> redirect(to: Routes.list_path(conn, :show, list))
+        |> redirect(to: Routes.collab_path(conn, :index, list))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", list: list, changeset: changeset)

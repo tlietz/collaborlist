@@ -40,12 +40,14 @@ defmodule CollaborlistWeb.Router do
     pipe_through :browser
     pipe_through :catalog
 
-    resources "/lists", ListController
+    resources "/lists", ListController, except: [:show]
   end
 
   scope "/collab", CollaborlistWeb do
     pipe_through :browser
     pipe_through :collab
+
+    resources "/lists/:list_id", CollabController
   end
 
   # Enables LiveDashboard only for development
