@@ -1,7 +1,7 @@
 <h1>Add item to list: <%= @list.title %></h1>
 
 <%= render(
-  "form.html",
+  "new_item_form.html",
   Map.put(@conn.assigns, :action, Routes.collab_path(@conn, :create, @list))
 ) %>
 
