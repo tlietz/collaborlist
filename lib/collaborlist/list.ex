@@ -8,6 +8,7 @@ defmodule Collaborlist.List do
 
   alias Collaborlist.List.ListItem
   alias Collaborlist.Catalog.List
+  alias Collaborlist.Catalog
 
   @doc """
   Returns the list of list_items that belong to a list.
@@ -15,7 +16,7 @@ defmodule Collaborlist.List do
   """
   def list_list_items(list_id) do
     # Check if the list exists before fetching the list items
-    Repo.get!(List, list_id)
+    Catalog.get_list!(list_id)
     Repo.all(from li in ListItem, where: li.list_id == ^list_id)
   end
 
