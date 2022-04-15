@@ -12,8 +12,8 @@ defmodule CollaborlistWeb.CollabController do
   end
 
   # Create a new list item
-  def new(conn, %{"list_id" => id}) do
+  def new(conn, %{"list_id" => list_id}) do
     changeset = List.change_list_item(%ListItem{})
-    # render(conn, "new.html", changeset: changeset, list_id: list_id)
+    render(conn, "new.html", changeset: changeset, list_id: list_id)
   end
 end
