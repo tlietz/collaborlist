@@ -1,5 +1,8 @@
 <h1>Edit item</h1>
 
-<%= render "form.html", Map.put(@conn.assigns, :action, Routes.collab_path(@conn, :update, @list, @list_item)) %>
+<%= render(
+  "form.html",
+  Map.put(@conn.assigns, :action, Routes.collab_path(@conn, :update, @list, @list_item))
+) %>
 
-<span><%= link "Back", to: Routes.collab_path(@conn, :index, @list.id) %></span>
+<span><%= link("Back", to: Routes.collab_path(@conn, :index, @list.id)) %></span>

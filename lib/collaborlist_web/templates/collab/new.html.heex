@@ -1,5 +1,8 @@
 <h1>Add item to list: <%= @list.title %></h1>
 
-<%= render "form.html", Map.put(@conn.assigns, :action, Routes.collab_path(@conn, :create, @list)) %>
+<%= render(
+  "form.html",
+  Map.put(@conn.assigns, :action, Routes.collab_path(@conn, :create, @list))
+) %>
 
-<span><%= link "Back", to: Routes.collab_path(@conn, :index, @list.id) %></span>
+<span><%= link("Back", to: Routes.collab_path(@conn, :index, @list.id)) %></span>

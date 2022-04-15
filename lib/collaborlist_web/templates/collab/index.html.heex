@@ -8,22 +8,33 @@
     </tr>
   </thead>
   <tbody>
-<%= for item <- @list_items do %>
-    <tr>
-      <td><%= item.content %></td>
+    <%= for item <- @list_items do %>
+      <tr>
+        <td>
+          <%= item.content %>
+          <br />
+          <div>Checked: <%= item.checked %></div>
+          <div>Striked: <%= item.striked %></div>
+        </td>
 
-      <td>
-        <span><%= link "Edit", to: Routes.collab_path(@conn, :edit, @list.id, item.id) %></span>
-        <span><%= link "Delete", to: Routes.collab_path(@conn, :delete, @list.id, item.id), method: :delete %></span>
-      </td>
-    </tr>
-<% end %>
+        <td>
+          <span>
+            <%= link("Edit", to: Routes.collab_path(@conn, :edit, @list.id, item.id)) %>
+          </span>
+          <span>
+            <%= link("Delete",
+              to: Routes.collab_path(@conn, :delete, @list.id, item.id),
+              method: :delete
+            ) %>
+          </span>
+        </td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 
-<span><%= link "Add item", to: Routes.collab_path(@conn, :new, @list.id) %></span>
+<span><%= link("Add item", to: Routes.collab_path(@conn, :new, @list.id)) %></span>
 
-<br>
+<br />
 
-<span><%= link "Back", to: Routes.list_path(@conn, :index) %></span>
-
+<span><%= link("Back", to: Routes.list_path(@conn, :index)) %></span>
