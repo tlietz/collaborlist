@@ -13,7 +13,20 @@ defmodule CollaborlistWeb.CollabController do
 
   # Create a new list item
   def new(conn, %{"list_id" => list_id}) do
+    list = Catalog.get_list!(list_id)
     changeset = List.change_list_item(%ListItem{})
-    render(conn, "new.html", changeset: changeset, list_id: list_id)
+    render(conn, "new.html", changeset: changeset, list: list)
+  end
+
+  def create(conn, %{"list" => list_params}) do
+    case Catalog.create_list(list_params) do
+      {:ok, list} ->
+        conn
+        |> put_flash(:info, "List created successfully.")
+        |> redirect(to: Routes.collab_path(conn, :index, list))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
   end
 end
