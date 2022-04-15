@@ -13,6 +13,7 @@
       <td><%= item.content %></td>
 
       <td>
+        <span><%= link "Edit", to: Routes.collab_path(@conn, :edit, @list.id, item.id) %></span>
         <span><%= link "Delete", to: Routes.collab_path(@conn, :delete, @list.id, item.id), method: :delete %></span>
       </td>
     </tr>
