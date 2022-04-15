@@ -1,8 +1,8 @@
 # Collaborlist
 
-Make lists for personal use, or collaborate on them with others all within a browser.
-You can check items off on the list, or strikethrough them.
-The list is updated in real time if someone adds an item.
+Make lists for personal use, or collaborate on them with others, all from within a browser window.
+Check items off on the list, or strikethrough them.
+The list is updated in real time.
 
 I personally use this for groceries.
 Once I put an item into my cart, I check it off the list. 
@@ -20,8 +20,8 @@ There are many different parts of the system that need to be split up into their
 Lists that a user is working on are shown to that user, along with its name and potentially other metadata such as how many collaborators there are on a certain list. 
 Along with the standard crud operations on lists themselves, doing crud operations on list items need to be supported. 
 Managing the CRUD operations on lists is different from managing the CRUD operations on list items when a user is working on a list.
-A `Catalog` context is a good place for the management of CRUD operations on lists. 
-This leaves a `List` context to mange the list items. 
+A `Catalog` context is a good place for the management of lists. 
+This leaves a `List` context to mange the list items of each list. 
 
 
 ## Database
