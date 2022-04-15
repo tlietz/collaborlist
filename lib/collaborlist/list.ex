@@ -8,7 +8,6 @@ defmodule Collaborlist.List do
 
   alias Collaborlist.List.ListItem
   alias Collaborlist.Catalog.List
-  alias Collaborlist.Catalog
 
   @doc """
   Returns the list of list_items that belong to a list.
