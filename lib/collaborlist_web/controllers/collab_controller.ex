@@ -29,4 +29,13 @@ defmodule CollaborlistWeb.CollabController do
         render(conn, "new.html", changeset: changeset)
     end
   end
+
+  def delete(conn, %{"list_id" => list_id, "id" => item_id}) do
+    list_item = List.get_list_item!(item_id)
+    {:ok, _list_item} = List.delete_list_item(list_item)
+
+    conn
+    |> put_flash(:info, "Item deleted successfully.")
+    |> redirect(to: Routes.collab_path(conn, :index, list_id))
+  end
 end
