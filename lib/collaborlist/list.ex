@@ -15,8 +15,7 @@ defmodule Collaborlist.List do
 
   """
   def list_list_items(list_id) do
-    # Check if the list exists before fetching the list items
-    Catalog.get_list!(list_id)
+    # TODO check that a user is authorized to view the list of `list_id`
     Repo.all(from li in ListItem, where: li.list_id == ^list_id)
   end
 

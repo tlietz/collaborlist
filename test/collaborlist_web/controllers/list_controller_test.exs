@@ -3,6 +3,8 @@ defmodule CollaborlistWeb.ListControllerTest do
 
   import Collaborlist.CatalogFixtures
 
+  alias Collaborlist.Catalog
+
   @create_attrs %{title: "some title"}
   @update_attrs %{title: "some updated title"}
   @invalid_attrs %{title: 4, checked: "foo", striked: "bar"}
@@ -28,8 +30,9 @@ defmodule CollaborlistWeb.ListControllerTest do
       assert %{list_id: id} = redirected_params(conn)
       assert redirected_to(conn) == Routes.collab_path(conn, :index, id)
 
+      list = Catalog.get_list!(id)
       conn = get(conn, Routes.collab_path(conn, :index, id))
-      assert html_response(conn, 200) =~ "Show List"
+      assert html_response(conn, 200) =~ list.title
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

@@ -1,4 +1,4 @@
-<h1>Show List</h1>
+<h1>Collaborting on list: <%= @list.title %></h1>
 
 <table>
   <thead>
@@ -19,4 +19,6 @@
 <% end %>
   </tbody>
 </table>
+
+<span><%= link "Back", to: Routes.list_path(@conn, :index) %></span>
 
