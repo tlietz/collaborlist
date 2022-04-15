@@ -14,9 +14,9 @@
       <td><%= list.title %></td>
 
       <td>
-        <span><%= link "Collab", to: Routes.collab_path(@conn, :index, list) %></span>
-        <span><%= link "Edit", to: Routes.list_path(@conn, :edit, list) %></span>
-        <span><%= link "Delete", to: Routes.list_path(@conn, :delete, list), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <span><%= link "Collab", to: Routes.collab_path(@conn, :index, list.id) %></span>
+        <span><%= link "Edit", to: Routes.list_path(@conn, :edit, list.id) %></span>
+        <span><%= link "Delete", to: Routes.list_path(@conn, :delete, list.id), method: :delete, data: [confirm: "Are you sure?"] %></span>
       </td>
     </tr>
 <% end %>

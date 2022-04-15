@@ -36,10 +36,10 @@ defmodule CollaborlistWeb.ListController do
     list = Catalog.get_list!(id)
 
     case Catalog.update_list(list, list_params) do
-      {:ok, list} ->
+      {:ok, _list} ->
         conn
         |> put_flash(:info, "List updated successfully.")
-        |> redirect(to: Routes.collab_path(conn, :index, list))
+        |> redirect(to: Routes.list_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", list: list, changeset: changeset)

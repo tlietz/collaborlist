@@ -12,13 +12,10 @@ defmodule Collaborlist.List do
   @doc """
   Returns the list of list_items that belong to a list.
 
-  ## Examples
-
-      iex> list_list_items()
-      [%ListItem{}, ...]
-
   """
   def list_list_items(list_id) do
+    # Check if the list exists before fetching the list items
+    Repo.get!(List, list_id)
     Repo.all(from li in ListItem, where: li.list_id == ^list_id)
   end
 

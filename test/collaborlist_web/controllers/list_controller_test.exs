@@ -53,10 +53,7 @@ defmodule CollaborlistWeb.ListControllerTest do
 
     test "redirects when data is valid", %{conn: conn, list: list} do
       conn = put(conn, Routes.list_path(conn, :update, list), list: @update_attrs)
-      assert redirected_to(conn) == Routes.collab_path(conn, :index, list)
-
-      conn = get(conn, Routes.collab_path(conn, :index, list))
-      assert html_response(conn, 200) =~ "some updated title"
+      assert redirected_to(conn) == Routes.list_path(conn, :index)
     end
 
     test "renders errors when data is invalid", %{conn: conn, list: list} do
