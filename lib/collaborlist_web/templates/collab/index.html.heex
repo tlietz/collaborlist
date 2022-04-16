@@ -19,6 +19,8 @@
 
         <td>
           <span>
+            <!-- The order of @list.id and item.id matter because the url parameters :list_id and :id 
+            are derived from here-->
             <%= link("Edit", to: Routes.collab_path(@conn, :edit, @list.id, item.id)) %>
           </span>
           <span>
