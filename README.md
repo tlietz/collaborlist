@@ -41,11 +41,12 @@ There is an option to sign in with Google to the application.
 - [ ] Drag and drop to reorder list items
 - [ ] Invite to collaborate on list via link
 - [ ] Invite to collaborate on list via QR code
+- [ ] Create an account through the app.
 - [ ] Google sign in
 
 ## Future Todos
 
-- [ ] Create an account through the app.
+- [ ] Try to speed up database retrievals by splitting up the `list_items` table into multiple tables, each corresponding to a list
 - [ ] Link app account to Google sign in.
 - [ ] Reset lists
 - [ ] Make copies of lists
