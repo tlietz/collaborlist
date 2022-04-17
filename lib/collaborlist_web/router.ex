@@ -41,6 +41,8 @@ defmodule CollaborlistWeb.Router do
     pipe_through :catalog
 
     resources "/lists", ListController, except: [:show]
+
+    post "/login", LoginController, :login
   end
 
   scope "/collab", CollaborlistWeb do
