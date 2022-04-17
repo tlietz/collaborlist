@@ -1,9 +1,18 @@
 defmodule CollaborlistWeb.SessionController do
   use CollaborlistWeb, :controller
 
-  def login(conn, _params) do
+  # TODO If a user enters the app through a url pointing to a specific list,
+  # TODO let the user login, then check if they have authorization to view the list.
+  # TODO If they do, redirect to `referer`. If not, redirect to `lists/` with a flash
+  # TODO message saying to make sure they got the correct link/qr code to collab on the list.
+  def login(conn, params) do
+    [referer] =
+      conn
+      |> get_req_header("referer")
+
     conn
     |> put_flash(:info, "Logged in successfully")
-    |> redirect(to: Routes.list_path(conn, :index))
+    # this has the `external` tag because ther `referer` from `get_req_header` returns a full URL.
+    |> redirect(external: referer)
   end
 end
