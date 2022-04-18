@@ -5,7 +5,7 @@ defmodule CollaborlistWeb.UserSessionController do
   # TODO let the user login, then check if they have authorization to view the list.
   # TODO If they do, redirect to `referer`. If not, redirect to `lists/` with a flash
   # TODO message saying to make sure they got the correct link/qr code to collab on the list.
-  def login(conn, _params) do
+  def create(conn, _params) do
     [referer] =
       conn
       |> get_req_header("referer")
