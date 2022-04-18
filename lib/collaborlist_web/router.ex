@@ -42,7 +42,7 @@ defmodule CollaborlistWeb.Router do
 
     resources "/lists", ListController, except: [:show]
 
-    post "/login", SessionController, :login
+    post "/users/login", UserSessionController, :login
   end
 
   scope "/collab", CollaborlistWeb do
