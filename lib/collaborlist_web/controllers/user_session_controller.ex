@@ -25,8 +25,8 @@ defmodule CollaborlistWeb.UserSessionController do
   end
 
   def verify_csrf(conn, params) do
-    with csrf_token_body <- params["g_csrf_tokenn"],
-         csrf_token_cookie <- conn.cookies["g_csrf_token"] do
+    with {:ok, csrf_token_body} <- check_nil(params["g_csrf_tokenn"]),
+         {:ok, csrf_token_cookie} <- check_nil(conn.cookies["g_csrf_token"]) do
       if tokens_equal?(csrf_token_body, csrf_token_cookie) do
         {:ok, csrf_token_body}
       else
@@ -37,9 +37,8 @@ defmodule CollaborlistWeb.UserSessionController do
     end
   end
 
-  defp tokens_equal?(token1, token2) when token1 == nil or token2 == nil do
-    false
-  end
+  defp check_nil(nil), do: nil
+  defp check_nil(token), do: {:ok, token}
 
   defp tokens_equal?(token1, token2) do
     token1 == token2
