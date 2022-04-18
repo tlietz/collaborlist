@@ -24,10 +24,11 @@ defmodule CollaborlistWeb.UserSessionController do
     end
   end
 
+  # Checks that the g_crsf_token in the POST body and cookie are present and are equal
   def verify_csrf(conn, params) do
     with {:ok, csrf_token_body} <- check_nil(params["g_csrf_tokenn"]),
          {:ok, csrf_token_cookie} <- check_nil(conn.cookies["g_csrf_token"]) do
-      if tokens_equal?(csrf_token_body, csrf_token_cookie) do
+      if csrf_token_body == csrf_token_cookie do
         {:ok, csrf_token_body}
       else
         {:error, "potential csrf attack detected, token in body and cookie do not match"}
@@ -38,11 +39,7 @@ defmodule CollaborlistWeb.UserSessionController do
   end
 
   defp check_nil(nil), do: nil
-  defp check_nil(token), do: {:ok, token}
-
-  defp tokens_equal?(token1, token2) do
-    token1 == token2
-  end
+  defp check_nil(x), do: {:ok, x}
 
   def verify_id_token(conn, _params) do
     {:ok, conn}
