@@ -26,7 +26,7 @@ defmodule CollaborlistWeb.UserSessionController do
 
   # Checks that the g_crsf_token in the POST body and cookie are present and are equal
   def verify_csrf(conn, params) do
-    with {:ok, csrf_token_body} <- check_nil(params["g_csrf_tokenn"]),
+    with {:ok, csrf_token_body} <- check_nil(params["g_csrf_token"]),
          {:ok, csrf_token_cookie} <- check_nil(conn.cookies["g_csrf_token"]) do
       if csrf_token_body == csrf_token_cookie do
         {:ok, csrf_token_body}
