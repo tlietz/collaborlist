@@ -31,10 +31,10 @@ defmodule CollaborlistWeb.UserSessionController do
       if csrf_token_body == csrf_token_cookie do
         {:ok, csrf_token_body}
       else
-        {:error, "potential csrf attack detected, token in body and cookie do not match"}
+        {:error, "CSRF token in body and cookie do not match"}
       end
     else
-      nil -> {:error, "g_csrf_token not found in either post body or cookie"}
+      nil -> {:error, "CSRF token not found in either post body or cookie"}
     end
   end
 
@@ -42,6 +42,17 @@ defmodule CollaborlistWeb.UserSessionController do
   defp check_nil(x), do: {:ok, x}
 
   def verify_id_token(conn, _params) do
+    decode_jwk()
     {:ok, conn}
+  end
+
+  def decode_jwk() do
+    url = "https://www.googleapis.com/oauth2/v3/certs"
+
+    %HTTPoison.Response{body: res} = HTTPoison.get!(url)
+
+    res
+    |> Jason.decode!()
+    |> IO.inspect(label: "JSON")
   end
 end

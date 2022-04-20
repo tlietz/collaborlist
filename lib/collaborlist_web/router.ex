@@ -50,7 +50,7 @@ defmodule CollaborlistWeb.Router do
     resources "/lists/:list_id", CollabController, except: [:show]
   end
 
-  scope "/users", CollaborlistWeb do
+  scope "/google", CollaborlistWeb do
     pipe_through :browser
 
     post "/login", UserSessionController, :create
