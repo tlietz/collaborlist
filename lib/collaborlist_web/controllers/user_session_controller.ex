@@ -41,29 +41,26 @@ defmodule CollaborlistWeb.UserSessionController do
   defp check_nil(nil), do: nil
   defp check_nil(x), do: {:ok, x}
 
-  def verify_id_token(conn, _params) do
-    decode_jwk()
+  def verify_id_token(conn, params) do
+    keys = jwk_keys()
+
+    params["credential"] |> decode(keys)
 
     {:ok, conn}
   end
 
-  def decode_jwk() do
+  def jwk_keys() do
     url = "https://www.googleapis.com/oauth2/v3/certs"
 
-    %HTTPoison.Response{body: res} =
-      HTTPoison.get!(url)
-      |> IO.inspect(label: "HTTPOISON")
+    %HTTPoison.Response{body: res} = HTTPoison.get!(url)
 
     %{"keys" => keys} =
       res
       |> Jason.decode!()
 
-    [key1, key2] = keys
+    keys
+  end
 
-    key1
-    |> IO.inspect(label: "KEY1")
-
-    key2
-    |> IO.inspect(label: "KEY2")
+  def decode(jwt_string, _public_key) do
   end
 end

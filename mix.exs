@@ -47,7 +47,7 @@ defmodule Collaborlist.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.18"},
-      {:joken, "~> 2.4"},
+      {:jose, "~> 1.11"},
       {:jason, "~> 1.2"},
       {:httpoison, "~> 1.8"},
       {:plug_cowboy, "~> 2.5"},
