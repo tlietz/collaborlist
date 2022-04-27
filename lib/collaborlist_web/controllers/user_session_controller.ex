@@ -55,13 +55,20 @@ defmodule CollaborlistWeb.UserSessionController do
     jwk = JOSE.JWK.from_pem(keys[key_id])
 
     # function expects a list of algorithms to whitelist
-    JOSE.JWT.verify_strict(jwk, [header["alg"]], token)
-    |> IO.inspect(label: "VERIFY")
+    case JOSE.JWT.verify_strict(jwk, [header["alg"]], token) do
+      {true, jwt, _jws} ->
+        jwt |> IO.inspect(label: "JWT")
+
+      {:error, error} ->
+        error
+        |> IO.inspect(label: "ERROR")
+    end
 
     {:ok, conn}
   end
 
   def jwk_keys() do
+    # url for keys in PEM encoding
     url = "https://www.googleapis.com/oauth2/v1/certs"
 
     %HTTPoison.Response{body: res} = HTTPoison.get!(url)
@@ -71,8 +78,5 @@ defmodule CollaborlistWeb.UserSessionController do
       |> Jason.decode!()
 
     keys
-  end
-
-  def decode(jwt_string, _public_key) do
   end
 end
