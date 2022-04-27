@@ -49,6 +49,7 @@ defmodule Collaborlist.MixProject do
       {:gettext, "~> 0.18"},
       {:jose, "~> 1.11"},
       {:jason, "~> 1.2"},
+      {:joken, "~> 2.4"},
       {:httpoison, "~> 1.8"},
       {:plug_cowboy, "~> 2.5"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}

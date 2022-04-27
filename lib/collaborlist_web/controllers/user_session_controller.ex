@@ -44,7 +44,19 @@ defmodule CollaborlistWeb.UserSessionController do
   def verify_id_token(conn, params) do
     keys = jwk_keys()
 
-    params["credential"] |> decode(keys)
+    token = params["credential"]
+
+    {:ok, header} =
+      token
+      |> Joken.peek_header()
+
+    key_id = header["kid"]
+
+    jwk = JOSE.JWK.from_pem(keys[key_id])
+
+    # function expects a list of algorithms to whitelist
+    JOSE.JWT.verify_strict(jwk, [header["alg"]], token)
+    |> IO.inspect(label: "VERIFY")
 
     {:ok, conn}
   end
@@ -56,9 +68,7 @@ defmodule CollaborlistWeb.UserSessionController do
 
     keys =
       res
-      |> IO.inspect(label: "RESULT")
-      |> JOSE.JWK.from_pem()
-      |> IO.inspect(label: "PEMKEYS")
+      |> Jason.decode!()
 
     keys
   end
