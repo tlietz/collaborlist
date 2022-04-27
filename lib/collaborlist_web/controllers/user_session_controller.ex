@@ -50,13 +50,15 @@ defmodule CollaborlistWeb.UserSessionController do
   end
 
   def jwk_keys() do
-    url = "https://www.googleapis.com/oauth2/v3/certs"
+    url = "https://www.googleapis.com/oauth2/v1/certs"
 
     %HTTPoison.Response{body: res} = HTTPoison.get!(url)
 
-    %{"keys" => keys} =
+    keys =
       res
-      |> Jason.decode!()
+      |> IO.inspect(label: "RESULT")
+      |> JOSE.JWK.from_pem()
+      |> IO.inspect(label: "PEMKEYS")
 
     keys
   end
