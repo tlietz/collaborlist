@@ -55,11 +55,12 @@ defmodule CollaborlistWeb.UserSessionController do
     jwk = JOSE.JWK.from_pem(keys[key_id])
 
     with {true, jwt, _jws} <- signature_verified?(jwk, header["alg"], token),
-         {true, _aud} <- aud_match?(jwt),
-         {true, _iss} <- iss_ok?(jwt) do
+         {true, _aud} <- aud_valid?(jwt),
+         {true, _iss} <- iss_valid?(jwt),
+         {true, _iat, _exp} <- not_expired?(jwt) do
       {:ok, token}
     else
-      {:error, reason} -> {:error, reason}
+      {false, reason} -> {:error, reason}
     end
   end
 
@@ -67,31 +68,39 @@ defmodule CollaborlistWeb.UserSessionController do
     # function expects a list of algorithms to whitelist
     case JOSE.JWT.verify_strict(jwk, [alg], token) do
       {true, jwt, jws} -> {true, jwt, jws}
-      {:error, _} -> {:error, "signature verification failed"}
+      {:error, _} -> {false, "signature verification failed"}
     end
   end
 
-  def aud_match?(jwt = %JOSE.JWT{}) do
+  def aud_valid?(jwt = %JOSE.JWT{}) do
     aud = jwt.fields["aud"]
 
     if aud == "486854246467-4o5dqr6fv5jkbojbhp6flddtfqf8ch8d.apps.googleusercontent.com" do
       {true, aud}
     else
-      {:error, "token `aud` field does not match application client ID"}
+      {false, "token `aud` field does not match application client ID"}
     end
   end
 
-  def iss_ok?(jwt = %JOSE.JWT{}) do
+  def iss_valid?(jwt = %JOSE.JWT{}) do
     iss = jwt.fields["iss"]
 
     if iss == "accounts.google.com" or iss == "https://accounts.google.com" do
       {true, iss}
     else
-      {:error, "token `iss` field is invalid"}
+      {false, "token `iss` field is invalid"}
     end
   end
 
-  def expired?(jwt) do
+  def not_expired?(jwt = %JOSE.JWT{}) do
+    expire_time = jwt.fields["exp"]
+    issued_at = jwt.fields["iat"]
+
+    if issued_at < expire_time do
+      {true, issued_at, expire_time}
+    else
+      {false, "token is expired"}
+    end
   end
 
   def jwk_keys() do
