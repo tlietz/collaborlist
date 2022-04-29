@@ -41,7 +41,7 @@ defmodule CollaborlistWeb.UserSessionController do
   defp check_nil(nil), do: nil
   defp check_nil(x), do: {:ok, x}
 
-  def verify_id_token(conn, params) do
+  def verify_id_token(_conn, params) do
     keys = jwk_keys()
 
     token = params["credential"]
@@ -54,7 +54,7 @@ defmodule CollaborlistWeb.UserSessionController do
 
     jwk = JOSE.JWK.from_pem(keys[key_id])
 
-    with {true, jwt, _jws} <- verify_signature(jwk, header["alg"], token),
+    with {true, jwt, _jws} <- signature_verified?(jwk, header["alg"], token),
          {true, _aud} <- aud_match?(jwt),
          {true, _iss} <- iss_ok?(jwt) do
       {:ok, token}
@@ -63,9 +63,12 @@ defmodule CollaborlistWeb.UserSessionController do
     end
   end
 
-  def verify_signature(jwk, alg, token) do
+  def signature_verified?(jwk, alg, token) do
     # function expects a list of algorithms to whitelist
-    JOSE.JWT.verify_strict(jwk, [alg], token)
+    case JOSE.JWT.verify_strict(jwk, [alg], token) do
+      {true, jwt, jws} -> {true, jwt, jws}
+      {:error, _} -> {:error, "signature verification failed"}
+    end
   end
 
   def aud_match?(jwt = %JOSE.JWT{}) do
@@ -86,6 +89,9 @@ defmodule CollaborlistWeb.UserSessionController do
     else
       {:error, "token `iss` field is invalid"}
     end
+  end
+
+  def expired?(jwt) do
   end
 
   def jwk_keys() do
