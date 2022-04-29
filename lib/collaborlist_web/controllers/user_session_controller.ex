@@ -54,21 +54,31 @@ defmodule CollaborlistWeb.UserSessionController do
 
     jwk = JOSE.JWK.from_pem(keys[key_id])
 
-    # function expects a list of algorithms to whitelist
-    case JOSE.JWT.verify_strict(jwk, [header["alg"]], token) do
-      {true, jwt, _jws} ->
-        jwt |> IO.inspect(label: "JWT")
-
-      {:error, error} ->
-        error
-        |> IO.inspect(label: "ERROR")
+    with {true, jwt, _jws} <- verify_signature(jwk, header["alg"], token),
+         {true, _aud} <- aud_match(jwt) do
+      {:ok, token}
+    else
+      {:error, reason} -> {:error, reason}
     end
+  end
 
-    {:ok, conn}
+  def verify_signature(jwk, alg, token) do
+    # function expects a list of algorithms to whitelist
+    JOSE.JWT.verify_strict(jwk, [alg], token)
+  end
+
+  def aud_match(jwt = %JOSE.JWT{}) do
+    aud = jwt.fields["aud"]
+
+    if aud == "486854246467-4o5dqr6fv5jkbojbhp6flddtfqf8ch8d.apps.googleusercontent.com" do
+      {true, aud}
+    else
+      {:error, "token `aud` field does not match application client ID"}
+    end
   end
 
   def jwk_keys() do
-    # url for keys in PEM encoding
+    # url for PEM encoded keys
     url = "https://www.googleapis.com/oauth2/v1/certs"
 
     %HTTPoison.Response{body: res} = HTTPoison.get!(url)
