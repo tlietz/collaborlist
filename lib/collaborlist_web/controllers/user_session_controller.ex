@@ -1,10 +1,6 @@
 defmodule CollaborlistWeb.UserSessionController do
   use CollaborlistWeb, :controller
 
-  # TODO If a user enters the app through a url pointing to a specific list,
-  # TODO let the user login, then check if they have authorization to view the list.
-  # TODO If they do, redirect to `referer`. If not, redirect to `lists/` with a flash
-  # TODO message saying to make sure they got the correct link/qr code to collab on the list.
   def create(conn, params) do
     with {:ok, _token} <- verify_csrf(conn, params),
          {:ok, _token} <- verify_id_token(conn, params) do
