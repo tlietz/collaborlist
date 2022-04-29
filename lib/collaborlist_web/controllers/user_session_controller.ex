@@ -3,13 +3,13 @@ defmodule CollaborlistWeb.UserSessionController do
 
   def create(conn, params) do
     with {:ok, _token} <- verify_csrf(conn, params),
-         {:ok, _token} <- verify_id_token(conn, params) do
+         {:ok, account_id} <- verify_id_token(conn, params) do
       [referer] =
         conn
         |> get_req_header("referer")
 
       conn
-      |> put_flash(:info, "signed in with google successfully")
+      |> put_flash(:info, "signed in with google successfully, your account id is #{account_id}")
       # this has the `external` tag because the `referer` from `get_req_header` returns a full URL.
       |> redirect(external: referer)
     else
@@ -54,7 +54,7 @@ defmodule CollaborlistWeb.UserSessionController do
          {true, _aud} <- aud_valid?(jwt),
          {true, _iss} <- iss_valid?(jwt),
          {true, _iat, _exp} <- not_expired?(jwt) do
-      {:ok, token}
+      {:ok, jwt.fields["sub"]}
     else
       {false, reason} -> {:error, reason}
     end
