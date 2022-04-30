@@ -3,13 +3,16 @@ defmodule CollaborlistWeb.UserSessionController do
 
   def create(conn, params) do
     with {:ok, _token} <- verify_csrf(conn, params),
-         {:ok, account_id} <- verify_id_token(conn, params) do
+         {:ok, id_token} <- verify_id_token(conn, params) do
       [referer] =
         conn
         |> get_req_header("referer")
 
       conn
-      |> put_flash(:info, "signed in with google successfully, your account id is #{account_id}")
+      |> put_flash(
+        :info,
+        "signed in with google successfully, your account id is #{account_id(id_token)}"
+      )
       # this has the `external` tag because the `referer` from `get_req_header` returns a full URL.
       |> redirect(external: referer)
     else
@@ -18,6 +21,10 @@ defmodule CollaborlistWeb.UserSessionController do
         |> put_flash(:error, reason)
         |> redirect(to: Routes.list_path(conn, :index))
     end
+  end
+
+  def account_id(id_token = %JOSE.JWT{}) do
+    id_token.fields["sub"]
   end
 
   # Checks that the g_crsf_token in the POST body and cookie are present and are equal
@@ -82,7 +89,7 @@ defmodule CollaborlistWeb.UserSessionController do
       jwt
       |> IO.inspect(label: "JWT")
 
-      {:ok, jwt.fields["sub"]}
+      {:ok, jwt}
     else
       {false, reason} -> {:error, reason}
     end
