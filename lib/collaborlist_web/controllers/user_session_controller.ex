@@ -22,20 +22,45 @@ defmodule CollaborlistWeb.UserSessionController do
 
   # Checks that the g_crsf_token in the POST body and cookie are present and are equal
   def verify_csrf(conn, params) do
-    with {:ok, csrf_token_body} <- check_nil(params["g_csrf_token"]),
-         {:ok, csrf_token_cookie} <- check_nil(conn.cookies["g_csrf_token"]) do
-      if csrf_token_body == csrf_token_cookie do
-        {:ok, csrf_token_body}
-      else
-        {:error, "CSRF token in body and cookie do not match"}
-      end
+    with {true, csrf_token_body} <- csrf_token_in_body?(conn, params),
+         {true, csrf_token_cookie} <- csrf_token_in_cookie?(conn, params),
+         {true, csrf_token} <- csrf_tokens_equal?(csrf_token_body, csrf_token_cookie) do
+      {:ok, csrf_token}
     else
-      nil -> {:error, "CSRF token not found in either post body or cookie"}
+      {false, reason} -> {:error, reason}
     end
   end
 
-  defp check_nil(nil), do: nil
-  defp check_nil(x), do: {:ok, x}
+  defp csrf_token_in_body?(_conn, params) do
+    token = params["g_csrf_token"]
+
+    if token do
+      {true, token}
+    else
+      {false, "CSRF token not found in post body"}
+    end
+  end
+
+  defp csrf_token_in_cookie?(conn, _params) do
+    conn
+    |> IO.inspect(label: "CONN")
+
+    token = conn.cookies["g_csrf_token"]
+
+    if token do
+      {true, token}
+    else
+      {false, "CSRF token not found in cookies"}
+    end
+  end
+
+  defp csrf_tokens_equal?(body_token, cookie_token) do
+    if body_token == cookie_token do
+      {true, body_token}
+    else
+      {false, "CSRF token in body and cookie do not match"}
+    end
+  end
 
   def verify_id_token(_conn, params) do
     keys = jwk_keys()
@@ -54,6 +79,9 @@ defmodule CollaborlistWeb.UserSessionController do
          {true, _aud} <- aud_valid?(jwt),
          {true, _iss} <- iss_valid?(jwt),
          {true, _iat, _exp} <- not_expired?(jwt) do
+      jwt
+      |> IO.inspect(label: "JWT")
+
       {:ok, jwt.fields["sub"]}
     else
       {false, reason} -> {:error, reason}
@@ -103,10 +131,13 @@ defmodule CollaborlistWeb.UserSessionController do
     # url for PEM encoded keys
     url = "https://www.googleapis.com/oauth2/v1/certs"
 
-    %HTTPoison.Response{body: res} = HTTPoison.get!(url)
+    res = HTTPoison.get!(url)
+
+    res
+    |> IO.inspect(label: "POISON_RES")
 
     keys =
-      res
+      res.body
       |> Jason.decode!()
 
     keys
