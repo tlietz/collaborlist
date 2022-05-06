@@ -86,9 +86,6 @@ defmodule CollaborlistWeb.UserSessionController do
          {true, _aud} <- aud_valid?(jwt),
          {true, _iss} <- iss_valid?(jwt),
          {true, _iat, _exp} <- not_expired?(jwt) do
-      jwt
-      |> IO.inspect(label: "JWT")
-
       {:ok, jwt}
     else
       {false, reason} -> {:error, reason}

@@ -15,9 +15,9 @@ defmodule Collaborlist.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Collaborlist.PubSub},
       # Start the Endpoint (http/https)
-      CollaborlistWeb.Endpoint
-      # Start a worker by calling: Collaborlist.Worker.start_link(arg)
-      # {Collaborlist.Worker, arg}
+      CollaborlistWeb.Endpoint,
+      # Start the Google Certs genserver
+      GoogleCerts
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
