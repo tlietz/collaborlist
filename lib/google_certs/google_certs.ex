@@ -13,12 +13,7 @@ defmodule GoogleCerts do
 
     res = HTTPoison.get!(url)
 
-    # a map with kid => key
-    keys =
-      res.body
-      |> Jason.decode!()
-
-    GenServer.start_link(__MODULE__, keys, name: __MODULE__)
+    GenServer.start_link(__MODULE__, extract_keys(res), name: __MODULE__)
   end
 
   def keys() do
@@ -35,5 +30,18 @@ defmodule GoogleCerts do
   @impl true
   def handle_call(:keys, _from, keys) do
     {:reply, keys, keys}
+  end
+
+  @spec extract_keys(HTTPoison.Response.t()) :: %{}
+  def extract_keys(res = %HTTPoison.Response{}) do
+    res.body
+    |> Jason.decode!()
+  end
+
+  def seconds_to_expire(res = %HTTPoison.Response{}) do
+    # {cache_control, age} = res.headers |> find(["Cache-Control", "Age"])
+
+    res.headers
+    |> IO.inspect(label: "HEADERS")
   end
 end

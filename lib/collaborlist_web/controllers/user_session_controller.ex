@@ -49,9 +49,6 @@ defmodule CollaborlistWeb.UserSessionController do
   end
 
   defp csrf_token_in_cookie?(conn, _params) do
-    conn
-    |> IO.inspect(label: "CONN")
-
     token = conn.cookies["g_csrf_token"]
 
     if token do
@@ -136,9 +133,6 @@ defmodule CollaborlistWeb.UserSessionController do
     url = "https://www.googleapis.com/oauth2/v1/certs"
 
     res = HTTPoison.get!(url)
-
-    res
-    |> IO.inspect(label: "POISON_RES")
 
     keys =
       res.body
