@@ -1,7 +1,6 @@
 defmodule GoogleCerts do
   @moduledoc """
-  Has client functions to access Google auth public keys.
-  Stores the keys and automatically renews them when they are close to becoming stale.
+  Stores the public Google cert keys in ETS and automatically renews them when they are close to becoming stale.
   """
 
   use GenServer
@@ -12,13 +11,13 @@ defmodule GoogleCerts do
     # url for PEM encoded keys
     url = "https://www.googleapis.com/oauth2/v1/certs"
 
-    res = HTTPoison.get!(url)
+    keys = HTTPoison.get!(url) |> extract_keys()
 
-    GenServer.start_link(__MODULE__, extract_keys(res), name: __MODULE__)
+    GenServer.start_link(__MODULE__, keys, name: __MODULE__)
   end
 
   def keys() do
-    GenServer.call({:global, __MODULE__}, :keys)
+    GenServer.call(__MODULE__, :keys)
   end
 
   # Server (callbacks)
