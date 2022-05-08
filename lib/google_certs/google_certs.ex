@@ -5,6 +5,7 @@ defmodule GoogleCerts do
   """
 
   use GenServer
+
   # Client
 
   def start_link(default) when is_list(default) do
@@ -17,7 +18,7 @@ defmodule GoogleCerts do
   end
 
   def keys() do
-    GenServer.call(__MODULE__, :keys)
+    GenServer.call({:global, __MODULE__}, :keys)
   end
 
   # Server (callbacks)
@@ -31,6 +32,8 @@ defmodule GoogleCerts do
   def handle_call(:keys, _from, keys) do
     {:reply, keys, keys}
   end
+
+  # Helper Functions
 
   @spec extract_keys(HTTPoison.Response.t()) :: %{}
   def extract_keys(res = %HTTPoison.Response{}) do
@@ -55,11 +58,10 @@ defmodule GoogleCerts do
     res
     |> get_header("Cache-Control")
     |> String.split([",", "="])
-    |> max_age_value()
-    |> IO.inspect(label: "CACHE")
+    |> extract_max_age()
   end
 
-  def max_age_value([head | tail]) do
+  def extract_max_age([head | tail]) do
     if head |> String.trim_leading() |> String.starts_with?("max-age") do
       [max_age_string | _] = tail
 
@@ -69,11 +71,11 @@ defmodule GoogleCerts do
 
       max_age
     else
-      max_age_value(tail)
+      extract_max_age(tail)
     end
   end
 
-  def max_age_value([]) do
+  def extract_max_age([]) do
     {:error, "Could not find max-age value"}
   end
 
