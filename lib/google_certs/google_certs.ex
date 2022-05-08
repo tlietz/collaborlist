@@ -1,6 +1,9 @@
 defmodule GoogleCerts do
   @moduledoc """
   Stores the public Google cert keys in ETS and automatically renews them when they are close to becoming stale.
+
+  There are no server callbacks implemented other than init/1, because otherwise it would become a bottleneck
+  for reading keys. The client keys/0 function reads the keys from ETS, which is used for its built in concurrency.
   """
 
   use GenServer
@@ -17,7 +20,6 @@ defmodule GoogleCerts do
   end
 
   def keys() do
-    GenServer.call(__MODULE__, :keys)
   end
 
   # Server (callbacks)
@@ -25,11 +27,6 @@ defmodule GoogleCerts do
   @impl true
   def init(keys) do
     {:ok, keys}
-  end
-
-  @impl true
-  def handle_call(:keys, _from, keys) do
-    {:reply, keys, keys}
   end
 
   # Helper Functions
