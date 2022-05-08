@@ -38,10 +38,61 @@ defmodule GoogleCerts do
     |> Jason.decode!()
   end
 
+  @spec seconds_to_expire(HTTPoison.Response.t()) :: Integer.t()
   def seconds_to_expire(res = %HTTPoison.Response{}) do
-    # {cache_control, age} = res.headers |> find(["Cache-Control", "Age"])
+    age = res |> age()
+    max_age = res |> max_age()
 
-    res.headers
-    |> IO.inspect(label: "HEADERS")
+    max_age - age
+  end
+
+  def age(res = %HTTPoison.Response{}) do
+    {age, _} = res |> get_header("Age") |> Integer.parse()
+    age
+  end
+
+  def max_age(res = %HTTPoison.Response{}) do
+    res
+    |> get_header("Cache-Control")
+    |> String.split([",", "="])
+    |> max_age_value()
+    |> IO.inspect(label: "CACHE")
+  end
+
+  def max_age_value([head | tail]) do
+    if head |> String.trim_leading() |> String.starts_with?("max-age") do
+      [max_age_string | _] = tail
+
+      {max_age, _} =
+        max_age_string
+        |> Integer.parse()
+
+      max_age
+    else
+      max_age_value(tail)
+    end
+  end
+
+  def max_age_value([]) do
+    {:error, "Could not find max-age value"}
+  end
+
+  @spec get_header(HTTPoison.Response.t(), any) :: String.t() | {:error, any}
+  def get_header(res = %HTTPoison.Response{}, header) do
+    res.headers |> get_header(header)
+  end
+
+  def get_header([head | tail], header) do
+    {res_header, value} = head
+
+    if res_header == header do
+      value
+    else
+      get_header(tail, header)
+    end
+  end
+
+  def get_header([], header) do
+    {:error, "could not find header '#{header}'"}
   end
 end

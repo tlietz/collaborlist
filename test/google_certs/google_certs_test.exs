@@ -53,4 +53,21 @@ defmodule GoogleCertsTest do
   test "seconds_to_expire/1 returns the correct number of seconds" do
     assert GoogleCerts.seconds_to_expire(@example_res) == 24385
   end
+
+  test "age/1 returns the correct age as an Integer" do
+    assert GoogleCerts.age(@example_res) == 45
+  end
+
+  test "max_age/1 returns the correct max-age as an Integer" do
+    assert GoogleCerts.max_age(@example_res) == 24430
+  end
+
+  test "get_header/2 returns the correct header" do
+    assert GoogleCerts.get_header(@example_res, "Age") == "45"
+  end
+
+  test "get_header/2 returns an error if" do
+    {status, _} = GoogleCerts.get_header(@example_res, "Does-Not-Exist")
+    assert status == :error
+  end
 end
