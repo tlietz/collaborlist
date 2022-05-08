@@ -23,8 +23,11 @@ defmodule GoogleCerts do
   end
 
   def jwk(key_id) do
-    [{_, jwks}] = :ets.lookup(@table, "jwks")
+    :ets.lookup(@table, "jwks") |> jwk_from_ets(key_id)
+  end
 
+  def jwk_from_ets(table, key_id) do
+    [{_, jwks}] = table
     jwks[key_id]
   end
 
@@ -44,9 +47,6 @@ defmodule GoogleCerts do
   end
 
   # Helper Functions
-
-  def init_key_cache() do
-  end
 
   def jwks(res) do
     res |> extract_keys() |> to_jwk_map()
