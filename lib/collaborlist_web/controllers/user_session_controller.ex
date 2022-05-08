@@ -89,7 +89,7 @@ defmodule CollaborlistWeb.UserSessionController do
     end
   end
 
-  def signature_verified?(jwk, alg, token) do
+  def signature_verified?(jwk = %JOSE.JWK{}, alg, token) do
     # function expects a list of algorithms to whitelist
     case JOSE.JWT.verify_strict(jwk, [alg], token) do
       {true, jwt, jws} -> {true, jwt, jws}
