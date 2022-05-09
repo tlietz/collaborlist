@@ -1,10 +1,9 @@
 defmodule GoogleCerts do
-  # TODO: Crash with a message instead of returning an {:error, _} tuple in functions. Wait a little (100ms) bit before restarting the Genserver.
-  # TODO: Do this by raising an exception instead of returning an {:error, _}.
+  # TODO: One hour before the keys go stale, grab the next keys from url and retry until successfull. Then, add the new keys to the cache, keeping track of which key_id are new or updated. Once the old keys go stale, remove them from the cache. Some of this info should be stored in the state of the genserver
   @moduledoc """
   Stores the public Google cert keys in ETS and automatically renews them when they are close to becoming stale.
 
-  The client key/1 function returns a JOSE jwk that is ready to be verified with JOSE.JWT.verify_strict/3
+  The client jwk/1 function returns a JOSE jwk that is ready to be verified with JOSE.JWT.verify_strict/3
 
   There are no server calls implemented other than init/1, because otherwise the genserver would become a bottleneck
   for reading keys. The client keys/0 function reads the keys from ETS, which is used for its built in concurrency.
@@ -33,12 +32,12 @@ defmodule GoogleCerts do
     jwks[key_id]
   end
 
-  def populate_key_cache(res = %HTTPoison.Response{}) do
-    :ets.insert(@table, {"jwks", jwks(res)})
-  end
-
   def create_key_cache() do
     :ets.new(@table, [:named_table])
+  end
+
+  def populate_key_cache(res = %HTTPoison.Response{}) do
+    :ets.insert(@table, {"jwks", jwks(res)})
   end
 
   # Server (callbacks)
