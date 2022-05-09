@@ -5,7 +5,7 @@ defmodule CollaborlistWeb.UserSessionController do
   import GoogleCerts.CSRF
 
   def create(conn, params) do
-    with {:ok, _token} <- verify_csrf(conn, params),
+    with {:ok, _token} <- verify_csrf_token(conn, params),
          {:ok, id_token} <- verify_id_token(conn, params) do
       [referer] =
         conn

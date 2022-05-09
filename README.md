@@ -29,6 +29,13 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 ## User Auth
 
 There is an option to sign in with Google to the application.
+It is JWT-based and is used for authentication only. 
+Once a user is authenticated with Google sign in, 
+they are given a `session_id` cookie, 
+and any authorization is done via a session-based workflow. 
+
+Part of the motivation for using JWT authentication and session-based authorization was the information given in this article titled ["Stop using JWT for session"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/).
+
 
 ## Features
 
