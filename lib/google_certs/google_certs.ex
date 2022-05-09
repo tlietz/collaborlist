@@ -5,10 +5,13 @@ defmodule GoogleCerts do
 
   The client jwk/1 function returns a JOSE jwk that is ready to be verified with JOSE.JWT.verify_strict/3
 
-  One hour before the keys go stale, the next keys from the Google url are retrieved.
-  Then, the new keys are added to ETS. The genserver keeps track of which key_id are new or updated.
-  One minute before the keys with `key_id` that is not new or updated are removed from the cache.
-  This implementation gives about a window of one hour where the
+  One minute before the old keys go stale, the new keys from the Google url are retrieved and added to the cache.
+  One minute after the old keys go stale, they are deleted from the cache, leaving only the new ones.
+  This overlap allows users that are in the process of signing in as the old keys go stale to still sign in.
+
+  The ETS key cache is setup such that reads can happen concurrently from any process,
+  while writes are still serialized through only the GoogleCerts process.
+  This prevents user sign-ins failing during the (really small) time intervals when the key cache is being written to.
 
   There are no server calls implemented other than init/1, because otherwise the genserver would become a bottleneck
   for reading keys. The client keys/0 function reads the keys from ETS, which is used for its built in concurrency.
@@ -21,9 +24,9 @@ defmodule GoogleCerts do
   # Client
 
   def start_link(default) when is_list(default) do
-    create_key_cache()
+    _ = create_key_cache()
 
-    populate_key_cache(HTTPoison.get!("https://www.googleapis.com/oauth2/v1/certs"))
+    _ = populate_key_cache(HTTPoison.get!("https://www.googleapis.com/oauth2/v1/certs"))
 
     GenServer.start_link(__MODULE__, name: __MODULE__)
   end
