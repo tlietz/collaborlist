@@ -2,6 +2,7 @@ defmodule CollaborlistWeb.UserSessionController do
   use CollaborlistWeb, :controller
 
   import GoogleCerts.Authentication
+  import GoogleCerts.CSRF
 
   def create(conn, params) do
     with {:ok, _token} <- verify_csrf(conn, params),
