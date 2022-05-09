@@ -1,4 +1,4 @@
-defmodule GoogleCerts.Authentication do
+defmodule GoogleCerts.Plugs.Authentication do
   def account_id(id_token = %JOSE.JWT{}) do
     id_token.fields["sub"]
   end

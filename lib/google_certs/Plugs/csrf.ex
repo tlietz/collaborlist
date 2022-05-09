@@ -1,16 +1,16 @@
-defmodule GoogleCerts.CSRF do
+defmodule GoogleCerts.Plugs.CSRF do
   # Checks that the g_crsf_token in the POST body and cookie are present and are equal
-  def verify_csrf_token(conn, params) do
-    with {true, csrf_token_body} <- csrf_token_in_body?(conn, params),
-         {true, csrf_token_cookie} <- csrf_token_in_cookie?(conn, params),
-         {true, csrf_token} <- csrf_tokens_equal?(csrf_token_body, csrf_token_cookie) do
+  def verify_token(conn, params) do
+    with {true, csrf_token_body} <- token_in_body?(conn, params),
+         {true, csrf_token_cookie} <- token_in_cookie?(conn, params),
+         {true, csrf_token} <- tokens_equal?(csrf_token_body, csrf_token_cookie) do
       {:ok, csrf_token}
     else
       {false, reason} -> {:error, reason}
     end
   end
 
-  defp csrf_token_in_body?(_conn, params) do
+  defp token_in_body?(_conn, params) do
     token = params["g_csrf_token"]
 
     if token do
@@ -20,7 +20,7 @@ defmodule GoogleCerts.CSRF do
     end
   end
 
-  defp csrf_token_in_cookie?(conn, _params) do
+  defp token_in_cookie?(conn, _params) do
     token = conn.cookies["g_csrf_token"]
 
     if token do
@@ -30,7 +30,7 @@ defmodule GoogleCerts.CSRF do
     end
   end
 
-  defp csrf_tokens_equal?(body_token, cookie_token) do
+  defp tokens_equal?(body_token, cookie_token) do
     if body_token == cookie_token do
       {true, body_token}
     else
