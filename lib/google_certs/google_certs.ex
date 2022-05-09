@@ -5,6 +5,11 @@ defmodule GoogleCerts do
 
   The client jwk/1 function returns a JOSE jwk that is ready to be verified with JOSE.JWT.verify_strict/3
 
+  One hour before the keys go stale, the next keys from the Google url are retrieved.
+  Then, the new keys are added to ETS. The genserver keeps track of which key_id are new or updated.
+  One minute before the keys with `key_id` that is not new or updated are removed from the cache.
+  This implementation gives about a window of one hour where the
+
   There are no server calls implemented other than init/1, because otherwise the genserver would become a bottleneck
   for reading keys. The client keys/0 function reads the keys from ETS, which is used for its built in concurrency.
   """
@@ -33,7 +38,7 @@ defmodule GoogleCerts do
   end
 
   def create_key_cache() do
-    :ets.new(@table, [:named_table])
+    :ets.new(@table, [:named_table, read_concurrency: true])
   end
 
   def populate_key_cache(res = %HTTPoison.Response{}) do
