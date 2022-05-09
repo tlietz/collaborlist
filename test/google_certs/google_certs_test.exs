@@ -122,8 +122,21 @@ defmodule GoogleCertsTest do
     assert GoogleCerts.get_header(@example_res, "Age") == "45"
   end
 
-  test "get_header/2 returns an error if" do
-    {status, _} = GoogleCerts.get_header(@example_res, "Does-Not-Exist")
-    assert status == :error
+  test "get_header/2 returns an error if header cannot be found" do
+    assert_raise(
+      GoogleCerts.Error,
+      fn ->
+        GoogleCerts.get_header(@example_res, "Does-Not-Exist")
+      end
+    )
+  end
+
+  test "extract_max_age/1 returns an error if max-age cannot be found" do
+    assert_raise(
+      GoogleCerts.Error,
+      fn ->
+        GoogleCerts.extract_max_age([])
+      end
+    )
   end
 end

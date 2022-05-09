@@ -1,4 +1,6 @@
 defmodule GoogleCerts do
+  # TODO: Crash with a message instead of returning an {:error, _} tuple in functions. Wait a little (100ms) bit before restarting the Genserver.
+  # TODO: Do this by raising an exception instead of returning an {:error, _}.
   @moduledoc """
   Stores the public Google cert keys in ETS and automatically renews them when they are close to becoming stale.
 
@@ -98,7 +100,7 @@ defmodule GoogleCerts do
   end
 
   def extract_max_age([]) do
-    {:error, "Could not find max-age value"}
+    raise GoogleCerts.Error, message: "Could not find max-age value"
   end
 
   @spec get_header(HTTPoison.Response.t(), any) :: String.t() | {:error, any}
@@ -117,6 +119,6 @@ defmodule GoogleCerts do
   end
 
   def get_header([], header) do
-    {:error, "could not find header '#{header}'"}
+    raise GoogleCerts.Error, message: "Could not find header '#{header}'"
   end
 end
