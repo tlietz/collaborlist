@@ -23,7 +23,7 @@ defmodule GoogleCerts do
     :ets.lookup(@table, "jwks") |> jwk_from_ets(key_id)
   end
 
-  defp jwk_from_ets(table, key_id) do
+  def jwk_from_ets(table, key_id) do
     [{_, jwks}] = table
     jwks[key_id]
   end
