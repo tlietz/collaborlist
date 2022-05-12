@@ -1,13 +1,8 @@
 defmodule GoogleCerts do
-  # TODO: One hour before the keys go stale, grab the next keys from url and retry until successfull. Then, add the new keys to the cache, keeping track of which key_id are new or updated. Once the old keys go stale, remove them from the cache. Some of this info should be stored in the state of the genserver
   @moduledoc """
   Stores the public Google cert keys in ETS and automatically renews them when they are close to becoming stale.
 
   The client jwk/1 function returns a JOSE jwk that is ready to be verified with JOSE.JWT.verify_strict/3
-
-  One minute before the old keys go stale, the new keys from the Google url are retrieved and added to the cache.
-  One minute after the old keys go stale, they are deleted from the cache, leaving only the new ones.
-  This overlap allows users that are in the process of signing in as the old keys go stale to still sign in.
 
   The ETS key cache is setup such that reads can happen concurrently from any process,
   while writes are still serialized through only the GoogleCerts process.
@@ -21,7 +16,19 @@ defmodule GoogleCerts do
 
   @table :google_key_cache
 
-  # Client
+  # User-facing client
+  # This does not make a call to the Genserver's server.
+
+  def jwk(key_id) do
+    :ets.lookup(@table, "jwks") |> jwk_from_ets(key_id)
+  end
+
+  defp jwk_from_ets(table, key_id) do
+    [{_, jwks}] = table
+    jwks[key_id]
+  end
+
+  # Genserver Client
 
   def start_link(default) when is_list(default) do
     _ = create_key_cache()
@@ -29,15 +36,6 @@ defmodule GoogleCerts do
     _ = populate_key_cache(HTTPoison.get!("https://www.googleapis.com/oauth2/v1/certs"))
 
     GenServer.start_link(__MODULE__, name: __MODULE__)
-  end
-
-  def jwk(key_id) do
-    :ets.lookup(@table, "jwks") |> jwk_from_ets(key_id)
-  end
-
-  def jwk_from_ets(table, key_id) do
-    [{_, jwks}] = table
-    jwks[key_id]
   end
 
   def create_key_cache() do

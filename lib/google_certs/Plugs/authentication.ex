@@ -27,7 +27,7 @@ defmodule GoogleCerts.Plugs.Authentication do
   end
 
   def signature_verified?(jwk = %JOSE.JWK{}, alg, token) do
-    # function expects a list of algorithms to whitelist
+    # verify_strict/3 expects a list of algorithms to whitelist
     case JOSE.JWT.verify_strict(jwk, [alg], token) do
       {true, jwt, jws} -> {true, jwt, jws}
       {:error, _} -> {false, "signature verification failed"}
