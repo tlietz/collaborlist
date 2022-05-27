@@ -6,7 +6,6 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {CollaborlistWeb.LayoutView, :root}
-    # plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
   end
@@ -38,6 +37,7 @@ defmodule CollaborlistWeb.Router do
 
   scope "/", CollaborlistWeb do
     pipe_through :browser
+    pipe_through :protect_from_forgery
     pipe_through :catalog
 
     resources "/lists", ListController, except: [:show]
@@ -45,6 +45,7 @@ defmodule CollaborlistWeb.Router do
 
   scope "/collab", CollaborlistWeb do
     pipe_through :browser
+    pipe_through :protect_from_forgery
     pipe_through :collab
 
     resources "/lists/:list_id", CollabController, except: [:show]
