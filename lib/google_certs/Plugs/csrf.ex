@@ -1,5 +1,5 @@
 defmodule GoogleCerts.Plugs.CSRF do
-  # Checks that the g_crsf_token in the POST body and cookie are present and are equal
+  # Checks that the g_crsf_token in the POST body and cookie are present and equal
   def verify_token(conn, params) do
     with {true, csrf_token_body} <- token_in_body?(conn, params),
          {true, csrf_token_cookie} <- token_in_cookie?(conn, params),
