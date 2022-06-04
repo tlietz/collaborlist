@@ -52,6 +52,7 @@ defmodule Collaborlist.MixProject do
       {:joken, "~> 2.4"},
       {:httpoison, "~> 1.8"},
       {:plug_cowboy, "~> 2.5"},
+      {:retry, "~> 0.16"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
