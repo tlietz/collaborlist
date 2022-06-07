@@ -1,12 +1,12 @@
 defmodule CollaborlistWeb.UserSessionController do
   use CollaborlistWeb, :controller
 
-  import GoogleCerts.Plugs.Authentication
-  alias GoogleCerts.Plugs.CSRF
+  alias GoogleCerts.Authentication
+  alias GoogleCerts.CSRF
 
   def create(conn, params) do
-    with {:ok, _token} <- CSRF.verify_token(conn, params),
-         {:ok, id_token} <- verify_id_token(conn, params) do
+    with {:ok, _token} <- CSRF.verify_csrf_token(conn, params),
+         {:ok, id_token} <- Authentication.verify_id_token(conn, params) do
       [referer] =
         conn
         |> get_req_header("referer")
@@ -14,7 +14,7 @@ defmodule CollaborlistWeb.UserSessionController do
       conn
       |> put_flash(
         :info,
-        "signed in with google successfully, your account id is #{account_id(id_token)}"
+        "signed in with google successfully, your account id is #{Authentication.account_id(id_token)}"
       )
       # this has the `external` tag because the `referer` from `get_req_header` returns a full URL.
       |> redirect(external: referer)

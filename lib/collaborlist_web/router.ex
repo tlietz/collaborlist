@@ -51,10 +51,10 @@ defmodule CollaborlistWeb.Router do
     resources "/lists/:list_id", CollabController, except: [:show]
   end
 
-  scope "/google", CollaborlistWeb do
+  scope "/google/login", CollaborlistWeb do
     pipe_through :browser
 
-    post "/login", UserSessionController, :create
+    post "/", UserSessionController, :create
   end
 
   # Enables LiveDashboard only for development

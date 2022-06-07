@@ -1,8 +1,9 @@
-defmodule GoogleCerts.Plugs.Authentication do
+defmodule GoogleCerts.Authentication do
   def account_id(id_token = %JOSE.JWT{}) do
     id_token.fields["sub"]
   end
 
+  # Checks that the id token is valid
   def verify_id_token(_conn, params) do
     keys = jwk_keys()
 

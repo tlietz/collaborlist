@@ -4,8 +4,7 @@ defmodule GoogleCerts do
 
   The client jwk/1 function returns a JOSE jwk that is ready to be verified with JOSE.JWT.verify_strict/3
 
-  There are no server calls implemented for reading keys, because otherwise the genserver process would become a bottleneck
-  .
+  There are no server calls implemented for reading keys, because otherwise the genserver process would become a bottleneck.
   """
 
   @table :google_key_cache
