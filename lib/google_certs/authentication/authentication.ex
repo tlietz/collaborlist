@@ -4,6 +4,8 @@ defmodule GoogleCerts.Authentication do
   end
 
   # Checks that the id token is valid
+  @spec verify_id_token(any, nil | maybe_improper_list | map) ::
+          {:error, any} | {:ok, JOSE.JWT.t()}
   def verify_id_token(_conn, params) do
     keys = jwk_keys()
 
