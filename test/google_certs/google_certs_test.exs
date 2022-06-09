@@ -82,7 +82,7 @@ defmodule GoogleCertsTest do
 
   describe "genserver" do
     test "jwks/1 returns the correct map" do
-      assert GoogleCerts.Server.jwks(@example_res) == %{
+      assert GoogleCerts.jwks(@example_res) == %{
                "fcbd7f481a825d113e0d03dd94e60b69ff1665a2" => %JOSE.JWK{
                  fields: %{},
                  keys: :undefined,
@@ -108,26 +108,26 @@ defmodule GoogleCertsTest do
     end
 
     test "seconds_to_expire/1 returns the correct number of seconds" do
-      assert GoogleCerts.Server.seconds_to_expire(@example_res) == 24385
+      assert GoogleCerts.seconds_to_expire(@example_res) == 24385
     end
 
     test "age/1 returns the correct age as an Integer" do
-      assert GoogleCerts.Server.age(@example_res) == 45
+      assert GoogleCerts.age(@example_res) == 45
     end
 
     test "max_age/1 returns the correct max-age as an Integer" do
-      assert GoogleCerts.Server.max_age(@example_res) == 24430
+      assert GoogleCerts.max_age(@example_res) == 24430
     end
 
     test "get_header/2 returns the correct header" do
-      assert GoogleCerts.Server.get_header(@example_res, "Age") == "45"
+      assert GoogleCerts.get_header(@example_res, "Age") == "45"
     end
 
     test "get_header/2 returns an error if header cannot be found" do
       assert_raise(
         GoogleCerts.Error,
         fn ->
-          GoogleCerts.Server.get_header(@example_res, "Does-Not-Exist")
+          GoogleCerts.get_header(@example_res, "Does-Not-Exist")
         end
       )
     end
@@ -136,7 +136,7 @@ defmodule GoogleCertsTest do
       assert_raise(
         GoogleCerts.Error,
         fn ->
-          GoogleCerts.Server.extract_max_age([])
+          GoogleCerts.extract_max_age([])
         end
       )
     end

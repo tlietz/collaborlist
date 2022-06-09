@@ -18,7 +18,7 @@ defmodule Collaborlist.Application do
       # Start the Endpoint (http/https)
       CollaborlistWeb.Endpoint,
       # Start the Google Certs genserver
-      GoogleCerts.Server
+      GoogleCerts
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
