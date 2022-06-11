@@ -14,13 +14,13 @@ defmodule GoogleCerts do
   use GenServer
   use Retry
 
-  @table :google_key_cache
+  @key_cache :google_key_cache
   @url "https://www.googleapis.com/oauth2/v1/certs"
 
   # ETS Key Cache client functions
 
   def jwk(key_id) do
-    :ets.lookup(@table, "jwks") |> jwk_from_ets(key_id)
+    :ets.lookup(@key_cache, "jwks") |> jwk_from_ets(key_id)
   end
 
   def jwk_from_ets(table, key_id) do
@@ -31,20 +31,25 @@ defmodule GoogleCerts do
   # Genserver client functions
 
   def start_link(default) when is_list(default) do
-    # Check here for existing cache?
-    _ = create_key_cache()
+    # TODO: Catch an error if trying to create a duplicate key cache
+    _ = maybe_create_key_cache(@key_cache)
 
-    _ = get_pem_keys(@url) |> populate_key_cache()
+    _ = populate_key_cache()
 
     GenServer.start_link(__MODULE__, name: __MODULE__)
   end
 
-  defp create_key_cache() do
-    :ets.new(@table, [:named_table, read_concurrency: true])
+  def maybe_create_key_cache(cache_name) do
+    create_key_cache(cache_name)
   end
 
-  def populate_key_cache(res) do
-    :ets.insert(@table, {"jwks", jwks(res)})
+  defp create_key_cache(cache_name) do
+    :ets.new(cache_name, [:named_table, read_concurrency: true])
+  end
+
+  def populate_key_cache() do
+    res = get_pem_keys(@url)
+    :ets.insert(@key_cache, {"jwks", jwks(res)})
   end
 
   # Server (callbacks)
@@ -58,13 +63,14 @@ defmodule GoogleCerts do
 
   @spec get_pem_keys(String.t()) :: HTTPoison.Response.t() | GoogleCerts.Error
   def get_pem_keys(url) do
+    # Retries the request for a minute, then raises an error
     retry with: exponential_backoff() |> randomize |> expiry(10_000) do
       HTTPoison.get(url)
     after
       {:ok, res} -> res
     else
       _error ->
-        raise GoogleCerts.Error, message: "Failed to retrive PEM keys from Google certs endpoint"
+        raise GoogleCerts.Error, message: "Failed to retrieve PEM keys from Google certs endpoint"
     end
   end
 
