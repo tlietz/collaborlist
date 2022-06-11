@@ -43,8 +43,7 @@ defmodule GoogleCerts do
     :ets.new(@table, [:named_table, read_concurrency: true])
   end
 
-  @spec populate_key_cache(HTTPoison.Response.t()) :: true
-  def populate_key_cache(res = %HTTPoison.Response{}) do
+  def populate_key_cache(res) do
     :ets.insert(@table, {"jwks", jwks(res)})
   end
 
@@ -60,9 +59,9 @@ defmodule GoogleCerts do
   @spec get_pem_keys(String.t()) :: HTTPoison.Response.t() | GoogleCerts.Error
   def get_pem_keys(url) do
     retry with: exponential_backoff() |> randomize |> expiry(10_000) do
-      HTTPoison.get!(url)
+      HTTPoison.get(url)
     after
-      result -> result
+      {:ok, res} -> res
     else
       _error ->
         raise GoogleCerts.Error, message: "Failed to retrive PEM keys from Google certs endpoint"
