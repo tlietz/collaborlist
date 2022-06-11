@@ -20,7 +20,7 @@ defmodule Collaborlist.MixProject do
   def application do
     [
       mod: {Collaborlist.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:retry, :logger, :runtime_tools]
     ]
   end
 
