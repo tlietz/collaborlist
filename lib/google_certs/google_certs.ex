@@ -32,12 +32,6 @@ defmodule GoogleCerts do
   # Genserver client functions
 
   def start_link(default) when is_list(default) do
-    _ = maybe_create_key_cache(@key_cache)
-
-    # TODO: move this into its own function where the work of the genserver is defined.
-    # TODO: This will be outside of start_link
-    _ = populate_key_cache()
-
     GenServer.start_link(__MODULE__, name: __MODULE__)
   end
 
@@ -54,17 +48,37 @@ defmodule GoogleCerts do
     :ets.new(cache_name, [:protected, :named_table, read_concurrency: true])
   end
 
-  def populate_key_cache() do
-    res = get_pem_keys(@url)
+  @spec populate_key_cache(HTTPoison.Response.t()) :: HTTPoison.Response.t()
+  def populate_key_cache(res = %HTTPoison.Response{}) do
     # Insert the new keys into the ETS key cache, replacing the old ones if there are any.
     :ets.insert(@key_cache, {"jwks", jwks(res)})
+    res
   end
 
   # Server (callbacks)
 
   @impl true
-  def init(_) do
+  def init(_state) do
+    _ = maybe_create_key_cache(@key_cache)
+
+    populate_and_refresh_key_cache()
     {:ok, %{}}
+  end
+
+  @impl true
+  def handle_info(:refresh, state) do
+    populate_and_refresh_key_cache()
+    {:noreply, state}
+  end
+
+  defp schedule_key_cache_refresh(res = %HTTPoison.Response{}) do
+    # Refresh the keys in the ETS key cache 5 minutes before they expire
+    Process.send_after(self(), :refresh, (res |> seconds_to_expire()) - 300)
+    res
+  end
+
+  defp populate_and_refresh_key_cache() do
+    get_pem_keys(@url) |> populate_key_cache() |> schedule_key_cache_refresh()
   end
 
   # Helper Functions
