@@ -31,7 +31,6 @@ defmodule GoogleCerts do
   # Genserver client functions
 
   def start_link(default) when is_list(default) do
-    # TODO: Catch an error if trying to create a duplicate key cache
     _ = maybe_create_key_cache(@key_cache)
 
     _ = populate_key_cache()
@@ -40,7 +39,11 @@ defmodule GoogleCerts do
   end
 
   def maybe_create_key_cache(cache_name) do
-    create_key_cache(cache_name)
+    try do
+      create_key_cache(cache_name)
+    rescue
+      ArgumentError -> []
+    end
   end
 
   defp create_key_cache(cache_name) do
