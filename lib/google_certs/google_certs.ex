@@ -33,6 +33,8 @@ defmodule GoogleCerts do
   def start_link(default) when is_list(default) do
     _ = maybe_create_key_cache(@key_cache)
 
+    # TODO: move this into its own function where the work of the genserver is defined.
+    # TODO: This will be outside of start_link
     _ = populate_key_cache()
 
     GenServer.start_link(__MODULE__, name: __MODULE__)
@@ -42,6 +44,7 @@ defmodule GoogleCerts do
     try do
       create_key_cache(cache_name)
     rescue
+      # If an ETS cache already exists, do nothing and return a [] to satisfy the Elixir requirement that functions must return something.
       ArgumentError -> []
     end
   end
@@ -73,7 +76,8 @@ defmodule GoogleCerts do
       {:ok, res} -> res
     else
       _error ->
-        raise GoogleCerts.Error, message: "Failed to retrieve PEM keys from Google certs endpoint"
+        raise GoogleCerts.InternalError,
+          message: "Failed to retrieve PEM keys from Google certs endpoint"
     end
   end
 
