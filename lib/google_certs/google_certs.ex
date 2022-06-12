@@ -19,6 +19,7 @@ defmodule GoogleCerts do
 
   # ETS Key Cache client functions
 
+  @spec jwk(String.t()) :: String.t()
   def jwk(key_id) do
     :ets.lookup(@key_cache, "jwks") |> jwk_from_ets(key_id)
   end
@@ -82,7 +83,8 @@ defmodule GoogleCerts do
     end
   end
 
-  def jwks(res) do
+  @spec jwks(HTTPoison.Response.t()) :: map
+  def jwks(res = %HTTPoison.Response{}) do
     res |> extract_keys() |> to_jwk_map()
   end
 
