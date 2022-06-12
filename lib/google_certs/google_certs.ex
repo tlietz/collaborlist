@@ -55,6 +55,7 @@ defmodule GoogleCerts do
 
   def populate_key_cache() do
     res = get_pem_keys(@url)
+    # Insert the new keys into the ETS key cache, replacing the old ones if there are any.
     :ets.insert(@key_cache, {"jwks", jwks(res)})
   end
 
@@ -67,7 +68,7 @@ defmodule GoogleCerts do
 
   # Helper Functions
 
-  @spec get_pem_keys(String.t()) :: HTTPoison.Response.t() | GoogleCerts.Error
+  @spec get_pem_keys(String.t()) :: HTTPoison.Response.t() | GoogleCerts.InternalError
   def get_pem_keys(url) do
     # Retries the request for a minute, then raises an error
     retry with: exponential_backoff() |> randomize |> expiry(10_000) do
