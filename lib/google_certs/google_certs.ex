@@ -70,7 +70,7 @@ defmodule GoogleCerts do
 
   @spec get_pem_keys(String.t()) :: HTTPoison.Response.t() | GoogleCerts.InternalError
   def get_pem_keys(url) do
-    # Retries the request for a minute, then raises an error
+    # Retries the request for 10 seconds, then raises an internal error
     retry with: exponential_backoff() |> randomize |> expiry(10_000) do
       HTTPoison.get(url)
     after
