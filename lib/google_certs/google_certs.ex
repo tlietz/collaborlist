@@ -50,7 +50,7 @@ defmodule GoogleCerts do
   end
 
   defp create_key_cache(cache_name) do
-    :ets.new(cache_name, [:named_table, read_concurrency: true])
+    :ets.new(cache_name, [:protected, :named_table, read_concurrency: true])
   end
 
   def populate_key_cache() do
