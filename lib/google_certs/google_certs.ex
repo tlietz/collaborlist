@@ -149,7 +149,7 @@ defmodule GoogleCerts do
   end
 
   def extract_max_age([]) do
-    raise GoogleCerts.Error, message: "Could not find max-age value"
+    raise GoogleCerts.InternalError, message: "Could not find max-age value"
   end
 
   @spec get_header(HTTPoison.Response.t(), any) :: String.t() | {:error, any}
@@ -168,6 +168,6 @@ defmodule GoogleCerts do
   end
 
   def get_header([], header) do
-    raise GoogleCerts.Error, message: "Could not find header '#{header}'"
+    raise GoogleCerts.InternalError, message: "Could not find header '#{header}'"
   end
 end

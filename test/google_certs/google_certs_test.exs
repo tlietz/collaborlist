@@ -139,7 +139,7 @@ defmodule GoogleCertsTest do
 
   test "get_header/2 returns an error if header cannot be found" do
     assert_raise(
-      GoogleCerts.Error,
+      GoogleCerts.InternalError,
       fn ->
         GoogleCerts.get_header(@example_res, "Does-Not-Exist")
       end
@@ -148,7 +148,7 @@ defmodule GoogleCertsTest do
 
   test "extract_max_age/1 returns an error if max-age cannot be found" do
     assert_raise(
-      GoogleCerts.Error,
+      GoogleCerts.InternalError,
       fn ->
         GoogleCerts.extract_max_age([])
       end
