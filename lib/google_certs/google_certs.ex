@@ -73,7 +73,7 @@ defmodule GoogleCerts do
 
   defp schedule_key_cache_refresh(res = %HTTPoison.Response{}) do
     # Refresh the keys in the ETS key cache 5 minutes before they expire
-    Process.send_after(self(), :refresh, (res |> seconds_to_expire()) - 300)
+    Process.send_after(self(), :refresh, 1000 * ((res |> seconds_to_expire()) - 300))
     res
   end
 

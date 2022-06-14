@@ -7,8 +7,6 @@ defmodule GoogleCerts.Authentication do
   @spec verify_id_token(any, nil | maybe_improper_list | map) ::
           {:error, any} | {:ok, JOSE.JWT.t()}
   def verify_id_token(_conn, params) do
-    keys = jwk_keys()
-
     token = params["credential"]
 
     {:ok, header} =
@@ -17,7 +15,7 @@ defmodule GoogleCerts.Authentication do
 
     key_id = header["kid"]
 
-    jwk = JOSE.JWK.from_pem(keys[key_id])
+    jwk = GoogleCerts.jwk(key_id)
 
     with {true, jwt, _jws} <- signature_verified?(jwk, header["alg"], token),
          {true, _aud} <- aud_valid?(jwt),
@@ -29,7 +27,7 @@ defmodule GoogleCerts.Authentication do
     end
   end
 
-  def signature_verified?(jwk = %JOSE.JWK{}, alg, token) do
+  def signature_verified?(jwk, alg, token) do
     # verify_strict/3 expects a list of algorithms to whitelist
     case JOSE.JWT.verify_strict(jwk, [alg], token) do
       {true, jwt, jws} -> {true, jwt, jws}

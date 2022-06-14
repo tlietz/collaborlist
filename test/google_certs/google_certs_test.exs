@@ -34,7 +34,7 @@ defmodule GoogleCertsTest do
     status_code: 200
   }
 
-  describe "client_functions" do
+  describe "client functions" do
     test "jwk_from_ets/2 works as expected" do
       sample_ets_lookup = [
         {"jwks",
@@ -72,12 +72,6 @@ defmodule GoogleCertsTest do
                    65537}}
              }
     end
-
-    test "it sends another get request if failed to retrieve keys from google certs url" do
-    end
-
-    test "the public keys are refreshed upon expiring" do
-    end
   end
 
   describe "genserver" do
@@ -106,6 +100,40 @@ defmodule GoogleCertsTest do
                }
              }
     end
+
+    test "seconds_to_expire/1 returns the correct number of seconds" do
+      assert GoogleCerts.seconds_to_expire(@example_res) == 24385
+    end
+
+    test "age/1 returns the correct age as an Integer" do
+      assert GoogleCerts.age(@example_res) == 45
+    end
+
+    test "max_age/1 returns the correct max-age as an Integer" do
+      assert GoogleCerts.max_age(@example_res) == 24430
+    end
+
+    test "get_header/2 returns the correct header" do
+      assert GoogleCerts.get_header(@example_res, "Age") == "45"
+    end
+
+    test "get_header/2 returns an error if header cannot be found" do
+      assert_raise(
+        GoogleCerts.InternalError,
+        fn ->
+          GoogleCerts.get_header(@example_res, "Does-Not-Exist")
+        end
+      )
+    end
+
+    test "extract_max_age/1 returns an error if max-age cannot be found" do
+      assert_raise(
+        GoogleCerts.InternalError,
+        fn ->
+          GoogleCerts.extract_max_age([])
+        end
+      )
+    end
   end
 
   describe "key cache" do
@@ -119,39 +147,5 @@ defmodule GoogleCertsTest do
       GoogleCerts.maybe_create_key_cache(@key_cache)
       assert GoogleCerts.maybe_create_key_cache(@key_cache) == []
     end
-  end
-
-  test "seconds_to_expire/1 returns the correct number of seconds" do
-    assert GoogleCerts.seconds_to_expire(@example_res) == 24385
-  end
-
-  test "age/1 returns the correct age as an Integer" do
-    assert GoogleCerts.age(@example_res) == 45
-  end
-
-  test "max_age/1 returns the correct max-age as an Integer" do
-    assert GoogleCerts.max_age(@example_res) == 24430
-  end
-
-  test "get_header/2 returns the correct header" do
-    assert GoogleCerts.get_header(@example_res, "Age") == "45"
-  end
-
-  test "get_header/2 returns an error if header cannot be found" do
-    assert_raise(
-      GoogleCerts.InternalError,
-      fn ->
-        GoogleCerts.get_header(@example_res, "Does-Not-Exist")
-      end
-    )
-  end
-
-  test "extract_max_age/1 returns an error if max-age cannot be found" do
-    assert_raise(
-      GoogleCerts.InternalError,
-      fn ->
-        GoogleCerts.extract_max_age([])
-      end
-    )
   end
 end
