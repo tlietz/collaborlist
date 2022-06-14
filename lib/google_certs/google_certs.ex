@@ -79,6 +79,7 @@ defmodule GoogleCerts do
 
   defp populate_and_refresh_key_cache() do
     get_pem_keys(@url) |> populate_key_cache() |> schedule_key_cache_refresh()
+    IO.puts("key kache refreshed")
   end
 
   # Helper Functions
