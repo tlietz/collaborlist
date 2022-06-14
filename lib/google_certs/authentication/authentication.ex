@@ -65,17 +65,4 @@ defmodule GoogleCerts.Authentication do
       {false, "token is expired"}
     end
   end
-
-  defp jwk_keys() do
-    # url for PEM encoded keys
-    url = "https://www.googleapis.com/oauth2/v1/certs"
-
-    res = HTTPoison.get!(url)
-
-    keys =
-      res.body
-      |> Jason.decode!()
-
-    keys
-  end
 end
