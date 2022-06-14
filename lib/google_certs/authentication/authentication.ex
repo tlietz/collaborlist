@@ -31,7 +31,7 @@ defmodule GoogleCerts.Authentication do
     # verify_strict/3 expects a list of algorithms to whitelist
     case JOSE.JWT.verify_strict(jwk, [alg], token) do
       {true, jwt, jws} -> {true, jwt, jws}
-      {:error, _} -> {false, "signature verification failed"}
+      {:error, _} -> {false, "verification failed: signature verification failed"}
     end
   end
 
@@ -41,7 +41,7 @@ defmodule GoogleCerts.Authentication do
     if aud == "486854246467-4o5dqr6fv5jkbojbhp6flddtfqf8ch8d.apps.googleusercontent.com" do
       {true, aud}
     else
-      {false, "token `aud` field does not match application client ID"}
+      {false, "verfication failed: token `aud` field does not match application client ID"}
     end
   end
 
@@ -51,7 +51,7 @@ defmodule GoogleCerts.Authentication do
     if iss == "accounts.google.com" or iss == "https://accounts.google.com" do
       {true, iss}
     else
-      {false, "token `iss` field is invalid"}
+      {false, "verfication failed: token `iss` field is invalid"}
     end
   end
 
@@ -62,7 +62,7 @@ defmodule GoogleCerts.Authentication do
     if issued_at < expire_time do
       {true, issued_at, expire_time}
     else
-      {false, "token is expired"}
+      {false, "verfication failed: token is expired"}
     end
   end
 end
