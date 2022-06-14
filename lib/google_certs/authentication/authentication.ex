@@ -27,7 +27,7 @@ defmodule GoogleCerts.Authentication do
     end
   end
 
-  def signature_verified?(jwk, alg, token) do
+  defp signature_verified?(jwk, alg, token) do
     # verify_strict/3 expects a list of algorithms to whitelist
     case JOSE.JWT.verify_strict(jwk, [alg], token) do
       {true, jwt, jws} -> {true, jwt, jws}
@@ -35,7 +35,7 @@ defmodule GoogleCerts.Authentication do
     end
   end
 
-  def aud_valid?(jwt = %JOSE.JWT{}) do
+  defp aud_valid?(jwt = %JOSE.JWT{}) do
     aud = jwt.fields["aud"]
 
     if aud == "486854246467-4o5dqr6fv5jkbojbhp6flddtfqf8ch8d.apps.googleusercontent.com" do
@@ -45,7 +45,7 @@ defmodule GoogleCerts.Authentication do
     end
   end
 
-  def iss_valid?(jwt = %JOSE.JWT{}) do
+  defp iss_valid?(jwt = %JOSE.JWT{}) do
     iss = jwt.fields["iss"]
 
     if iss == "accounts.google.com" or iss == "https://accounts.google.com" do
@@ -55,7 +55,7 @@ defmodule GoogleCerts.Authentication do
     end
   end
 
-  def not_expired?(jwt = %JOSE.JWT{}) do
+  defp not_expired?(jwt = %JOSE.JWT{}) do
     expire_time = jwt.fields["exp"]
     issued_at = jwt.fields["iat"]
 
@@ -66,7 +66,7 @@ defmodule GoogleCerts.Authentication do
     end
   end
 
-  def jwk_keys() do
+  defp jwk_keys() do
     # url for PEM encoded keys
     url = "https://www.googleapis.com/oauth2/v1/certs"
 

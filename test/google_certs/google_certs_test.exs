@@ -34,7 +34,18 @@ defmodule GoogleCertsTest do
     status_code: 200
   }
 
-  describe "client functions" do
+  describe "key cache" do
+    @key_cache :foo
+
+    test "maybe_create_key_cache/1 creates a cache when one doesn't exist" do
+      assert GoogleCerts.maybe_create_key_cache(@key_cache) == :foo
+    end
+
+    test "maybe_create_key_cache/1 does not do anything when a key cache already exists" do
+      GoogleCerts.maybe_create_key_cache(@key_cache)
+      assert GoogleCerts.maybe_create_key_cache(@key_cache) == []
+    end
+
     test "jwk_from_ets/2 works as expected" do
       sample_ets_lookup = [
         {"jwks",
@@ -133,19 +144,6 @@ defmodule GoogleCertsTest do
           GoogleCerts.extract_max_age([])
         end
       )
-    end
-  end
-
-  describe "key cache" do
-    @key_cache :foo
-
-    test "maybe_create_key_cache/1 creates a cache when one doesn't exist" do
-      assert GoogleCerts.maybe_create_key_cache(@key_cache) == :foo
-    end
-
-    test "maybe_create_key_cache/1 does not do anything when a key cache already exists" do
-      GoogleCerts.maybe_create_key_cache(@key_cache)
-      assert GoogleCerts.maybe_create_key_cache(@key_cache) == []
     end
   end
 end
