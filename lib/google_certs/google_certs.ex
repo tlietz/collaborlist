@@ -60,11 +60,12 @@ defmodule GoogleCerts do
   @impl true
   def init(_state) do
     _ = maybe_create_key_cache(@key_cache)
-    {:ok, %{}, {:continue, :refresh}}
+    # initialize the cache and schedule the next time to refresh the keys
+    {:ok, %{}, {:continue, :init}}
   end
 
   @impl true
-  def handle_continue(:refresh, state) do
+  def handle_continue(:init, state) do
     _ = refresh_and_schedule_key_cache()
     {:noreply, state}
   end
