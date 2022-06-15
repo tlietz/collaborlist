@@ -60,14 +60,18 @@ defmodule GoogleCerts do
   @impl true
   def init(_state) do
     _ = maybe_create_key_cache(@key_cache)
+    {:ok, %{}, {:continue, :refresh}}
+  end
 
-    populate_and_refresh_key_cache()
-    {:ok, %{}}
+  @impl true
+  def handle_continue(:refresh, state) do
+    _ = refresh_and_schedule_key_cache()
+    {:noreply, state}
   end
 
   @impl true
   def handle_info(:refresh, state) do
-    populate_and_refresh_key_cache()
+    _ = refresh_and_schedule_key_cache()
     {:noreply, state}
   end
 
@@ -77,7 +81,7 @@ defmodule GoogleCerts do
     res
   end
 
-  defp populate_and_refresh_key_cache() do
+  defp refresh_and_schedule_key_cache() do
     get_pem_keys(@url) |> populate_key_cache() |> schedule_key_cache_refresh()
     IO.puts("key kache refreshed")
   end
@@ -87,7 +91,7 @@ defmodule GoogleCerts do
   @spec get_pem_keys(String.t()) :: HTTPoison.Response.t() | GoogleCerts.InternalError
   def get_pem_keys(url) do
     # Retries the request for 10 seconds, then raises an internal error
-    retry with: exponential_backoff() |> randomize |> expiry(10_000) do
+    retry with: exponential_backoff() |> expiry(10_000) do
       HTTPoison.get(url)
     after
       {:ok, res} -> res
