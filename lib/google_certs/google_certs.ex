@@ -13,7 +13,6 @@ defmodule GoogleCerts do
 
   use GenServer
   use Retry
-  import GoogleCerts.HTTPProcessor.HTTPoisonProcessor
 
   alias GoogleCerts.Constants
 
@@ -48,10 +47,10 @@ defmodule GoogleCerts do
     :ets.new(cache_name, [:protected, :named_table, read_concurrency: true])
   end
 
-  @spec populate_key_cache(HTTPoison.Response.t()) :: HTTPoison.Response.t()
-  def populate_key_cache(res = %HTTPoison.Response{}) do
+  @spec populate_key_cache(map) :: map
+  def populate_key_cache(res) do
     # Insert the new keys into the ETS key cache, replacing the old ones if there are any.
-    :ets.insert(Constants.key_cache(), {"jwks", jwks(res)})
+    :ets.insert(Constants.key_cache(), {"jwks", http_processor().jwks(res)})
     res
   end
 
@@ -78,7 +77,12 @@ defmodule GoogleCerts do
 
   defp schedule_key_cache_refresh(res) do
     # Refresh the keys in the ETS key cache 5 minutes before they expire
-    Process.send_after(self(), :refresh, 1000 * ((res |> seconds_to_expire()) - 300))
+    Process.send_after(
+      self(),
+      :refresh,
+      1000 * ((res |> http_processor().seconds_to_expire()) - 300)
+    )
+
     res
   end
 
@@ -95,7 +99,7 @@ defmodule GoogleCerts do
   def get_pem_keys(url, time) do
     # Retries the request for the specified time, then raises an internal error
     retry with: exponential_backoff() |> expiry(time) do
-      get(url)
+      http_processor().get(url)
     after
       {:ok, res} -> res
     else
@@ -103,5 +107,9 @@ defmodule GoogleCerts do
         raise GoogleCerts.InternalError,
           message: "Failed to retrieve PEM keys from Google certs endpoint"
     end
+  end
+
+  defp http_processor() do
+    Application.get_env(:collaborlist, :http_processor)
   end
 end

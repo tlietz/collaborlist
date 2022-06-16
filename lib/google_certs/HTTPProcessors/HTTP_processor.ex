@@ -9,7 +9,7 @@ defmodule GoogleCerts.HTTPProcessor do
   @doc "Returns a map of JWKs that will be inserted into the ETS key cache"
   @callback jwks(response :: map) :: jwk_map
 
-  @doc "Returns the seconds until the HTTP/S response expires"
+  @doc "Returns the seconds until the HTTPS response expires"
   @callback seconds_to_expire(response :: map) :: integer()
 
   @doc "Executes a GET request to the specified URL"
