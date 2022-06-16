@@ -15,14 +15,13 @@ defmodule GoogleCerts do
   use Retry
   import GoogleCerts.HTTPProcessor.HTTPoisonProcessor
 
-  @key_cache :google_key_cache
-  @url "https://www.googleapis.com/oauth2/v1/certs"
+  alias GoogleCerts.Constants
 
   # ETS Key Cache client functions
 
   @spec jwk(String.t()) :: String.t()
   def jwk(key_id) do
-    :ets.lookup(@key_cache, "jwks") |> jwk_from_ets(key_id)
+    :ets.lookup(Constants.key_cache(), "jwks") |> jwk_from_ets(key_id)
   end
 
   def jwk_from_ets(table, key_id) do
@@ -52,7 +51,7 @@ defmodule GoogleCerts do
   @spec populate_key_cache(HTTPoison.Response.t()) :: HTTPoison.Response.t()
   def populate_key_cache(res = %HTTPoison.Response{}) do
     # Insert the new keys into the ETS key cache, replacing the old ones if there are any.
-    :ets.insert(@key_cache, {"jwks", jwks(res)})
+    :ets.insert(Constants.key_cache(), {"jwks", jwks(res)})
     res
   end
 
@@ -60,7 +59,7 @@ defmodule GoogleCerts do
 
   @impl true
   def init(_state) do
-    _ = maybe_create_key_cache(@key_cache)
+    _ = maybe_create_key_cache(Constants.key_cache())
     # initialize the cache and schedule the next time to refresh the keys
     {:ok, %{}, {:continue, :init}}
   end
@@ -77,14 +76,14 @@ defmodule GoogleCerts do
     {:noreply, state}
   end
 
-  defp schedule_key_cache_refresh(res = %HTTPoison.Response{}) do
+  defp schedule_key_cache_refresh(res) do
     # Refresh the keys in the ETS key cache 5 minutes before they expire
     Process.send_after(self(), :refresh, 1000 * ((res |> seconds_to_expire()) - 300))
     res
   end
 
   defp refresh_and_schedule_key_cache() do
-    get_pem_keys(@url, 10_000) |> populate_key_cache() |> schedule_key_cache_refresh()
+    get_pem_keys(Constants.url(), 10_000) |> populate_key_cache() |> schedule_key_cache_refresh()
   end
 
   # Helper Functions
