@@ -15,6 +15,8 @@ config :collaborlist, CollaborlistWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :collaborlist, :http_processor, GoogleCerts.HTTPProcessor.HTTPoisonProcessor
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
