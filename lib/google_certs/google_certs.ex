@@ -13,6 +13,7 @@ defmodule GoogleCerts do
 
   use GenServer
   use Retry
+  import GoogleCerts.HTTPProcessor.HTTPoisonProcessor
 
   @key_cache :google_key_cache
   @url "https://www.googleapis.com/oauth2/v1/certs"
@@ -83,16 +84,19 @@ defmodule GoogleCerts do
   end
 
   defp refresh_and_schedule_key_cache() do
-    get_pem_keys(@url) |> populate_key_cache() |> schedule_key_cache_refresh()
+    get_pem_keys(@url, 10_000) |> populate_key_cache() |> schedule_key_cache_refresh()
   end
 
   # Helper Functions
 
-  @spec get_pem_keys(String.t()) :: HTTPoison.Response.t() | GoogleCerts.InternalError
-  def get_pem_keys(url) do
-    # Retries the request for 10 seconds, then raises an internal error
-    retry with: exponential_backoff() |> expiry(10_000) do
-      HTTPoison.get(url)
+  @type milliseconds :: Integer.t()
+
+  @spec get_pem_keys(url :: String.t(), expiry_time :: milliseconds) ::
+          HTTPoison.Response.t() | GoogleCerts.InternalError
+  def get_pem_keys(url, time) do
+    # Retries the request for the specified time, then raises an internal error
+    retry with: exponential_backoff() |> expiry(time) do
+      get(url)
     after
       {:ok, res} -> res
     else
@@ -100,78 +104,5 @@ defmodule GoogleCerts do
         raise GoogleCerts.InternalError,
           message: "Failed to retrieve PEM keys from Google certs endpoint"
     end
-  end
-
-  @spec jwks(HTTPoison.Response.t()) :: map
-  def jwks(res = %HTTPoison.Response{}) do
-    res |> extract_keys() |> to_jwk_map()
-  end
-
-  @spec extract_keys(HTTPoison.Response.t()) :: %{}
-  def extract_keys(res = %HTTPoison.Response{}) do
-    res.body
-    |> Jason.decode!()
-  end
-
-  def to_jwk_map(keys = %{}) do
-    Enum.map(keys, fn {key_id, pem_key} -> {key_id, JOSE.JWK.from_pem(pem_key)} end)
-    |> Map.new()
-  end
-
-  @spec seconds_to_expire(HTTPoison.Response.t()) :: Integer.t()
-  def seconds_to_expire(res = %HTTPoison.Response{}) do
-    age = res |> age()
-    max_age = res |> max_age()
-
-    max_age - age
-  end
-
-  def age(res = %HTTPoison.Response{}) do
-    {age, _} = res |> get_header("Age") |> Integer.parse()
-    age
-  end
-
-  def max_age(res = %HTTPoison.Response{}) do
-    res
-    |> get_header("Cache-Control")
-    |> String.split([",", "="])
-    |> extract_max_age()
-  end
-
-  def extract_max_age([head | tail]) do
-    if head |> String.trim_leading() |> String.starts_with?("max-age") do
-      [max_age_string | _] = tail
-
-      {max_age, _} =
-        max_age_string
-        |> Integer.parse()
-
-      max_age
-    else
-      extract_max_age(tail)
-    end
-  end
-
-  def extract_max_age([]) do
-    raise GoogleCerts.InternalError, message: "Could not find max-age value"
-  end
-
-  @spec get_header(HTTPoison.Response.t(), any) :: String.t() | {:error, any}
-  def get_header(res = %HTTPoison.Response{}, header) do
-    res.headers |> get_header(header)
-  end
-
-  def get_header([head | tail], header) do
-    {res_header, value} = head
-
-    if res_header == header do
-      value
-    else
-      get_header(tail, header)
-    end
-  end
-
-  def get_header([], header) do
-    raise GoogleCerts.InternalError, message: "Could not find header '#{header}'"
   end
 end
