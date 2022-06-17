@@ -13,7 +13,7 @@ defmodule GoogleCerts.Authentication do
 
     key_id = header["kid"]
 
-    jwk = GoogleCerts.jwk(key_id)
+    jwk = GoogleCerts.KeyCache.jwk(key_id)
 
     with {true, jwt, _jws} <- signature_verified?(jwk, header["alg"], token),
          {true, _aud} <- aud_valid?(jwt),
