@@ -2,7 +2,7 @@ defmodule CollaborlistWeb.UserSessionController do
   use CollaborlistWeb, :controller
 
   def create(conn, params) do
-    case GoogleCerts.user_info(conn, params) do
+    case GoogleCerts.user_id_token(conn, params) do
       {:ok, id_token} ->
         [referer] =
           conn
