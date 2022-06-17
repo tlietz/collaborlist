@@ -7,9 +7,9 @@ defmodule GoogleCerts do
   @type seconds :: Integer.t()
 
   # Client facing functions
-  @spec verify_user(conn :: any, params :: any) ::
-          {:error, any} | {:ok, jwt_fields :: map}
-  def verify_user(conn, params) do
+  @spec user_jwt(conn :: any, params :: any) ::
+          {:error, any} | {:ok, jwt :: map}
+  def user_jwt(conn, params) do
     with {:ok, _token} <- verify_csrf_token(conn, params),
          {:ok, jwt} <- verify_id_token(conn, params) do
       {:ok, jwt.fields}
@@ -26,4 +26,6 @@ defmodule GoogleCerts do
   @spec verify_csrf_token(any, nil | maybe_improper_list | map) ::
           {:error, any} | {:ok, any}
   defdelegate verify_csrf_token(conn, params), to: GoogleCerts.CSRF
+
+  # Helper
 end

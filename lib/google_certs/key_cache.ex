@@ -3,8 +3,8 @@ defmodule GoogleCerts.KeyCache do
   Stores the public Google cert keys in ETS and automatically renews them when they are close to becoming stale.
 
   The ETS key cache is setup such that reads can happen concurrently from any process,
-  while writes are still serialized through only the GoogleCerts process.
-  This prevents user sign-ins failing during the (really small) time intervals when the key cache is being written to.
+  while writes are still serialized through only the parent process.
+  This prevents user sign-ins failing during the time intervals where the key cache is being written to.
 
   The client jwk/1 function returns a JOSE jwk that is ready to be verified with JOSE.JWT.verify_strict/3
 

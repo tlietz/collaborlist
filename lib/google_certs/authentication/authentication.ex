@@ -1,8 +1,4 @@
 defmodule GoogleCerts.Authentication do
-  def account_id(id_token = %JOSE.JWT{}) do
-    id_token.fields["sub"]
-  end
-
   # Checks that the id token is valid
   def verify_id_token(_conn, params) do
     token = params["credential"]
@@ -29,7 +25,7 @@ defmodule GoogleCerts.Authentication do
     # verify_strict/3 expects a list of algorithms to whitelist
     case JOSE.JWT.verify_strict(jwk, [alg], token) do
       {true, jwt, jws} -> {true, jwt, jws}
-      {:error, _} -> {false, "verification failed: signature verification failed"}
+      {:error, _} -> {false, "signature verification failed"}
     end
   end
 
