@@ -21,11 +21,11 @@ defmodule GoogleCerts do
 
   # Client facing functions
   @spec verify_user(conn :: any, params :: any) ::
-          {:error, any} | {:ok, JOSE.JWT.t()}
+          {:error, any} | {:ok, jwt_fields :: map}
   def verify_user(conn, params) do
     with {:ok, _token} <- verify_csrf_token(conn, params),
-         {:ok, id_token} <- verify_id_token(conn, params) do
-      {:ok, id_token.fields |> IO.inspect(label: "FIELDS")}
+         {:ok, jwt} <- verify_id_token(conn, params) do
+      {:ok, jwt.fields}
     else
       {:error, reason} ->
         {:error, reason}
