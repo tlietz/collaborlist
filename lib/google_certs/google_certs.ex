@@ -3,13 +3,10 @@ defmodule GoogleCerts do
   TODO: documentation
   """
 
-  @type milliseconds :: Integer.t()
-  @type seconds :: Integer.t()
-
   # Client facing functions
-  @spec user_jwt(conn :: any, params :: any) ::
+  @spec user_info(conn :: any, params :: any) ::
           {:error, any} | {:ok, jwt :: map}
-  def user_jwt(conn, params) do
+  def user_info(conn, params) do
     with {:ok, _token} <- verify_csrf_token(conn, params),
          {:ok, jwt} <- verify_id_token(conn, params) do
       {:ok, jwt.fields}

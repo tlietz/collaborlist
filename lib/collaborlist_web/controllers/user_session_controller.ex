@@ -5,7 +5,7 @@ defmodule CollaborlistWeb.UserSessionController do
     conn |> IO.inspect(label: "CONN")
     params |> IO.inspect(label: "PARAMS")
 
-    case GoogleCerts.user_jwt(conn, params) do
+    case GoogleCerts.user_info(conn, params) do
       {:ok, id_token} ->
         [referer] =
           conn
