@@ -16,6 +16,9 @@ defmodule GoogleCerts do
 
   alias GoogleCerts.Constants
 
+  @type milliseconds :: Integer.t()
+  @type seconds :: Integer.t()
+
   # ETS Key Cache client functions
 
   @spec jwk(String.t()) :: String.t()
@@ -85,7 +88,8 @@ defmodule GoogleCerts do
     res
   end
 
-  defp refresh_time(seconds_to_expire) do
+  @spec refresh_time(seconds) :: milliseconds
+  defp(refresh_time(seconds_to_expire)) do
     # 5 minutes in milliseconds
     refresh_time_before_expiry = 300_000
 
@@ -106,8 +110,6 @@ defmodule GoogleCerts do
   end
 
   # Helper Functions
-
-  @type milliseconds :: Integer.t()
 
   @spec get_pem_keys(url :: String.t(), expiry_time :: milliseconds) ::
           HTTPoison.Response.t() | GoogleCerts.InternalError
