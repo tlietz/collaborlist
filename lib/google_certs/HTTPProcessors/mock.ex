@@ -7,8 +7,8 @@ defmodule GoogleCerts.HTTPProcessor.Mock do
   end
 
   @impl true
-  def seconds_to_expire(_example_res) do
-    1000
+  def seconds_to_expire(example_res) when is_map(example_res) do
+    1
   end
 
   @impl true

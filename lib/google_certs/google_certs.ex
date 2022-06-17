@@ -76,14 +76,29 @@ defmodule GoogleCerts do
   end
 
   defp schedule_key_cache_refresh(res) do
-    # Refresh the keys in the ETS key cache 5 minutes before they expire
     Process.send_after(
       self(),
       :refresh,
-      1000 * ((res |> http_processor().seconds_to_expire()) - 300)
+      refresh_time(res |> http_processor().seconds_to_expire())
     )
 
     res
+  end
+
+  defp refresh_time(seconds_to_expire) do
+    # 5 minutes in milliseconds
+    refresh_time_before_expiry = 300_000
+
+    time_to_expiry = 1000 * seconds_to_expire
+
+    refresh_time = time_to_expiry - refresh_time_before_expiry
+
+    # If the keys expire in less than 5 minutes, refresh immidiately
+    if refresh_time < 0 do
+      0
+    else
+      refresh_time
+    end
   end
 
   defp refresh_and_schedule_key_cache() do
