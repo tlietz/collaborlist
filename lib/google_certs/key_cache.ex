@@ -90,8 +90,8 @@ defmodule GoogleCerts.KeyCache do
 
   @spec refresh_time(seconds) :: milliseconds
   defp(refresh_time(seconds_to_expire)) do
-    # 5 minutes in milliseconds
-    refresh_time_before_expiry = 300_000
+    # 5 minutes = 5 * 60 * 1000 milliseconds
+    refresh_time_before_expiry = 5 * 60 * 1000
 
     time_to_expiry = 1000 * seconds_to_expire
 
