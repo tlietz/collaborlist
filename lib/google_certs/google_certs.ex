@@ -15,7 +15,7 @@ defmodule GoogleCerts do
   %{
     "aud" => "Your Google app client ID",
     "azp" => "Same as `aud`",
-    "email" => "",
+    "email" => "example.email@gmail.com",
     "email_verified" => true,
     "exp" => 1655479451,
     "family_name" => "Last name",
@@ -57,6 +57,10 @@ defmodule GoogleCerts do
     end
   end
 
+  @doc """
+  Goes through verifying the CSRF, but does an extra check that the `id_token` has a claim
+  that matched the `g_suite_domain`.
+  """
   @spec user_id_token(conn :: any, params :: any, g_suite_domain :: String.t()) ::
           {:error, any} | {:ok, id_token :: map}
   def user_id_token(conn, params, g_suite_domain) do
