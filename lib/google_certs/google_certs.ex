@@ -13,13 +13,14 @@ defmodule GoogleCerts do
 
   The `user_id_token` is a map that has the following fields:
   %{
-    "aud" => "some stuff",
-    "azp" => "code",
+    "aud" => "Your Google app client ID",
+    "azp" => "Same as `aud`",
     "email" => "",
     "email_verified" => true,
     "exp" => 1655479451,
     "family_name" => "Last name",
     "given_name" => "First name",
+    "hd" => "G suite domain name",
     "iat" => 1655475851,
     "iss" => "https://accounts.google.com",
     "jti" => "40c49e3b0bd44a02ab646122b9f7420754ff3045",
@@ -50,6 +51,35 @@ defmodule GoogleCerts do
     end
   end
 
+  @spec user_id_token(conn :: any, params :: any, g_suite_domain :: String.t()) ::
+          {:error, any} | {:ok, id_token :: map}
+  def user_id_token(conn, params, g_suite_domain) do
+    case user_id_token(conn, params) do
+      {:ok, id_token} ->
+        if g_suite_domain == id_token["hd"] do
+          {:ok, id_token}
+        else
+          {:error, "G suite domain of user is unauthorized"}
+        end
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  @spec uid(id_token :: map) :: String.t()
   def uid(id_token) do
+    id_token["sub"]
+  end
+
+  @spec name(id_token :: map) :: String.t()
+  def name(id_token) do
+    id_token["name"]
+  end
+
+  # Returns a link to the picture
+  @spec picture(id_token :: map) :: String.t()
+  def picture(id_token) do
+    id_token["picture"]
   end
 end

@@ -16,9 +16,9 @@ defmodule CollaborlistWeb.UserSessionController do
         # this has the `external` tag because the `referer` from `get_req_header` returns a full URL.
         |> redirect(external: referer)
 
-      {:error, _reason} ->
+      {:error, reason} ->
         conn
-        |> put_flash(:error, "Sign in failed, please try again")
+        |> put_flash(:error, "Sign in failed because #{reason}")
         |> redirect(to: Routes.list_path(conn, :index))
     end
   end
