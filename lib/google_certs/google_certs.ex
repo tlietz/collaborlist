@@ -31,6 +31,9 @@ defmodule GoogleCerts do
   }
 
   The `sub` field is unique to each user and can be used to identify the authenticated user.
+
+  The `hd` field is the G suite domain of a user signing in. For example, if the user's email
+  is `robbie.rotten@realvillain.com`, then `hd` => "realvillain.com"
   """
 
   # Client facing functions
@@ -38,6 +41,9 @@ defmodule GoogleCerts do
   @doc """
   Returns an `id_token` of the user that was authenticated.
   An `id_token` is what Google calls their JWT.
+
+  When the third argument of a g_suite_domain is passed in,
+  user_id_token/3 will be invoked.
   """
   @spec user_id_token(conn :: any, params :: any) ::
           {:error, any} | {:ok, id_token :: map}
