@@ -1,7 +1,20 @@
 defmodule CollaborlistWeb.Router do
   use CollaborlistWeb, :router
 
+  import CollaborlistWeb.UserAuth
+
   pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, {CollaborlistWeb.LayoutView, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+    plug :fetch_current_user
+  end
+
+  # Google sign in uses its own CSRF protection that conflicts with Phoneix's :protect_from_forgery
+  pipeline :google_sign_in do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
@@ -12,10 +25,6 @@ defmodule CollaborlistWeb.Router do
 
   pipeline :catalog do
     plug :fetch_lists
-  end
-
-  defp fetch_current_user(conn, _) do
-    conn
   end
 
   defp fetch_lists(conn, _) do
@@ -37,24 +46,55 @@ defmodule CollaborlistWeb.Router do
 
   scope "/", CollaborlistWeb do
     pipe_through :browser
-    pipe_through :protect_from_forgery
     pipe_through :catalog
 
-    resources "/lists", ListController, except: [:show]
+    resources "/", ListController, except: [:show]
   end
 
   scope "/collab", CollaborlistWeb do
     pipe_through :browser
-    pipe_through :protect_from_forgery
     pipe_through :collab
 
     resources "/lists/:list_id", CollabController, except: [:show]
   end
 
   scope "/google/login", CollaborlistWeb do
-    pipe_through :browser
+    pipe_through :google_sign_in
 
     post "/", GoogleUserSessionController, :create
+  end
+
+  ## Authentication routes
+
+  scope "/", CollaborlistWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/users/register", UserRegistrationController, :new
+    post "/users/register", UserRegistrationController, :create
+    get "/users/log_in", UserSessionController, :new
+    post "/users/log_in", UserSessionController, :create
+    get "/users/reset_password", UserResetPasswordController, :new
+    post "/users/reset_password", UserResetPasswordController, :create
+    get "/users/reset_password/:token", UserResetPasswordController, :edit
+    put "/users/reset_password/:token", UserResetPasswordController, :update
+  end
+
+  scope "/", CollaborlistWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/users/settings", UserSettingsController, :edit
+    put "/users/settings", UserSettingsController, :update
+    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+  end
+
+  scope "/", CollaborlistWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+    get "/users/confirm", UserConfirmationController, :new
+    post "/users/confirm", UserConfirmationController, :create
+    get "/users/confirm/:token", UserConfirmationController, :edit
+    post "/users/confirm/:token", UserConfirmationController, :update
   end
 
   # Enables LiveDashboard only for development
