@@ -153,8 +153,7 @@ defmodule Collaborlist.AccountTest do
     test "validates email uniqueness", %{user: user} do
       %{email: email} = user_fixture()
 
-      {:error, changeset} =
-        Account.apply_user_email(user, valid_user_password(), %{email: email})
+      {:error, changeset} = Account.apply_user_email(user, valid_user_password(), %{email: email})
 
       assert "has already been taken" in errors_on(changeset).email
     end
