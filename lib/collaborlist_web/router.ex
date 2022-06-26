@@ -54,7 +54,7 @@ defmodule CollaborlistWeb.Router do
   scope "/google/login", CollaborlistWeb do
     pipe_through :browser
 
-    post "/", UserSessionController, :create
+    post "/", GoogleUserSessionController, :create
   end
 
   # Enables LiveDashboard only for development

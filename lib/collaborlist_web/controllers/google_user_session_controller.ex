@@ -1,4 +1,4 @@
-defmodule CollaborlistWeb.UserSessionController do
+defmodule CollaborlistWeb.GoogleUserSessionController do
   use CollaborlistWeb, :controller
 
   def create(conn, params) do
