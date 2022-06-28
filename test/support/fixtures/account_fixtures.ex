@@ -6,11 +6,13 @@ defmodule Collaborlist.AccountFixtures do
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
+  def example_google_uid, do: "#{Ecto.UUID.generate()}"
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
-      password: valid_user_password()
+      password: valid_user_password(),
+      google_uid: example_google_uid()
     })
   end
 

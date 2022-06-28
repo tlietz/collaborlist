@@ -6,6 +6,17 @@ defmodule Collaborlist.AccountTest do
   import Collaborlist.AccountFixtures
   alias Collaborlist.Account.{User, UserToken}
 
+  describe "get_user_by_google_uid/1" do
+    test "does not return the user if the google_uid does not exist" do
+      refute Account.get_user_by_google_uid("unknown-uid")
+    end
+
+    test "returns the user if the google uid exists" do
+      %{id: id} = user = user_fixture()
+      assert %User{id: ^id} = Account.get_user_by_google_uid(user.google_uid)
+    end
+  end
+
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
       refute Account.get_user_by_email("unknown@example.com")

@@ -11,6 +11,22 @@ defmodule Collaborlist.Account do
   ## Database getters
 
   @doc """
+  Gets a user by google uid.
+
+  ## Examples
+
+      iex> get_user_by_google_uid("existing-user-uid-here")
+      %User{}
+
+      iex> get_user_by_google_uid("unknown-user-uid")
+      nil
+
+  """
+  def get_user_by_google_uid(uid) when is_binary(uid) do
+    Repo.get_by(User, google_uid: uid)
+  end
+
+  @doc """
   Gets a user by email.
 
   ## Examples
