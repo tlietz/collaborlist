@@ -7,7 +7,7 @@ defmodule Collaborlist.AccountTest do
   alias Collaborlist.Account.{User, UserToken}
 
   describe "get_user_by_google_uid/1" do
-    test "does not return the user if the google_uid does not exist" do
+    test "does not return the user if the google uid does not exist" do
       refute Account.get_user_by_google_uid("unknown-uid")
     end
 

@@ -1,4 +1,4 @@
-defmodule CollaborlistWeb.GoogleUserSessionController do
+defmodule CollaborlistWeb.GoogleLoginController do
   use CollaborlistWeb, :controller
 
   def create(conn, params) do
@@ -11,7 +11,7 @@ defmodule CollaborlistWeb.GoogleUserSessionController do
         conn
         |> put_flash(
           :info,
-          "signed in with google successfully, user id is #{id_token["sub"]}"
+          "signed in with google successfully"
         )
         # this has the `external` tag because the `referer` from `get_req_header` returns a full URL.
         |> redirect(external: referer)

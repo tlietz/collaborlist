@@ -6,7 +6,7 @@ defmodule Collaborlist.Account.User do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
-    # This corresponds to the `hud` claim on Google Certs JWT
+    # This corresponds to the `sub` claim on Google Certs JWT
     field :google_uid, :string, redact: true
     field :confirmed_at, :naive_datetime
 
