@@ -8,6 +8,8 @@ defmodule CollaborlistWeb.GoogleLoginController do
           conn
           |> get_req_header("referer")
 
+        # TODO: Register account if google ID does not exist, else log user in
+        # TODO: Ensure that Google user accounts cannot be logged in with a password (may need to make password default nil in ecto but unsure)
         conn
         |> put_flash(
           :info,
