@@ -21,12 +21,12 @@
     <header>
       <section class="container">
         <nav>
-          <%= render "_user_menu.html", assigns %>
+          <%= render("_user_menu.html", assigns) %>
         </nav>
       </section>
     </header>
     <%= @inner_content %>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer>
+    </script>
   </body>
 </html>
-
