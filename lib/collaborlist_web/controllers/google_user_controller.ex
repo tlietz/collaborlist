@@ -13,6 +13,7 @@ defmodule CollaborlistWeb.GoogleUserController do
           |> get_req_header("referer")
 
         # TODO: If there is already an email associated with an account, but a Google sign-in was used, popup and ask if user wants to use Google as default, or use both.
+        # TODO: Auto logout feature for google account in settings
 
         google_user = id_token |> GoogleCerts.uid() |> Account.get_user_by_google_uid()
 
