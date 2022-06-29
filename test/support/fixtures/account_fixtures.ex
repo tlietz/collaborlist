@@ -11,7 +11,13 @@ defmodule Collaborlist.AccountFixtures do
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
-      password: valid_user_password(),
+      password: valid_user_password()
+    })
+  end
+
+  def valid_google_user_attributes(attrs \\ %{}) do
+    Enum.into(attrs, %{
+      email: unique_user_email(),
       google_uid: example_google_uid()
     })
   end
@@ -20,6 +26,15 @@ defmodule Collaborlist.AccountFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
+      |> Collaborlist.Account.register_user()
+
+    user
+  end
+
+  def google_user_fixture(attrs \\ %{}) do
+    {:ok, user} =
+      attrs
+      |> valid_google_user_attributes()
       |> Collaborlist.Account.register_user()
 
     user

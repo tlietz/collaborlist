@@ -12,7 +12,7 @@ defmodule Collaborlist.AccountTest do
     end
 
     test "returns the user if the google uid exists" do
-      %{id: id} = user = user_fixture()
+      %{id: id} = user = google_user_fixture()
       assert %User{id: ^id} = Account.get_user_by_google_uid(user.google_uid)
     end
   end

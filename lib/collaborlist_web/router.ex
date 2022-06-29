@@ -61,7 +61,7 @@ defmodule CollaborlistWeb.Router do
   scope "/google/login", CollaborlistWeb do
     pipe_through :google_sign_in
 
-    post "/", GoogleLoginController, :create
+    post "/", GoogleUserController, :create
   end
 
   ## Authentication routes

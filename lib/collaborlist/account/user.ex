@@ -34,7 +34,7 @@ defmodule Collaborlist.Account.User do
     user
     |> cast(attrs, [:email, :password, :google_uid])
     |> validate_email()
-    |> validate_password(opts)
+    |> maybe_validate_password(opts)
   end
 
   defp validate_email(changeset) do
@@ -44,6 +44,14 @@ defmodule Collaborlist.Account.User do
     |> validate_length(:email, max: 160)
     |> unsafe_validate_unique(:email, Collaborlist.Repo)
     |> unique_constraint(:email)
+  end
+
+  defp maybe_validate_password(changeset, opts) do
+    if Map.has_key?(changeset.changes, :google_uid) do
+      changeset
+    else
+      validate_password(changeset, opts)
+    end
   end
 
   defp validate_password(changeset, opts) do

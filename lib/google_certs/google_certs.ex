@@ -2,7 +2,7 @@ defmodule GoogleCerts do
   @moduledoc """
   TODO: documentation
 
-  There is only one client function in this module.
+  The user_id_token client function in this module.
 
   It does two things:
   1) Verifies the g_csrf token
@@ -24,7 +24,7 @@ defmodule GoogleCerts do
     "iat" => 1655475851,
     "iss" => "https://accounts.google.com",
     "jti" => "40c49e3b0bd44a02ab646122b9f7420754ff3045",
-    "name" => "Ted Lietz",
+    "name" => "First Last",
     "nbf" => 1655475551,
     "picture" => "link to picture",
     "sub" => "unique user id"
@@ -80,6 +80,11 @@ defmodule GoogleCerts do
   @spec uid(id_token :: map) :: String.t()
   def uid(id_token) do
     id_token["sub"]
+  end
+
+  @spec email(id_token :: map) :: String.t()
+  def email(id_token) do
+    id_token["email"]
   end
 
   @spec name(id_token :: map) :: String.t()
