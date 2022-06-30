@@ -1,4 +1,7 @@
 defmodule Collaborlist.Account do
+  # TODO: delete account
+  # TODO: usernames, not just email
+
   @moduledoc """
   The Account context.
   """
