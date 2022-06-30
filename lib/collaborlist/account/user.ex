@@ -34,6 +34,7 @@ defmodule Collaborlist.Account.User do
     user
     |> cast(attrs, [:email, :password, :google_uid])
     |> validate_email()
+    |> maybe_confirm_email()
     |> maybe_validate_password(opts)
   end
 
@@ -46,6 +47,20 @@ defmodule Collaborlist.Account.User do
     |> unique_constraint(:email)
   end
 
+  # If third party authentication was used, confirm the email
+  defp maybe_confirm_email(changeset) do
+    if Map.has_key?(changeset.changes, :google_uid) do
+      changeset
+      |> Map.put(
+        :changes,
+        changeset.changes |> Map.put(:confirmed_at, now())
+      )
+    else
+      changeset
+    end
+  end
+
+  # Skips password validation if third party authentication was used
   defp maybe_validate_password(changeset, opts) do
     if Map.has_key?(changeset.changes, :google_uid) do
       changeset
@@ -117,8 +132,7 @@ defmodule Collaborlist.Account.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    change(user, confirmed_at: now)
+    change(user, confirmed_at: now())
   end
 
   @doc """
@@ -147,4 +161,6 @@ defmodule Collaborlist.Account.User do
       add_error(changeset, :current_password, "is not valid")
     end
   end
+
+  defp now(), do: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 end

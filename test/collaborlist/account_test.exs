@@ -103,6 +103,11 @@ defmodule Collaborlist.AccountTest do
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
     end
+
+    test "confirms email if google login is used as registration" do
+      user = google_user_fixture()
+      assert user.confirmed_at != nil
+    end
   end
 
   describe "change_user_registration/2" do
