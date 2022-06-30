@@ -12,9 +12,9 @@ defmodule CollaborlistWeb.GoogleUserController do
           conn
           |> get_req_header("referer")
 
-        # TODO: If there is already an email associated with an account, but a Google sign-in was used, sign them into the corresponding email, and insert the google_uid.
-        # TODO: Automatically confirm an email if google sign-in is used
-        # TODO: Auto logout feature for google account in settings
+        # TODO: If there is already an email associated with an account, but a Google sign-in was used, ask them if they want to merge the accounts.
+        # TODO: Update a google account's email if it changes.
+        # TODO: Add tests for new functionality
 
         google_user = id_token |> GoogleCerts.uid() |> Account.get_user_by_google_uid()
 
@@ -24,15 +24,13 @@ defmodule CollaborlistWeb.GoogleUserController do
           # this has the `external` tag because the `referer` from `get_req_header` returns a full URL.
           |> redirect(external: referer)
         else
-          # user is already registered with this email without a google account
           maybe_user = id_token |> GoogleCerts.email() |> Account.get_user_by_email()
 
           if maybe_user do
-            maybe_user
-            |> IO.inspect(label: "USER")
-
+            # user is already registered with this email without a google account
             conn
-            |> UserAuth.log_in_user(maybe_user)
+            |> put_flash(:error, "Your email is already registered to an account")
+            |> redirect(to: Routes.list_path(conn, :index))
           else
             {:ok, new_google_user} =
               Account.register_user(%{
