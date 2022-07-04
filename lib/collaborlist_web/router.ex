@@ -13,7 +13,7 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
-  # Google sign in uses its own CSRF protection that conflicts with Phoneix's :protect_from_forgery
+  # Google sign in uses its own CSRF protection that conflicts with Phoneix's :protect_from_forgery plug
   pipeline :google_sign_in do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -23,45 +23,16 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
-  pipeline :catalog do
-    plug :fetch_lists
-  end
-
-  defp fetch_lists(conn, _) do
-    conn
-  end
-
-  pipeline :collab do
-    plug :fetch_current_list
-    plug :fetch_list_items
-  end
-
-  defp fetch_current_list(conn, _) do
-    conn
-  end
-
-  defp fetch_list_items(conn, _) do
-    conn
-  end
-
   scope "/", CollaborlistWeb do
     pipe_through :browser
-    pipe_through :catalog
 
     resources "/", ListController, except: [:show]
   end
 
   scope "/collab", CollaborlistWeb do
     pipe_through :browser
-    pipe_through :collab
 
     resources "/lists/:list_id", CollabController, except: [:show]
-  end
-
-  scope "/google/login", CollaborlistWeb do
-    pipe_through :google_sign_in
-
-    post "/", GoogleUserController, :create
   end
 
   ## Authentication routes
@@ -77,6 +48,12 @@ defmodule CollaborlistWeb.Router do
     post "/users/reset_password", UserResetPasswordController, :create
     get "/users/reset_password/:token", UserResetPasswordController, :edit
     put "/users/reset_password/:token", UserResetPasswordController, :update
+  end
+
+  scope "/google/login", CollaborlistWeb do
+    pipe_through :google_sign_in
+
+    post "/", GoogleUserController, :create
   end
 
   scope "/", CollaborlistWeb do
