@@ -1,0 +1,7 @@
+migrate: 
+	mix ecto.migrate
+	MIX_ENV=test mix ecto.migrate
+
+ecto_reset:
+	mix ecto.reset
+	MIX_ENV=test mix ecto.reset
