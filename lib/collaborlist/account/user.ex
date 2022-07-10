@@ -10,6 +10,8 @@ defmodule Collaborlist.Account.User do
     field :google_uid, :string, redact: true
     field :confirmed_at, :naive_datetime
 
+    many_to_many :lists, Collaborlist.Catalog.List, join_through: "users_lists"
+
     timestamps()
   end
 
