@@ -12,7 +12,6 @@ defmodule Collaborlist.List.ListItem do
     timestamps()
   end
 
-  @doc false
   def changeset(list_item, attrs) do
     list_item
     |> cast(attrs, [:content, :checked, :striked])

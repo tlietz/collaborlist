@@ -39,8 +39,8 @@ defmodule Collaborlist.List do
   """
   def create_list_item(attrs \\ %{}, %List{} = list) do
     %ListItem{}
+    |> Map.put(:list_id, list.id)
     |> ListItem.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:list, list)
     |> Repo.insert()
   end
 

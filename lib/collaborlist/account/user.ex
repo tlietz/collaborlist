@@ -2,6 +2,8 @@ defmodule Collaborlist.Account.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @required_fields [:email, :password, :google_uid]
+
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
@@ -34,7 +36,7 @@ defmodule Collaborlist.Account.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :google_uid])
+    |> cast(attrs, @required_fields)
     |> validate_email()
     |> maybe_confirm_email()
     |> maybe_validate_password(opts)
