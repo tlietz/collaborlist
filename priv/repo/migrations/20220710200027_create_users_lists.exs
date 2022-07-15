@@ -5,6 +5,8 @@ defmodule Collaborlist.Repo.Migrations.CreateUsersLists do
     create table(:users_lists, primary_key: false) do
       add(:user_id, references(:users))
       add(:list_id, references(:lists))
+
+      timestamps()
     end
 
     create(index(:users_lists, [:user_id]))

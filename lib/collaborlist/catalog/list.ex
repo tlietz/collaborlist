@@ -6,12 +6,11 @@ defmodule Collaborlist.Catalog.List do
     field :title, :string
 
     has_many :list_items, Collaborlist.List.ListItem
-    many_to_many :lists, Collaborlist.Account.User, join_through: "users_lists"
+    many_to_many :users, Collaborlist.Account.User, join_through: "users_lists"
 
     timestamps()
   end
 
-  @doc false
   def changeset(list, attrs) do
     list
     |> cast(attrs, [:title])
