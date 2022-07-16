@@ -3,8 +3,8 @@ defmodule Collaborlist.Repo.Migrations.CreateUsersLists do
 
   def change do
     create table(:users_lists, primary_key: false) do
-      add(:user_id, references(:users))
-      add(:list_id, references(:lists))
+      add(:user_id, references(:users), primary_key: true)
+      add(:list_id, references(:lists), primary_key: true)
 
       timestamps()
     end
