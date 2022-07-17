@@ -9,6 +9,8 @@ defmodule CollaborlistWeb.ListControllerTest do
   @update_attrs %{title: "some updated title"}
   @invalid_attrs %{title: 4, checked: "foo", striked: "bar"}
 
+  setup :register_and_log_in_user
+
   describe "index" do
     test "lists all lists", %{conn: conn} do
       conn = get(conn, Routes.list_path(conn, :index))

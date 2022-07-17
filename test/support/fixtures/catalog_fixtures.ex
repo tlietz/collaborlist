@@ -8,12 +8,14 @@ defmodule Collaborlist.CatalogFixtures do
   Generate a list.
   """
   def list_fixture(attrs \\ %{}) do
-    {:ok, list} =
+    attrs =
       attrs
       |> Enum.into(%{
         title: "some title"
       })
-      |> Collaborlist.Catalog.create_list()
+
+    {:ok, list} =
+      Collaborlist.AccountFixtures.user_fixture() |> Collaborlist.Catalog.create_list(attrs)
 
     list
   end

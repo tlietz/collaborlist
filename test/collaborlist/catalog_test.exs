@@ -7,29 +7,30 @@ defmodule Collaborlist.CatalogTest do
     alias Collaborlist.Catalog.List
 
     import Collaborlist.CatalogFixtures
+    import Collaborlist.AccountFixtures
     import Collaborlist.ListFixtures
 
     @invalid_attrs %{title: 42, checked: "foo", striked: "bar"}
 
     test "list_lists/0 returns all lists" do
       list = list_fixture()
-      assert Catalog.list_lists() == [list]
+      assert Catalog.list_lists()[:id] == [list][:id]
     end
 
     test "get_list!/1 returns the list with given id" do
       list = list_fixture()
-      assert Catalog.get_list!(list.id) == list
+      assert Catalog.get_list!(list.id).id == list.id
     end
 
     test "create_list/1 with valid data creates a list" do
       valid_attrs = %{title: "some title"}
 
-      assert {:ok, %List{} = list} = Catalog.create_list(valid_attrs)
+      assert {:ok, %List{} = list} = Catalog.create_list(user_fixture(), valid_attrs)
       assert list.title == "some title"
     end
 
     test "create_list/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Catalog.create_list(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Catalog.create_list(user_fixture(), @invalid_attrs)
     end
 
     test "update_list/2 with valid data updates the list" do
@@ -43,7 +44,7 @@ defmodule Collaborlist.CatalogTest do
     test "update_list/2 with invalid data returns error changeset" do
       list = list_fixture()
       assert {:error, %Ecto.Changeset{}} = Catalog.update_list(list, @invalid_attrs)
-      assert list == Catalog.get_list!(list.id)
+      assert list.id == Catalog.get_list!(list.id).id
     end
 
     test "delete_list/1 deletes the list" do

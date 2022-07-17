@@ -139,6 +139,12 @@ defmodule CollaborlistWeb.UserAuth do
     end
   end
 
+  @doc """
+  Used for routes that require the user to be a collaborator on a list.
+  """
+  def require_user_list_collaborator(conn, _opts) do
+  end
+
   defp maybe_store_return_to(%{method: "GET"} = conn) do
     put_session(conn, :user_return_to, current_path(conn))
   end

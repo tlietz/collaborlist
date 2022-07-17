@@ -43,7 +43,7 @@ defmodule Collaborlist.Catalog do
 
   ## Examples
 
-      iex> create_list(%{field: value})
+      iex> create_list(user, %{field: value})
       {:ok, %List{}}
 
       iex> create_list(%{field: bad_value})
