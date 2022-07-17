@@ -15,7 +15,9 @@ defmodule CollaborlistWeb.ListController do
   end
 
   def create(conn, %{"list" => list_params}) do
-    case Catalog.create_list(list_params) do
+    user = conn.assigns[:current_user]
+
+    case Catalog.create_list(user, list_params) do
       {:ok, list} ->
         conn
         |> put_flash(:info, "List created successfully.")

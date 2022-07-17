@@ -7,6 +7,7 @@ defmodule Collaborlist.Catalog do
   alias Collaborlist.Repo
 
   alias Collaborlist.Catalog.List
+  alias Collaborlist.Account.User
 
   @doc """
   Returns the list of lists.
@@ -49,9 +50,10 @@ defmodule Collaborlist.Catalog do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_list(attrs \\ %{}) do
+  def create_list(%User{} = user, attrs \\ %{}) do
     %List{}
     |> List.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:users, [user], required: true)
     |> Repo.insert()
   end
 
