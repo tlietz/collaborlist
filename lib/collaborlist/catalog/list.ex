@@ -6,7 +6,10 @@ defmodule Collaborlist.Catalog.List do
     field :title, :string
 
     has_many :list_items, Collaborlist.List.ListItem
-    many_to_many :users, Collaborlist.Account.User, join_through: "users_lists"
+
+    many_to_many :users, Collaborlist.Account.User,
+      on_delete: :delete_all,
+      join_through: "users_lists"
 
     timestamps()
   end
