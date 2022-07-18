@@ -144,7 +144,6 @@ defmodule CollaborlistWeb.UserAuth do
   Used for routes that require the user to be a collaborator on a list.
   """
   def require_user_list_collaborator(conn, _opts) do
-    # TODO: make another function that turns strings into integers, or just pass through the integer
     if Catalog.list_collaborator?(
          maybe_to_integer(conn.params["list_id"]),
          maybe_to_integer(conn.assigns[:current_user].id)
