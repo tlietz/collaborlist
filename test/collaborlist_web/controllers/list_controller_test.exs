@@ -49,7 +49,13 @@ defmodule CollaborlistWeb.ListControllerTest do
     setup [:create_list]
 
     test "renders form for editing chosen list", %{conn: conn, list: list} do
-      conn = get(conn, Routes.list_path(conn, :edit, list))
+      [user] = list.users
+
+      conn =
+        log_in_user(conn, user)
+        |> UserAuth.fetch_current_user(%{})
+        |> get(Routes.list_path(conn, :edit, list))
+
       assert html_response(conn, 200) =~ "Edit List"
     end
   end
@@ -72,7 +78,13 @@ defmodule CollaborlistWeb.ListControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, list: list} do
-      conn = put(conn, Routes.list_path(conn, :update, list), list: @invalid_attrs)
+      [user] = list.users
+
+      conn =
+        log_in_user(conn, user)
+        |> UserAuth.fetch_current_user(%{})
+        |> put(Routes.list_path(conn, :update, list), list: @invalid_attrs)
+
       assert html_response(conn, 200) =~ "Edit List"
     end
   end
@@ -81,12 +93,14 @@ defmodule CollaborlistWeb.ListControllerTest do
     setup [:create_list]
 
     test "deletes chosen list", %{conn: conn, list: list} do
-      conn = delete(conn, Routes.list_path(conn, :delete, list))
-      assert redirected_to(conn) == Routes.list_path(conn, :index)
+      [user] = list.users
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.collab_path(conn, :index, list))
-      end
+      conn =
+        log_in_user(conn, user)
+        |> UserAuth.fetch_current_user(%{})
+        |> delete(Routes.list_path(conn, :delete, list))
+
+      assert redirected_to(conn) == Routes.list_path(conn, :index)
     end
   end
 

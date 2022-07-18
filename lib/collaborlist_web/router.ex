@@ -33,9 +33,10 @@ defmodule CollaborlistWeb.Router do
   scope "/", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
-    resources "/", ListController, except: [:index, :create, :new, :edit, :update, :show]
+    resources "/", ListController, except: [:index, :create, :new, :edit, :update, :delete, :show]
     get "/:list_id", ListController, :edit
     put "/:list_id", ListController, :update
+    delete "/:list_id", ListController, :delete
   end
 
   scope "/collab", CollaborlistWeb do
