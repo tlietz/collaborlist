@@ -3,6 +3,7 @@ defmodule CollaborlistWeb.UserAuth do
   import Phoenix.Controller
 
   alias Collaborlist.Account
+  alias Collaborlist.Catalog
   alias CollaborlistWeb.Router.Helpers, as: Routes
 
   # Make the remember me cookie valid for 60 days.
@@ -143,6 +144,31 @@ defmodule CollaborlistWeb.UserAuth do
   Used for routes that require the user to be a collaborator on a list.
   """
   def require_user_list_collaborator(conn, _opts) do
+    # TODO: make another function that turns strings into integers, or just pass through the integer
+    if Catalog.list_collaborator?(
+         maybe_to_integer(conn.params["list_id"]),
+         maybe_to_integer(conn.assigns[:current_user].id)
+       ) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be a collaborator on the list to do this action.")
+      |> maybe_store_return_to()
+      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> halt()
+    end
+  end
+
+  defp maybe_to_integer(string?) when is_binary(string?) do
+    String.to_integer(string?)
+  end
+
+  defp maybe_to_integer(string?) when is_integer(string?) do
+    string?
+  end
+
+  defp maybe_to_integer(_) do
+    raise "unexpected type"
   end
 
   defp maybe_store_return_to(%{method: "GET"} = conn) do

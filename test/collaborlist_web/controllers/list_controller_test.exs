@@ -79,6 +79,7 @@ defmodule CollaborlistWeb.ListControllerTest do
 
       assert_error_sent 404, fn ->
         get(conn, Routes.collab_path(conn, :index, list))
+        |> IO.inspect(label: "GET")
       end
     end
   end

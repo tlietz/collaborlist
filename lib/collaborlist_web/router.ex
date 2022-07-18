@@ -26,11 +26,18 @@ defmodule CollaborlistWeb.Router do
   scope "/", CollaborlistWeb do
     pipe_through :browser
 
-    resources "/", ListController, except: [:show]
+    # TODO make index only show lists that a user is a collaborator on
+    get "/", ListController, :index
+  end
+
+  scope "/", CollaborlistWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
+
+    resources "/", ListController, except: [:index, :show]
   end
 
   scope "/collab", CollaborlistWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
     resources "/lists/:list_id", CollabController, except: [:show]
   end
