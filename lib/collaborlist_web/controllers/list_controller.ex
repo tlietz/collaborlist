@@ -28,13 +28,13 @@ defmodule CollaborlistWeb.ListController do
     end
   end
 
-  def edit(conn, %{"id" => id}) do
+  def edit(conn, %{"list_id" => id}) do
     list = Catalog.get_list!(id)
     changeset = Catalog.change_list(list)
     render(conn, "edit.html", list: list, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "list" => list_params}) do
+  def update(conn, %{"list_id" => id, "list" => list_params}) do
     list = Catalog.get_list!(id)
 
     case Catalog.update_list(list, list_params) do
@@ -48,7 +48,7 @@ defmodule CollaborlistWeb.ListController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"list_id" => id}) do
     list = Catalog.get_list!(id)
     {:ok, _list} = Catalog.delete_list(list)
 
