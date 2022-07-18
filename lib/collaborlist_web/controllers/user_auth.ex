@@ -144,8 +144,12 @@ defmodule CollaborlistWeb.UserAuth do
   Used for routes that require the user to be a collaborator on a list.
   """
   def require_user_list_collaborator(conn, _opts) do
+    # TODO find out where conn.params["id"] is being set during tests, and make it "list_id" instead
+
+    list_id = conn.params["list_id"]
+
     if Catalog.list_collaborator?(
-         maybe_to_integer(conn.params["list_id"]),
+         maybe_to_integer(list_id),
          maybe_to_integer(conn.assigns[:current_user].id)
        ) do
       conn

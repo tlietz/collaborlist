@@ -3,6 +3,7 @@ defmodule CollaborlistWeb.ListControllerTest do
 
   import Collaborlist.CatalogFixtures
 
+  alias CollaborlistWeb.UserAuth
   alias Collaborlist.Catalog
 
   @create_attrs %{title: "some title"}
@@ -57,7 +58,20 @@ defmodule CollaborlistWeb.ListControllerTest do
     setup [:create_list]
 
     test "redirects when data is valid", %{conn: conn, list: list} do
-      conn = put(conn, Routes.list_path(conn, :update, list), list: @update_attrs)
+      conn
+      |> IO.inspect(label: "CONN1")
+
+      [user] = list.users
+
+      conn =
+        log_in_user(conn, user)
+        |> IO.inspect(label: "2")
+        |> UserAuth.fetch_current_user(%{})
+        |> IO.inspect(label: "3")
+        # TODO the put function puts conn.params["id"] instead of "list_id". Need to figure out how to change that.
+        |> put(Routes.list_path(conn, :update, list), list: @update_attrs)
+        |> IO.inspect(label: "4")
+
       assert redirected_to(conn) == Routes.list_path(conn, :index)
 
       # conn = get(conn, Routes.collab_path(conn, :index, list))
@@ -79,13 +93,13 @@ defmodule CollaborlistWeb.ListControllerTest do
 
       assert_error_sent 404, fn ->
         get(conn, Routes.collab_path(conn, :index, list))
-        |> IO.inspect(label: "GET")
       end
     end
   end
 
   defp create_list(_) do
     list = list_fixture()
+
     %{list: list}
   end
 end
