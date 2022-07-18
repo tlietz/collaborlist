@@ -162,12 +162,8 @@ defmodule CollaborlistWeb.UserAuth do
     String.to_integer(string?)
   end
 
-  defp maybe_to_integer(string?) when is_integer(string?) do
+  defp maybe_to_integer(string?) do
     string?
-  end
-
-  defp maybe_to_integer(_) do
-    raise "unexpected type"
   end
 
   defp maybe_store_return_to(%{method: "GET"} = conn) do
