@@ -11,9 +11,7 @@ defmodule CollaborlistWeb.ListController do
       lists = Catalog.list_lists(user)
       render(conn, "index.html", lists: lists)
     else
-      conn
-      |> put_flash(:info, "Register and login to create lists")
-      |> render("index.html", lists: [])
+      render(conn, "index.html", lists: [])
     end
   end
 

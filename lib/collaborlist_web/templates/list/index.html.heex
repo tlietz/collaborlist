@@ -1,3 +1,4 @@
+<%= if @conn.assigns[:current_user] do %>
 <h1>Listing Lists</h1>
 
 <table>
@@ -32,8 +33,12 @@
   </tbody>
 </table>
 
-<%= if @conn.assigns[:current_user] do %>
 <span>
 <%= link("New List", to: Routes.list_path(@conn, :new)) %>
 </span>
+<% else %>
+<div>
+  Register and login to create lists
+</div>
 <% end %>
+
