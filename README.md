@@ -34,8 +34,13 @@ Once a user is authenticated with Google sign in,
 they are given a `session_id` cookie, 
 and any authorization is done via a session-based workflow. 
 
-Part of the motivation for using JWT authentication and session-based authorization was the information given in this article titled ["Stop using JWT for session"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/).
+Part of the motivation for using *JWT authentication* and *session-based authorization* was the information given in this article: ["Stop using JWT for session"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/).
 
+## Collaborating with other users on a list
+
+Once a user creates a list, they can add users in two ways:
+1) By email
+2) An invite link
 
 ## Features
 
