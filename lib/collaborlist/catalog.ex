@@ -39,22 +39,6 @@ defmodule Collaborlist.Catalog do
   def get_list!(id), do: Repo.get!(List, id)
 
   @doc """
-  Returns true if the user is a collaborator on a list, false otherwise.
-  """
-  # TODO write tests for this function
-  def list_collaborator?(list_id, user_id) do
-    query =
-      from "users_lists",
-        select: [:user_id],
-        where: [list_id: type(^list_id, :integer), user_id: type(^user_id, :integer)]
-
-    is_collaborator?(Repo.all(query))
-  end
-
-  defp is_collaborator?([]), do: false
-  defp is_collaborator?(_), do: true
-
-  @doc """
   Creates a list.
 
   ## Examples
@@ -118,5 +102,39 @@ defmodule Collaborlist.Catalog do
   """
   def change_list(%List{} = list, attrs \\ %{}) do
     List.changeset(list, attrs)
+  end
+
+  @doc """
+  Returns true if the user is a collaborator on a list, false otherwise.
+  """
+  # TODO write tests for this function
+  def list_collaborator?(list_id, %User{} = user) do
+    query =
+      from "users_lists",
+        select: [:user_id],
+        where: [list_id: type(^list_id, :integer), user_id: type(^user.id, :integer)]
+
+    is_collaborator?(Repo.all(query))
+  end
+
+  defp is_collaborator?([]), do: false
+  defp is_collaborator?(_), do: true
+
+  @doc """
+  Adds a user to a list's collaborators
+  """
+  def add_collaborator(list_id, %User{} = user) do
+  end
+
+  @doc """
+  Removes a user from a list's collaborators
+  """
+  def remove_collaborator(list_id, %User{} = user) do
+  end
+
+  @doc """
+  Returns the list of a list's collaborators
+  """
+  def list_collaborators(list_id) do
   end
 end

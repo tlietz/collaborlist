@@ -146,7 +146,7 @@ defmodule CollaborlistWeb.UserAuth do
   def require_user_list_collaborator(conn, _opts) do
     if Catalog.list_collaborator?(
          maybe_to_integer(conn.params["list_id"]),
-         maybe_to_integer(conn.assigns[:current_user].id)
+         conn.assigns[:current_user]
        ) do
       conn
     else
