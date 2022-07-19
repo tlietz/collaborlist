@@ -12,9 +12,17 @@ defmodule Collaborlist.CatalogTest do
 
     @invalid_attrs %{title: 42, checked: "foo", striked: "bar"}
 
-    test "list_lists/0 returns all lists" do
+    test "list_lists/0 returns only lists that belong to a user" do
       list = list_fixture()
-      assert Catalog.list_lists()[:id] == [list][:id]
+
+      [user] = list.users
+      list2 = list_fixture()
+
+      lists = Catalog.list_lists(user)
+      assert length(lists) == 1
+
+      [first_user_list] = lists
+      assert first_user_list.id == list.id
     end
 
     test "get_list!/1 returns the list with given id" do

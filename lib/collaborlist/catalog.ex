@@ -18,8 +18,12 @@ defmodule Collaborlist.Catalog do
       [%List{}, ...]
 
   """
-  def list_lists do
-    Repo.all(List)
+  def list_lists(%User{} = user) do
+    user_with_lists =
+      user
+      |> Repo.preload(:lists)
+
+    user_with_lists.lists
   end
 
   @doc """
