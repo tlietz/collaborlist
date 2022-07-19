@@ -131,13 +131,13 @@ defmodule Collaborlist.Catalog do
   end
 
   @doc """
-  Removes a user from a list's collaborators
+  Removes a user as a list's collaborators
   """
   def remove_collaborator(list_id, %User{} = user) do
   end
 
   @doc """
-  Returns the list of a list's collaborators
+  Returns a list of users that are a list's collaborators
   """
   def list_collaborators(list_id) do
   end
