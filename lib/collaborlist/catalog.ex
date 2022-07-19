@@ -114,11 +114,11 @@ defmodule Collaborlist.Catalog do
         select: [:user_id],
         where: [list_id: type(^list_id, :integer), user_id: type(^user.id, :integer)]
 
-    is_collaborator?(Repo.all(query))
+    found_user?(Repo.all(query))
   end
 
-  defp is_collaborator?([]), do: false
-  defp is_collaborator?(_), do: true
+  defp found_user?([]), do: false
+  defp found_user?(_), do: true
 
   @doc """
   Adds a user to a list's collaborators
