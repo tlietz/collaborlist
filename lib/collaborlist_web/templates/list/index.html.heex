@@ -32,4 +32,8 @@
   </tbody>
 </table>
 
-<span><%= link("New List", to: Routes.list_path(@conn, :new)) %></span>
+<%= if @conn.assigns[:current_user] do %>
+<span>
+<%= link("New List", to: Routes.list_path(@conn, :new)) %>
+</span>
+<% end %>

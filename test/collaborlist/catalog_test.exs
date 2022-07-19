@@ -16,7 +16,7 @@ defmodule Collaborlist.CatalogTest do
       list = list_fixture()
 
       [user] = list.users
-      list2 = list_fixture()
+      _list2 = list_fixture()
 
       lists = Catalog.list_lists(user)
       assert length(lists) == 1

@@ -13,9 +13,16 @@ defmodule CollaborlistWeb.ListControllerTest do
   setup :register_and_log_in_user
 
   describe "index" do
-    test "lists all lists", %{conn: conn} do
+    test "lists all lists that belongs to a user", %{conn: conn} do
       conn = get(conn, Routes.list_path(conn, :index))
       assert html_response(conn, 200) =~ "Listing Lists"
+    end
+
+    test "gives user message to create an account to create a list when no user is logged in", %{
+      conn: conn
+    } do
+      conn = get(conn, Routes.list_path(conn, :index))
+      assert html_response(conn, 200) =~ "Register"
     end
   end
 

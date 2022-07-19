@@ -5,8 +5,16 @@ defmodule CollaborlistWeb.ListController do
   alias Collaborlist.Catalog.List
 
   def index(conn, _params) do
-    lists = Catalog.list_lists()
-    render(conn, "index.html", lists: lists)
+    user = conn.assigns[:currt_user]
+
+    if user do
+      lists = Catalog.list_lists(user)
+      render(conn, "index.html", lists: lists)
+    else
+      conn
+      |> put_flash(:info, "Register and login to create lists")
+      |> render("index.html", lists: [])
+    end
   end
 
   def new(conn, _params) do
