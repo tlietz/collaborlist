@@ -38,6 +38,29 @@ Part of the motivation for using *JWT authentication* and *session-based authori
 
 ## Collaboration Invite Links
 
+Users can create a collaboration invite link with an expiry time and 
+a maximum number of uses. 
+
+In the database, the `invites` table has `invite_code` as its primary 
+key, and a column that stores the `list_id` the invite link is for.
+When a user creates an invite link, a `UUID` is generated and stored as the `invite_code`.
+
+The link created looks something like:
+`https://collaborlist.com/invite/qwerty12345`
+
+
+When a client navigates to the `/invite/:invite_code` endpoint, 
+if the `invite_code` exists and if it's not expired, the client is 
+routed to a register page, login page, or the list based on their 
+account status.
+
+Two appraoches were considered to purge stale invite links:
+
+1) Using a genserver to set deletion times
+2) Doing a check at set time intervals 
+
+
+
 
 ## Features
 
@@ -45,10 +68,12 @@ Part of the motivation for using *JWT authentication* and *session-based authori
 - [x] Delete lists
 - [x] Add items to lists
 - [x] Delete items from lists
-- [ ] Strikethrough or checkmark lists
-- [ ] Invite to collaborate on list via link
 - [x] Create an account through the app.
 - [x] Google sign in
+- [ ] Display collaborators on a list
+- [ ] Strikethrough or checkmark lists
+- [ ] Invite to collaborate on list via link
+- [ ] Collaborate on users in real-time
 
 ## Future Todos
 
