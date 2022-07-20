@@ -6,6 +6,7 @@ defmodule Collaborlist.Catalog.List do
     field :title, :string
 
     has_many :list_items, Collaborlist.List.ListItem
+    has_many :invites, Collaborlist.Invites.Invite
 
     many_to_many :users, Collaborlist.Account.User,
       on_delete: :delete_all,

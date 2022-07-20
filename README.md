@@ -61,7 +61,8 @@ Two appraoches were considered to purge stale invite links:
 
 Approach `1` is more "elixir-ish" and elegant with it's use of a process.
 However, if something happens to the server, and the genserver fails at the wrong time, a stale invite link might be able to slip by.
-If that were to happen, approach `2` would have to be implemented as a failsafe. Therefore, to keep things simpler, only approach `2` is used. 
+If that were to happen, approach `2` would have to be implemented as a failsafe anyways.
+Therefore, to keep things simpler, only approach `2` is used. 
 
 ## Features
 
