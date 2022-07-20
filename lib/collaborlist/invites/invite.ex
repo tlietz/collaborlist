@@ -6,6 +6,7 @@ defmodule Collaborlist.Invites.Invite do
 
   schema "users" do
     belongs_to :list, Collaborlist.Catalog.List
+    belongs_to :user, Collaborlist.Account.User
 
     timestamps()
   end
