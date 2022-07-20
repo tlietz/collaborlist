@@ -111,7 +111,6 @@ defmodule Collaborlist.Catalog do
   @doc """
   Returns true if the user is a collaborator on a list, false otherwise.
   """
-  # TODO write tests for this function
   def list_collaborator?(list_id, %User{} = user) do
     query =
       from "users_lists",
@@ -127,18 +126,28 @@ defmodule Collaborlist.Catalog do
   @doc """
   Adds a user to a list's collaborators
   """
-  def add_collaborator(list_id, %User{} = user) do
+  def add_collaborator(%List{} = list, %User{} = user) do
+    users = [user | list |> list_collaborators()]
+
+    list
+    |> List.changeset_update_collaborators(users)
+    |> Repo.update()
   end
 
   @doc """
   Removes a user as a list's collaborators
   """
-  def remove_collaborator(list_id, %User{} = user) do
+  def remove_collaborator(%List{} = list, %User{} = user) do
   end
 
   @doc """
   Returns a list of users that are a list's collaborators
   """
-  def list_collaborators(list_id) do
+  def list_collaborators(%List{} = list) do
+    list_with_collaborators =
+      list
+      |> Repo.preload(:users)
+
+    list_with_collaborators.users
   end
 end

@@ -9,7 +9,8 @@ defmodule Collaborlist.Catalog.List do
 
     many_to_many :users, Collaborlist.Account.User,
       on_delete: :delete_all,
-      join_through: "users_lists"
+      join_through: "users_lists",
+      on_replace: :delete
 
     timestamps()
   end
@@ -17,5 +18,11 @@ defmodule Collaborlist.Catalog.List do
   def changeset(list, attrs) do
     list
     |> cast(attrs, [:title])
+  end
+
+  def changeset_update_collaborators(list, users) do
+    list
+    |> cast(%{}, [:title])
+    |> put_assoc(:users, users)
   end
 end

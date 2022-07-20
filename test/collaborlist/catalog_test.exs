@@ -92,5 +92,43 @@ defmodule Collaborlist.CatalogTest do
 
       assert Catalog.list_collaborator?(list2.id, user) == false
     end
+
+    test "add_collaborator/2 adds a user as a collaborator to a list" do
+      list = list_fixture()
+
+      [user1] = list.users
+
+      user2 = user_fixture()
+
+      assert Catalog.list_collaborator?(list.id, user1) == true
+      assert Catalog.list_collaborator?(list.id, user2) == false
+
+      _ = Catalog.add_collaborator(list, user2)
+
+      assert Catalog.list_collaborator?(list.id, user1) == true
+      assert Catalog.list_collaborator?(list.id, user2) == true
+    end
+
+    test "remove_collaborator/2 removes a user as a collaborator" do
+      list = list_fixture()
+
+      [user1] = list.users
+
+      user2 = user_fixture()
+
+      assert Catalog.list_collaborator?(list.id, user1) == true
+      assert Catalog.list_collaborator?(list.id, user2) == false
+
+      _ = Catalog.add_collaborator(list, user2)
+      _ = Catalog.remove_collaborator(list, user1)
+
+      assert Catalog.list_collaborator?(list.id, user1) == false
+    end
+
+    test "list_collaborators/1 returns a list of collaborators" do
+      list = list_fixture()
+
+      assert Catalog.list_collaborators(list) == list.users
+    end
   end
 end

@@ -14,7 +14,8 @@ defmodule Collaborlist.Account.User do
 
     many_to_many :lists, Collaborlist.Catalog.List,
       on_delete: :delete_all,
-      join_through: "users_lists"
+      join_through: "users_lists",
+      on_replace: :delete
 
     timestamps()
   end
