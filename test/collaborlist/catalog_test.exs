@@ -123,6 +123,7 @@ defmodule Collaborlist.CatalogTest do
       _ = Catalog.remove_collaborator(list, user1)
 
       assert Catalog.list_collaborator?(list.id, user1) == false
+      assert Catalog.list_collaborator?(list.id, user2) == true
     end
 
     test "list_collaborators/1 returns a list of collaborators" do

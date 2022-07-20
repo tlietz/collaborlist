@@ -6,7 +6,8 @@ defmodule Collaborlist.Catalog do
   import Ecto.Query, warn: false
   alias Collaborlist.Repo
 
-  alias Collaborlist.Catalog.List
+  alias Collaborlist.Catalog
+
   alias Collaborlist.Account.User
 
   @doc """
@@ -15,7 +16,7 @@ defmodule Collaborlist.Catalog do
   ## Examples
 
       iex> list_lists()
-      [%List{}, ...]
+      [%Catalog.List{}, ...]
 
   """
   def list_lists(%User{} = user) do
@@ -29,18 +30,18 @@ defmodule Collaborlist.Catalog do
   @doc """
   Gets a single list.
 
-  Raises `Ecto.NoResultsError` if the List does not exist.
+  Raises `Ecto.NoResultsError` if the Catalog.List does not exist.
 
   ## Examples
 
       iex> get_list!(123)
-      %List{}
+      %Catalog.List{}
 
       iex> get_list!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_list!(id), do: Repo.get!(List, id)
+  def get_list!(id), do: Repo.get!(Catalog.List, id)
 
   @doc """
   Creates a list.
@@ -48,15 +49,15 @@ defmodule Collaborlist.Catalog do
   ## Examples
 
       iex> create_list(user, %{field: value})
-      {:ok, %List{}}
+      {:ok, %Catalog.List{}}
 
       iex> create_list(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_list(%User{} = user, attrs \\ %{}) do
-    %List{}
-    |> List.changeset(attrs)
+    %Catalog.List{}
+    |> Catalog.List.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:users, [user], required: true)
     |> Repo.insert()
   end
@@ -67,15 +68,15 @@ defmodule Collaborlist.Catalog do
   ## Examples
 
       iex> update_list(list, %{field: new_value})
-      {:ok, %List{}}
+      {:ok, %Catalog.List{}}
 
       iex> update_list(list, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_list(%List{} = list, attrs) do
+  def update_list(%Catalog.List{} = list, attrs) do
     list
-    |> List.changeset(attrs)
+    |> Catalog.List.changeset(attrs)
     |> Repo.update()
   end
 
@@ -85,13 +86,13 @@ defmodule Collaborlist.Catalog do
   ## Examples
 
       iex> delete_list(list)
-      {:ok, %List{}}
+      {:ok, %Catalog.List{}}
 
       iex> delete_list(list)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_list(%List{} = list) do
+  def delete_list(%Catalog.List{} = list) do
     Repo.delete(list)
   end
 
@@ -101,11 +102,11 @@ defmodule Collaborlist.Catalog do
   ## Examples
 
       iex> change_list(list)
-      %Ecto.Changeset{data: %List{}}
+      %Ecto.Changeset{data: %Catalog.List{}}
 
   """
-  def change_list(%List{} = list, attrs \\ %{}) do
-    List.changeset(list, attrs)
+  def change_list(%Catalog.List{} = list, attrs \\ %{}) do
+    Catalog.List.changeset(list, attrs)
   end
 
   @doc """
@@ -126,24 +127,29 @@ defmodule Collaborlist.Catalog do
   @doc """
   Adds a user to a list's collaborators
   """
-  def add_collaborator(%List{} = list, %User{} = user) do
-    users = [user | list |> list_collaborators()]
+  def add_collaborator(%Catalog.List{} = list, %User{} = user) do
+    users = [user | list_collaborators(list)]
 
     list
-    |> List.changeset_update_collaborators(users)
+    |> Catalog.List.changeset_update_collaborators(users)
     |> Repo.update()
   end
 
   @doc """
   Removes a user as a list's collaborators
   """
-  def remove_collaborator(%List{} = list, %User{} = user) do
+  def remove_collaborator(%Catalog.List{} = list, %User{} = user) do
+    users = List.delete(list_collaborators(list), user)
+
+    list
+    |> Catalog.List.changeset_update_collaborators(users)
+    |> Repo.update()
   end
 
   @doc """
   Returns a list of users that are a list's collaborators
   """
-  def list_collaborators(%List{} = list) do
+  def list_collaborators(%Catalog.List{} = list) do
     list_with_collaborators =
       list
       |> Repo.preload(:users)
