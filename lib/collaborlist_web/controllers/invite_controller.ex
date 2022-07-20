@@ -2,7 +2,7 @@ defmodule CollaborlistWeb.InviteController do
   use CollaborlistWeb, :controller
 
   def process_invite(conn, params) do
-    params
+    params["invite_code"]
     |> IO.inspect(label: "params")
   end
 end
