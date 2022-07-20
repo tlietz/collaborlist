@@ -36,30 +36,25 @@ and any authorization is done via a session-based workflow.
 
 Part of the motivation for using *JWT authentication* and *session-based authorization* was the information given in this article: ["Stop using JWT for session"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/).
 
-## Collaborating with other users on a list
+## Collaboration Invite Links
 
-Once a user creates a list, they can add users in two ways:
-1) By email
-2) An invite link
 
 ## Features
 
-- [ ] Create lists
-- [ ] Delete lists
-- [ ] Add items to lists
-- [ ] Delete items from lists
-- [ ] Strikethrough lists
-- [ ] Undo deleting items
-- [ ] Drag and drop to reorder list items
+- [x] Create lists
+- [x] Delete lists
+- [x] Add items to lists
+- [x] Delete items from lists
+- [ ] Strikethrough or checkmark lists
 - [ ] Invite to collaborate on list via link
-- [ ] Invite to collaborate on list via QR code
-- [ ] Create an account through the app.
-- [ ] Google sign in
+- [x] Create an account through the app.
+- [x] Google sign in
 
 ## Future Todos
 
-- [ ] Try to speed up database retrievals by splitting up the `list_items` table into multiple tables, each corresponding to a list
 - [ ] Link app account to Google sign in.
+- [ ] Drag and drop to reorder list items
+- [ ] Invite to collaborate on list via QR code
 - [ ] Reset lists
 - [ ] Make copies of lists
 - [ ] Undo actions
