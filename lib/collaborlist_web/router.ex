@@ -45,12 +45,20 @@ defmodule CollaborlistWeb.Router do
     delete "/:list_id", ListController, :delete
   end
 
-  ##################################################################
+  ## Collab routes
 
   scope "/collab", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
     resources "/lists/:list_id", CollabController, except: [:show]
+  end
+
+  ## Invite routes
+
+  scope "/invite", CollaborlistWeb do
+    pipe_through [:browser]
+
+    get "/:invite_code", InviteController, :process_invite
   end
 
   ## Authentication routes

@@ -1,9 +1,9 @@
 defmodule Collaborlist.AccountTest do
   use Collaborlist.DataCase
 
-  alias Collaborlist.Account
-
   import Collaborlist.AccountFixtures
+
+  alias Collaborlist.Account
   alias Collaborlist.Account.{User, UserToken}
 
   describe "get_user_by_google_uid/1" do
