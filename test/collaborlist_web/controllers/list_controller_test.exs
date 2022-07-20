@@ -15,10 +15,15 @@ defmodule CollaborlistWeb.ListControllerTest do
   describe "index" do
     setup [:create_list]
 
-    test "lists all lists that belongs to a user", %{conn: conn} do
-      conn = get(conn, Routes.list_path(conn, :index))
+    test "lists all lists that belongs to a user", %{conn: conn, list: list} do
+      [user] = list.users
 
-      assert html_response(conn, 200) =~ "Listing Lists"
+      conn =
+        log_in_user(conn, user)
+        |> UserAuth.fetch_current_user(%{})
+        |> get(Routes.list_path(conn, :index))
+
+      assert html_response(conn, 200) =~ ~s/#{list.title}/
     end
   end
 

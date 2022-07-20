@@ -23,6 +23,7 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
+  ## ListController routes
   scope "/", CollaborlistWeb do
     pipe_through :browser
 
@@ -38,11 +39,13 @@ defmodule CollaborlistWeb.Router do
   scope "/", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
-    resources "/", ListController, except: [:index, :create, :edit, :update, :delete, :show]
+    resources "/", ListController, except: [:index, :new, :create, :edit, :update, :delete, :show]
     get "/:list_id", ListController, :edit
     put "/:list_id", ListController, :update
     delete "/:list_id", ListController, :delete
   end
+
+  ##################################################################
 
   scope "/collab", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]

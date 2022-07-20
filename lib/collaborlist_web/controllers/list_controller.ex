@@ -5,7 +5,7 @@ defmodule CollaborlistWeb.ListController do
   alias Collaborlist.Catalog.List
 
   def index(conn, _params) do
-    user = conn.assigns[:currt_user]
+    user = conn.assigns[:current_user]
 
     if user do
       lists = Catalog.list_lists(user)
