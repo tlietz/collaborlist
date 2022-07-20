@@ -15,6 +15,6 @@ defmodule Collaborlist.Invites.Invite do
   def changeset(invite, attrs) do
     invite
     |> cast(attrs, [:invite_code])
-    |> validate_required([:invite_code])
+    |> validate_required([:invite_code, :user_id, :list_id])
   end
 end

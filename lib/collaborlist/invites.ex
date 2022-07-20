@@ -7,12 +7,33 @@ defmodule Collaborlist.Invites do
   alias Collaborlist.Repo
 
   alias Collaborlist.Invites.Invite
+  alias Collaborlist.Account.User
+  alias Collaborlist.Catalog
 
   @doc """
-  Returns the list of all invites to a list.
-
+  Returns the list of all invites.
   """
+  def list_invites(%User{} = user) do
+    Repo.all(from invite in Invite, where: invite.user_id == ^user.id)
+  end
+
   def list_invites(list_id) do
-    Repo.all(from li in Invite, where: li.list_id == ^list_id)
+    Repo.all(from invite in Invite, where: invite.list_id == ^list_id)
+  end
+
+  @doc """
+  Gets a single invite.
+  """
+  def get_invite!(invite_code), do: Repo.get!(Invite, invite_code)
+
+  @doc """
+  Creates an invite.
+  """
+  def create_invite(attrs \\ %{}, %Catalog.List{} = list, %User{} = user) do
+    %Invite{}
+    |> Map.put(:list_id, list.id)
+    |> Map.put(:user_id, user.id)
+    |> Invite.changeset(attrs)
+    |> Repo.insert()
   end
 end
