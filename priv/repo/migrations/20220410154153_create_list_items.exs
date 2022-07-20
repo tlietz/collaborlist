@@ -7,7 +7,7 @@ defmodule Collaborlist.Repo.Migrations.CreateListItems do
       add :checked, :boolean, default: false, null: false
       add :striked, :boolean, default: false, null: false
 
-      add :list_id, references(:lists, on_delete: :delete_all)
+      add :list_id, references(:lists, on_delete: :delete_all), null: false
 
       timestamps()
     end
