@@ -7,7 +7,7 @@ defmodule Collaborlist.List do
   alias Collaborlist.Repo
 
   alias Collaborlist.List.ListItem
-  alias Collaborlist.Catalog.List
+  alias Collaborlist.Catalog
 
   @doc """
   Returns the list of list_items that belong to a list.
@@ -36,7 +36,7 @@ defmodule Collaborlist.List do
   @doc """
   Creates a list_item and adds it to a list.
   """
-  def create_list_item(attrs \\ %{}, %List{} = list) do
+  def create_list_item(attrs \\ %{}, %Catalog.List{} = list) do
     %ListItem{}
     |> Map.put(:list_id, list.id)
     |> ListItem.changeset(attrs)
