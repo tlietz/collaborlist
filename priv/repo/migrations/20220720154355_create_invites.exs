@@ -2,7 +2,7 @@ defmodule Collaborlist.Repo.Migrations.CreateInvites do
   use Ecto.Migration
 
   def change do
-    create table(:users, primary_key: false) do
+    create table(:invites, primary_key: false) do
       add :invite_code, :uuid, primary_key: true
 
       add :list_id, references(:lists, on_delete: :delete_all)
@@ -10,6 +10,6 @@ defmodule Collaborlist.Repo.Migrations.CreateInvites do
       timestamps()
     end
 
-    create index(:users, [:list_id])
+    create index(:invites, [:list_id])
   end
 end
