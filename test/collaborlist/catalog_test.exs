@@ -3,13 +3,13 @@ defmodule Collaborlist.CatalogTest do
 
   alias Collaborlist.Catalog
 
+  alias Collaborlist.Catalog.List
+
+  import Collaborlist.CatalogFixtures
+  import Collaborlist.AccountFixtures
+  import Collaborlist.ListFixtures
+
   describe "lists" do
-    alias Collaborlist.Catalog.List
-
-    import Collaborlist.CatalogFixtures
-    import Collaborlist.AccountFixtures
-    import Collaborlist.ListFixtures
-
     @invalid_attrs %{title: 42, checked: "foo", striked: "bar"}
 
     test "list_lists/0 returns only lists that belong to a user" do
@@ -72,6 +72,25 @@ defmodule Collaborlist.CatalogTest do
     test "change_list/1 returns a list changeset" do
       list = list_fixture()
       assert %Ecto.Changeset{} = Catalog.change_list(list)
+    end
+  end
+
+  describe "list collaborators" do
+    test "list_collaborator?/2 returns true if a user is a collaborator on a list" do
+      list = list_fixture()
+
+      [user] = list.users
+
+      assert Catalog.list_collaborator?(list.id, user) == true
+    end
+
+    test "list_collaborator?/2 returns false if a user is not a collaborator on a list" do
+      list = list_fixture()
+      list2 = list_fixture()
+
+      [user] = list.users
+
+      assert Catalog.list_collaborator?(list2.id, user) == false
     end
   end
 end
