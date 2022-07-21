@@ -2,17 +2,13 @@ defmodule Collaborlist.InvitesTest do
   use Collaborlist.DataCase
 
   alias Collaborlist.Invites
+  alias Collaborlist.Invites.Invite
 
   import Collaborlist.CatalogFixtures
-  import Collaborlist.ListFixtures
   import Collaborlist.AccountFixtures
   import Collaborlist.InvitesFixtures
 
   describe "invites" do
-    alias Collaborlist.Invites.Invite
-
-    @invalid_attrs %{content: 42, striked: "foo", checked: "bar"}
-
     test "list_invites/1 returns all expected invites" do
       user = user_fixture()
       list = list_fixture(%{}, user)
