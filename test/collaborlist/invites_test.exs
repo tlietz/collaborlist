@@ -6,15 +6,38 @@ defmodule Collaborlist.InvitesTest do
   import Collaborlist.CatalogFixtures
   import Collaborlist.ListFixtures
   import Collaborlist.AccountFixtures
+  import Collaborlist.InvitesFixtures
 
   describe "invites" do
     alias Collaborlist.Invites.Invite
 
     @invalid_attrs %{content: 42, striked: "foo", checked: "bar"}
 
-    test "create_invite/2 creates an invite" do
-      list = list_fixture()
+    test "list_invites/1 returns all expected invites" do
       user = user_fixture()
+      list = list_fixture(%{}, user)
+
+      invite = invite_fixture(list, user)
+
+      Enum.zip(Invites.list_invites(user), [user])
+      |> Enum.each(fn {got, want} ->
+        unless got.user_id == want.id do
+          raise "expected listing an invite of user to match the invite"
+        end
+      end)
+
+      Enum.zip(Invites.list_invites(invite.list_id), [list])
+      |> Enum.each(fn {got, want} ->
+        unless got.list_id == want.id do
+          raise "expected listing an invite of list to match the invite"
+        end
+      end)
+    end
+
+    test "create_invite/2 creates an invite" do
+      user = user_fixture()
+      list = list_fixture(%{}, user)
+
       assert {:ok, %Invite{} = invite} = Invites.create_invite(list, user)
 
       assert invite.list_id == list.id

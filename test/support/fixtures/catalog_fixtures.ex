@@ -4,18 +4,19 @@ defmodule Collaborlist.CatalogFixtures do
   entities via the `Collaborlist.Catalog` context.
   """
 
+  import Collaborlist.AccountFixtures
+
   @doc """
   Generate a list.
   """
-  def list_fixture(attrs \\ %{}) do
+  def list_fixture(attrs \\ %{}, user \\ user_fixture()) do
     attrs =
       attrs
       |> Enum.into(%{
         title: "some title"
       })
 
-    {:ok, list} =
-      Collaborlist.AccountFixtures.user_fixture() |> Collaborlist.Catalog.create_list(attrs)
+    {:ok, list} = user |> Collaborlist.Catalog.create_list(attrs)
 
     list
   end
