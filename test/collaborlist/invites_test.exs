@@ -34,6 +34,13 @@ defmodule Collaborlist.InvitesTest do
       end)
     end
 
+    test "get_invite!/1 returns the invite with the given invite_code" do
+      invite = invite_fixture()
+
+      got = Invites.get_invite!(invite.invite_code)
+      assert got.invite_code == invite.invite_code
+    end
+
     test "create_invite/2 creates an invite" do
       user = user_fixture()
       list = list_fixture(%{}, user)
