@@ -73,9 +73,9 @@ Therefore, to keep things simpler, only approach `2` is used.
 - [x] Create an account through the app.
 - [x] Google sign in
 - [ ] Display collaborators on a list
-- [ ] Strikethrough or checkmark lists
+- [ ] Strikethrough or checkmark list items
 - [ ] Invite to collaborate on list via link
-- [ ] Collaborate on users in real-time
+- [ ] Collaborate on lists in real-time
 
 ## Future Todos
 
