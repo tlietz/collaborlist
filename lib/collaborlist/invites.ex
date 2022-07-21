@@ -29,7 +29,7 @@ defmodule Collaborlist.Invites do
   @doc """
   Creates an invite.
   """
-  def create_invite(attrs \\ %{}, %Catalog.List{} = list, %User{} = user) do
+  def create_invite(%Catalog.List{} = list, %User{} = user, attrs \\ %{}) do
     %Invite{}
     |> Map.put(:list_id, list.id)
     |> Map.put(:user_id, user.id)

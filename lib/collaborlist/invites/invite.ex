@@ -4,7 +4,7 @@ defmodule Collaborlist.Invites.Invite do
 
   @primary_key {:invite_code, :binary_id, autogenerate: true}
 
-  schema "users" do
+  schema "invites" do
     belongs_to :list, Collaborlist.Catalog.List
     belongs_to :user, Collaborlist.Account.User
 
@@ -14,7 +14,7 @@ defmodule Collaborlist.Invites.Invite do
   @doc false
   def changeset(invite, attrs) do
     invite
-    |> cast(attrs, [:invite_code])
-    |> validate_required([:invite_code, :user_id, :list_id])
+    |> cast(attrs, [])
+    |> validate_required([:user_id, :list_id])
   end
 end
