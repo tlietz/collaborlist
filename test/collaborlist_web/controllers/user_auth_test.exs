@@ -3,6 +3,7 @@ defmodule CollaborlistWeb.UserAuthTest do
 
   alias Collaborlist.Account
   alias CollaborlistWeb.UserAuth
+  alias CollaborlistWeb.Invites
   import Collaborlist.AccountFixtures
 
   @remember_me_cookie "_collaborlist_web_user_remember_me"

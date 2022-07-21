@@ -53,17 +53,29 @@ defmodule CollaborlistWeb.Router do
     resources "/lists/:list_id/list_items", CollabController, except: [:show]
   end
 
-  ## Invite routes
-
   # TODO: determine good routing for invites that allows invites to be created for individual lists
-  scope "/invite", CollaborlistWeb do
+  scope "/collab", CollaborlistWeb do
     pipe_through [:browser]
 
-    get "/lists/invite/:invite_code", InviteController, :process_invite
+    get "/lists/:list_id/invite/:invite_code", InvitesController, :process_invite
   end
 
-  scope "/lists/:list_id", CollaborlistWeb do
+  scope "/collab", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
+
+    get "/lists/:list_id/invite/", InvitesController, :edit
+    post "/lists/:list_id/invite/", InvitesController, :create
+  end
+
+  scope "/collab", CollaborlistWeb do
+    pipe_through [
+      :browser,
+      :require_authenticated_user,
+      :require_user_list_collaborator,
+      :require_user_invite_creator
+    ]
+
+    delete "/lists/:list_id/invite/:invite_code", InvitesController, :create
   end
 
   ## Authentication routes

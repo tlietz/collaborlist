@@ -1,4 +1,4 @@
-defmodule CollaborlistWeb.InviteController do
+defmodule CollaborlistWeb.InvitesController do
   use CollaborlistWeb, :controller
 
   def process_invite(conn, params) do

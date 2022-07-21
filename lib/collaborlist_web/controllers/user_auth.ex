@@ -4,6 +4,7 @@ defmodule CollaborlistWeb.UserAuth do
 
   alias Collaborlist.Account
   alias Collaborlist.Catalog
+  alias Collaborlist.Invites
   alias CollaborlistWeb.Router.Helpers, as: Routes
 
   # Make the remember me cookie valid for 60 days.
@@ -143,6 +144,7 @@ defmodule CollaborlistWeb.UserAuth do
   @doc """
   Used for routes that require the user to be a collaborator on a list.
   """
+  # TODO: write test for this function
   def require_user_list_collaborator(conn, _opts) do
     if Catalog.list_collaborator?(
          maybe_to_integer(conn.params["list_id"]),
@@ -164,6 +166,12 @@ defmodule CollaborlistWeb.UserAuth do
 
   defp maybe_to_integer(string?) do
     string?
+  end
+
+  @doc """
+  Used for routes that require the user to be the creator of an invite
+  """
+  def require_user_invite_creator(conn, _opts) do
   end
 
   defp maybe_store_return_to(%{method: "GET"} = conn) do
