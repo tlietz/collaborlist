@@ -46,5 +46,18 @@ defmodule Collaborlist.InvitesTest do
       assert invite.list_id == list.id
       assert invite.user_id == user.id
     end
+
+    test "invite_creator?/2 returns true if the user is a creator of an invite, false otherwise" do
+      user = user_fixture()
+      list = list_fixture()
+
+      {:ok, invite} = Invites.create_invite(list, user)
+
+      assert Invites.invite_creator?(invite.invite_code, user) == true
+
+      user2 = user_fixture()
+
+      assert Invites.invite_creator?(invite.invite_code, user2) == false
+    end
   end
 end

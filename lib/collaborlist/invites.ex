@@ -46,5 +46,14 @@ defmodule Collaborlist.Invites do
   Returns true if the user is the creator of an invite, false otherwise.
   """
   def invite_creator?(invite_code, %User{} = user) do
+    invite =
+      get_invite(invite_code)
+      |> Repo.preload(:user)
+
+    if invite.user.id == user.id do
+      true
+    else
+      false
+    end
   end
 end
