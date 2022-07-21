@@ -23,6 +23,7 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
+  # TODO: Sign a user in as a guest if no account is here, so that they can start using the webapp immideately
   ## ListController routes
   scope "/", CollaborlistWeb do
     pipe_through :browser
@@ -55,10 +56,10 @@ defmodule CollaborlistWeb.Router do
   ## Invite routes
 
   # TODO: determine good routing for invites that allows invites to be created for individual lists
-  scope "invite/", CollaborlistWeb do
+  scope "/invite", CollaborlistWeb do
     pipe_through [:browser]
 
-    get "lists/invite/:invite_code", InviteController, :process_invite
+    get "/lists/invite/:invite_code", InviteController, :process_invite
   end
 
   scope "/lists/:list_id", CollaborlistWeb do
