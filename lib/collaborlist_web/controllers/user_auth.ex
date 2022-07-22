@@ -172,6 +172,20 @@ defmodule CollaborlistWeb.UserAuth do
   Used for routes that require the user to be the creator of an invite
   """
   def require_user_invite_creator(conn, _opts) do
+    if Invites.invite_creator?(
+         conn.params[
+           "invite_code"
+         ],
+         conn.assigns[:current_user]
+       ) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be the invite creator to do this action.")
+      |> maybe_store_return_to()
+      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> halt()
+    end
   end
 
   defp maybe_store_return_to(%{method: "GET"} = conn) do
