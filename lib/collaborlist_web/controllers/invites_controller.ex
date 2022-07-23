@@ -6,6 +6,17 @@ defmodule CollaborlistWeb.InvitesController do
 
   alias Collaborlist.Catalog
 
+  def index(conn, %{"list_id" => list_id}) do
+    user = conn.assigns[:current_user]
+
+    if user do
+      lists = Catalog.list_lists(user)
+      render(conn, "index.html", lists: lists)
+    else
+      render(conn, "index.html", lists: [])
+    end
+  end
+
   def create(conn, %{"list_id" => list_id}) do
     user = conn.assigns[:current_user]
     list = Catalog.get_list!(list_id)
@@ -14,12 +25,12 @@ defmodule CollaborlistWeb.InvitesController do
       {:ok, invite} ->
         conn
         |> put_flash(:info, "Invite link: #{invite_link(invite)}")
-        |> redirect(to: Routes.collab_path(conn, :index, list))
+        |> redirect(to: Routes.invites_path(conn, :index, list))
 
       {:error, %Ecto.Changeset{} = _changeset} ->
         conn
         |> put_flash(:error, "error occured while trying to create invite link")
-        |> redirect(to: Routes.collab_path(conn, :index, list))
+        |> redirect(to: Routes.invites_path(conn, :index, list))
     end
   end
 

@@ -239,7 +239,7 @@ defmodule CollaborlistWeb.UserAuthTest do
 
   describe "require_user_invite_creator/2" do
     test "redirects if user is not an invite creator", %{conn: conn} do
-      invite = invite_fixture(list_fixture(), user_fixture())
+      invite = invite_fixture(user_fixture(), list_fixture())
       other_user = user_fixture()
 
       conn =
@@ -256,7 +256,7 @@ defmodule CollaborlistWeb.UserAuthTest do
     test "stores the path to redirect to on GET", %{conn: conn} do
       other_user = user_fixture()
 
-      invite = invite_fixture(list_fixture(), user_fixture())
+      invite = invite_fixture(user_fixture(), list_fixture())
 
       halted_conn =
         %{
@@ -303,7 +303,7 @@ defmodule CollaborlistWeb.UserAuthTest do
     end
 
     test "does not redirect if user is the invite creator", %{conn: conn, user: user} do
-      invite = invite_fixture(list_fixture(), user)
+      invite = invite_fixture(user, list_fixture())
 
       conn =
         %{conn | params: %{"invite_code" => invite.invite_code}}

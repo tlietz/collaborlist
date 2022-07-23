@@ -26,6 +26,7 @@ defmodule CollaborlistWeb.Router do
   # TODO: Sign a user in as a guest if no account is here, so that they can start using the webapp immideately
 
   ## ListController routes
+
   scope "/", CollaborlistWeb do
     pipe_through :browser
 
@@ -66,6 +67,7 @@ defmodule CollaborlistWeb.Router do
   scope "/lists/:list_id/invite", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
+    get "/", InvitesController, :index
     post "/", InvitesController, :create
   end
 

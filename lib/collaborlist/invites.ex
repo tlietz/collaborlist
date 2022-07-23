@@ -21,6 +21,10 @@ defmodule Collaborlist.Invites do
     Repo.all(from invite in Invite, where: invite.list_id == ^list_id)
   end
 
+  def list_invites(%User{}, list_id) do
+    Repo.all(from invite in Invite, where: invite.list_id == ^list_id)
+  end
+
   @doc """
   Gets a single invite.
   """
@@ -34,10 +38,10 @@ defmodule Collaborlist.Invites do
   @doc """
   Creates an invite.
   """
-  def create_invite(%Catalog.List{} = list, %User{} = user, attrs \\ %{}) do
+  def create_invite(%User{} = user, %Catalog.List{} = list, attrs \\ %{}) do
     %Invite{}
-    |> Map.put(:list_id, list.id)
     |> Map.put(:user_id, user.id)
+    |> Map.put(:list_id, list.id)
     |> Invite.changeset(attrs)
     |> Repo.insert()
   end
@@ -45,7 +49,7 @@ defmodule Collaborlist.Invites do
   @doc """
   Returns true if the user is the creator of an invite, false otherwise.
   """
-  def invite_creator?(invite_code, %User{} = user) do
+  def invite_creator?(%User{} = user, invite_code) do
     invite =
       get_invite(invite_code)
       |> Repo.preload(:user)

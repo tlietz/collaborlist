@@ -13,7 +13,7 @@ defmodule Collaborlist.InvitesTest do
       user = user_fixture()
       list = list_fixture(%{}, user)
 
-      invite = invite_fixture(list, user)
+      invite = invite_fixture(user, list)
 
       Enum.zip(Invites.list_invites(user), [user])
       |> Enum.each(fn {got, want} ->
@@ -41,7 +41,7 @@ defmodule Collaborlist.InvitesTest do
       user = user_fixture()
       list = list_fixture(%{}, user)
 
-      assert {:ok, %Invite{} = invite} = Invites.create_invite(list, user)
+      assert {:ok, %Invite{} = invite} = Invites.create_invite(user, list)
 
       assert invite.list_id == list.id
       assert invite.user_id == user.id
@@ -51,13 +51,13 @@ defmodule Collaborlist.InvitesTest do
       user = user_fixture()
       list = list_fixture()
 
-      {:ok, invite} = Invites.create_invite(list, user)
+      {:ok, invite} = Invites.create_invite(user, list)
 
-      assert Invites.invite_creator?(invite.invite_code, user) == true
+      assert Invites.invite_creator?(user, invite.invite_code) == true
 
       user2 = user_fixture()
 
-      assert Invites.invite_creator?(invite.invite_code, user2) == false
+      assert Invites.invite_creator?(user2, invite.invite_code) == false
     end
   end
 end

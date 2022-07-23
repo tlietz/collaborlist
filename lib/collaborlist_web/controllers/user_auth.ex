@@ -172,10 +172,10 @@ defmodule CollaborlistWeb.UserAuth do
   """
   def require_user_invite_creator(conn, _opts) do
     if Invites.invite_creator?(
+         conn.assigns[:current_user],
          conn.params[
            "invite_code"
-         ],
-         conn.assigns[:current_user]
+         ]
        ) do
       conn
     else
