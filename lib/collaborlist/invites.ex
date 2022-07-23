@@ -21,8 +21,10 @@ defmodule Collaborlist.Invites do
     Repo.all(from invite in Invite, where: invite.list_id == ^list_id)
   end
 
-  def list_invites(%User{}, list_id) do
-    Repo.all(from invite in Invite, where: invite.list_id == ^list_id)
+  def list_invites(%User{} = user, list_id) do
+    Repo.all(
+      from invite in Invite, where: invite.list_id == ^list_id and invite.user_id == ^user.id
+    )
   end
 
   @doc """
