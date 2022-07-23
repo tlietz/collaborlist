@@ -24,6 +24,7 @@ defmodule CollaborlistWeb.Router do
   end
 
   # TODO: Sign a user in as a guest if no account is here, so that they can start using the webapp immideately
+
   ## ListController routes
   scope "/", CollaborlistWeb do
     pipe_through :browser
@@ -31,13 +32,13 @@ defmodule CollaborlistWeb.Router do
     resources "/", ListController, only: [:index]
   end
 
-  scope "/", CollaborlistWeb do
+  scope "/lists", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     resources "/", ListController, only: [:create, :new]
   end
 
-  scope "/", CollaborlistWeb do
+  scope "/lists", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
     get "/:list_id", ListController, :edit
@@ -47,26 +48,28 @@ defmodule CollaborlistWeb.Router do
 
   ## Collab routes
 
-  scope "/collab", CollaborlistWeb do
+  scope "/lists/:list_id/collab", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
-    resources "/lists/:list_id/list_items", CollabController, except: [:show]
+    resources "/list_items/", CollabController, except: [:show]
   end
 
-  scope "/collab", CollaborlistWeb do
+  ## Invite routes
+
+  scope "/lists/:list_id/invite", CollaborlistWeb do
     pipe_through [:browser]
 
-    get "/lists/:list_id/invite/:invite_code", InvitesController, :process_invite
+    get "/:invite_code", InvitesController, :process_invite
   end
 
-  scope "/collab", CollaborlistWeb do
+  scope "/lists/:list_id/invite", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
-    get "/lists/:list_id/invite/new", InvitesController, :new
-    post "/lists/:list_id/invite/", InvitesController, :create
+    get "/new", InvitesController, :new
+    post "/", InvitesController, :create
   end
 
-  scope "/collab", CollaborlistWeb do
+  scope "/lists/:list_id/invite", CollaborlistWeb do
     pipe_through [
       :browser,
       :require_authenticated_user,
@@ -74,7 +77,7 @@ defmodule CollaborlistWeb.Router do
       :require_user_invite_creator
     ]
 
-    delete "/lists/:list_id/invite/:invite_code", InvitesController, :delete
+    delete "/:invite_code", InvitesController, :delete
   end
 
   ## Authentication routes
