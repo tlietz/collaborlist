@@ -81,7 +81,7 @@ defmodule Collaborlist.CatalogTest do
 
       [user] = list.users
 
-      assert Catalog.list_collaborator?(list.id, user) == true
+      assert Catalog.list_collaborator?(user, list.id) == true
     end
 
     test "list_collaborator?/2 returns false if a user is not a collaborator on a list" do
@@ -90,7 +90,7 @@ defmodule Collaborlist.CatalogTest do
 
       [user] = list.users
 
-      assert Catalog.list_collaborator?(list2.id, user) == false
+      assert Catalog.list_collaborator?(user, list2.id) == false
     end
 
     test "add_collaborator/2 adds a user as a collaborator to a list" do
@@ -100,13 +100,13 @@ defmodule Collaborlist.CatalogTest do
 
       user2 = user_fixture()
 
-      assert Catalog.list_collaborator?(list.id, user1) == true
-      assert Catalog.list_collaborator?(list.id, user2) == false
+      assert Catalog.list_collaborator?(user1, list.id) == true
+      assert Catalog.list_collaborator?(user2, list.id) == false
 
       _ = Catalog.add_collaborator(list, user2)
 
-      assert Catalog.list_collaborator?(list.id, user1) == true
-      assert Catalog.list_collaborator?(list.id, user2) == true
+      assert Catalog.list_collaborator?(user1, list.id) == true
+      assert Catalog.list_collaborator?(user2, list.id) == true
     end
 
     test "remove_collaborator/2 removes a user as a collaborator" do
@@ -116,14 +116,14 @@ defmodule Collaborlist.CatalogTest do
 
       user2 = user_fixture()
 
-      assert Catalog.list_collaborator?(list.id, user1) == true
-      assert Catalog.list_collaborator?(list.id, user2) == false
+      assert Catalog.list_collaborator?(user1, list.id) == true
+      assert Catalog.list_collaborator?(user2, list.id) == false
 
       _ = Catalog.add_collaborator(list, user2)
       _ = Catalog.remove_collaborator(list, user1)
 
-      assert Catalog.list_collaborator?(list.id, user1) == false
-      assert Catalog.list_collaborator?(list.id, user2) == true
+      assert Catalog.list_collaborator?(user1, list.id) == false
+      assert Catalog.list_collaborator?(user2, list.id) == true
     end
 
     test "list_collaborators/1 returns a list of collaborators" do

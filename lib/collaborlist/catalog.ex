@@ -114,7 +114,7 @@ defmodule Collaborlist.Catalog do
   @doc """
   Returns true if the user is a collaborator on a list, false otherwise.
   """
-  def list_collaborator?(list_id, %User{} = user) do
+  def list_collaborator?(%User{} = user, list_id) do
     query =
       from "users_lists",
         select: [:user_id],

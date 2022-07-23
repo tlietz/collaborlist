@@ -23,7 +23,6 @@ defmodule Collaborlist.InvitesTest do
       end)
 
       Enum.zip(Invites.list_invites(invite.list_id), [list])
-      |> IO.inspect(label: "LIST")
       |> Enum.each(fn {got, want} ->
         unless got.list_id == want.id do
           raise "expected listing an invite of list to match the invite"
@@ -33,7 +32,6 @@ defmodule Collaborlist.InvitesTest do
       _invite2 = invite_fixture(user_fixture(), list_fixture())
 
       Enum.zip(Invites.list_invites(user, invite.list_id), [user, list])
-      |> IO.inspect(label: "HELLo")
       |> Enum.each(fn {got, want} ->
         unless got.user_id == want.id and got.list_id == list.id do
           raise "expected listing an invite of user and list to match the invite"
