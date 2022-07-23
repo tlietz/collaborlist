@@ -54,15 +54,10 @@ if the `invite_code` exists and if it's not expired, the client is
 routed to a register page, login page, or the list based on their 
 account status.
 
-Two appraoches were considered to purge stale invite links:
-
-1) Using a genserver to spawn processes that know which invite link to delete at what time
-2) Doing a check at set time intervals 
-
-Approach `1` is more "elixir-ish" and elegant with it's use of a process.
-However, if something happens to the server, and the genserver fails at the wrong time, a stale invite link might be able to slip by.
-If that were to happen, approach `2` would have to be implemented as a failsafe anyways.
-Therefore, to keep things simpler, only approach `2` is used. 
+An invite is stored permanently until any one of the following occurs:
+- A user manually deletes the invite
+- The list that an invite is associated with is deleted
+- The user that created the invite is deleted
 
 ## Features
 
