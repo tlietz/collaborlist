@@ -70,9 +70,10 @@ An invite is stored permanently until any one of the following occurs:
 - [ ] Display collaborators on a list
 - [ ] Strikethrough or checkmark list items
 - [ ] Invite to collaborate on list via link
+- [ ] User can delete invites
 - [ ] Collaborate on lists in real-time
 
-## Future Todos
+## Future Improvements
 
 - [ ] Link app account to Google sign in.
 - [ ] Drag and drop to reorder list items
@@ -85,3 +86,5 @@ An invite is stored permanently until any one of the following occurs:
 - [ ] Export lists as text file
 - [ ] Search for lists and list items
 - [ ] Email options such as notifying upon list changing
+- [ ] Invites with expiry time
+- [ ] Invites with limited number of uses
