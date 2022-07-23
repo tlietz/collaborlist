@@ -38,6 +38,13 @@ defmodule Collaborlist.Invites do
   def get_invite(invite_code), do: Repo.get(Invite, invite_code)
 
   @doc """
+  Deletes an invite
+  """
+  def delete_invite(%Invite{} = invite) do
+    Repo.delete(invite)
+  end
+
+  @doc """
   Creates an invite.
   """
   def create_invite(%User{} = user, %Catalog.List{} = list, attrs \\ %{}) do

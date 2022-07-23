@@ -10,10 +10,10 @@ defmodule CollaborlistWeb.InvitesController do
     user = conn.assigns[:current_user]
 
     if user do
-      lists = Catalog.list_lists(user)
-      render(conn, "index.html", lists: lists)
+      invites = Invites.list_invites(user, list_id)
+      render(conn, "index.html", invites: invites, list_id: list_id)
     else
-      render(conn, "index.html", lists: [])
+      render(conn, "index.html", invites: [])
     end
   end
 
@@ -21,10 +21,9 @@ defmodule CollaborlistWeb.InvitesController do
     user = conn.assigns[:current_user]
     list = Catalog.get_list!(list_id)
 
-    case Invites.create_invite(list, user) do
+    case Invites.create_invite(user, list) do
       {:ok, invite} ->
         conn
-        |> put_flash(:info, "Invite link: #{invite_link(invite)}")
         |> redirect(to: Routes.invites_path(conn, :index, list))
 
       {:error, %Ecto.Changeset{} = _changeset} ->
@@ -32,6 +31,14 @@ defmodule CollaborlistWeb.InvitesController do
         |> put_flash(:error, "error occured while trying to create invite link")
         |> redirect(to: Routes.invites_path(conn, :index, list))
     end
+  end
+
+  def delete(conn, %{"list_id" => list_id, "invite_code" => invite_code}) do
+    invite = Invites.get_invite!(invite_code)
+    {:ok, _invite} = Invites.delete_invite(invite)
+
+    conn
+    |> redirect(to: Routes.invites_path(conn, :index, list_id))
   end
 
   defp invite_link(invite) do

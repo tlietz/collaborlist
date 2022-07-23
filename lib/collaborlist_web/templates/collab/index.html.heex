@@ -39,11 +39,7 @@
 
 <br />
 
-<span><%= link("Invite collaborators", to: Routes.invites_path(@conn, :index, @list.id)) %></span>
-
-<br />
-
-<span><%= link("Manage invites", to: Routes.invites_path(@conn, :create, @list.id), method: :post) %></span>
+<span><%= link("Manage Invites", to: Routes.invites_path(@conn, :index, @list.id)) %></span>
 
 <br />
 
