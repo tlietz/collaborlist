@@ -40,10 +40,6 @@ defmodule CollaborlistWeb.InvitesController do
     |> redirect(to: Routes.invites_path(conn, :index, list_id))
   end
 
-  def invite_link(invite) do
-    invite.invite_code
-  end
-
   def process_invite(conn, %{"list_id" => list_id, "invite_code" => invite_code}) do
     conn
   end
