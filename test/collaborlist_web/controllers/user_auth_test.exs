@@ -3,8 +3,9 @@ defmodule CollaborlistWeb.UserAuthTest do
 
   alias Collaborlist.Account
   alias CollaborlistWeb.UserAuth
-  alias CollaborlistWeb.Invites
   import Collaborlist.AccountFixtures
+  import Collaborlist.InvitesFixtures
+  import Collaborlist.CatalogFixtures
 
   @remember_me_cookie "_collaborlist_web_user_remember_me"
 
@@ -164,6 +165,151 @@ defmodule CollaborlistWeb.UserAuthTest do
 
     test "does not redirect if user is authenticated", %{conn: conn, user: user} do
       conn = conn |> assign(:current_user, user) |> UserAuth.require_authenticated_user([])
+      refute conn.halted
+      refute conn.status
+    end
+  end
+
+  describe "require_user_list_collaborator/2" do
+    test "redirects if user is not a list collaborator", %{conn: conn} do
+      list = list_fixture()
+      other_user = user_fixture()
+
+      conn =
+        %{conn | params: %{"list_id" => list.id}}
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_list_collaborator([])
+
+      assert conn.halted
+      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert get_flash(conn, :error) =~ "collaborator on the list"
+    end
+
+    test "stores the path to redirect to on GET", %{conn: conn} do
+      list = list_fixture()
+      other_user = user_fixture()
+
+      halted_conn =
+        %{conn | path_info: ["foo"], query_string: "", params: %{"list_id" => list.id}}
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_list_collaborator([])
+
+      assert halted_conn.halted
+      assert get_session(halted_conn, :user_return_to) == "/foo"
+
+      halted_conn =
+        %{conn | path_info: ["foo"], query_string: "bar=baz", params: %{"list_id" => list.id}}
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_list_collaborator([])
+
+      assert halted_conn.halted
+      assert get_session(halted_conn, :user_return_to) == "/foo?bar=baz"
+
+      halted_conn =
+        %{
+          conn
+          | path_info: ["foo"],
+            query_string: "bar",
+            method: "POST",
+            params: %{"list_id" => list.id}
+        }
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_list_collaborator([])
+
+      assert halted_conn.halted
+      refute get_session(halted_conn, :user_return_to)
+    end
+
+    test "does not redirect if user is a collaborator", %{conn: conn, user: user} do
+      list = list_fixture(%{}, user)
+
+      conn =
+        %{conn | params: %{"list_id" => list.id}}
+        |> assign(:current_user, user)
+        |> UserAuth.require_user_list_collaborator([])
+
+      refute conn.halted
+      refute conn.status
+    end
+  end
+
+  describe "require_user_invite_creator/2" do
+    test "redirects if user is not an invite creator", %{conn: conn} do
+      invite = invite_fixture(list_fixture(), user_fixture())
+      other_user = user_fixture()
+
+      conn =
+        %{conn | params: %{"invite_code" => invite.invite_code}}
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_invite_creator([])
+
+      assert conn.halted
+      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert get_flash(conn, :error) =~ "invite creator"
+    end
+
+    test "stores the path to redirect to on GET", %{conn: conn} do
+      other_user = user_fixture()
+
+      invite = invite_fixture(list_fixture(), user_fixture())
+
+      halted_conn =
+        %{
+          conn
+          | path_info: ["foo"],
+            query_string: "",
+            params: %{"invite_code" => invite.invite_code}
+        }
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_invite_creator([])
+
+      assert halted_conn.halted
+      assert get_session(halted_conn, :user_return_to) == "/foo"
+
+      halted_conn =
+        %{
+          conn
+          | path_info: ["foo"],
+            query_string: "bar=baz",
+            params: %{"invite_code" => invite.invite_code}
+        }
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_invite_creator([])
+
+      assert halted_conn.halted
+      assert get_session(halted_conn, :user_return_to) == "/foo?bar=baz"
+
+      halted_conn =
+        %{
+          conn
+          | path_info: ["foo"],
+            query_string: "bar",
+            method: "POST",
+            params: %{"invite_code" => invite.invite_code}
+        }
+        |> assign(:current_user, other_user)
+        |> fetch_flash()
+        |> UserAuth.require_user_invite_creator([])
+
+      assert halted_conn.halted
+      refute get_session(halted_conn, :user_return_to)
+    end
+
+    test "does not redirect if user is the invite creator", %{conn: conn, user: user} do
+      invite = invite_fixture(list_fixture(), user)
+
+      conn =
+        %{conn | params: %{"invite_code" => invite.invite_code}}
+        |> assign(:current_user, user)
+        |> UserAuth.require_user_invite_creator([])
+
       refute conn.halted
       refute conn.status
     end
