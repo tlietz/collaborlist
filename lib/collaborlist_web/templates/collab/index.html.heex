@@ -39,7 +39,7 @@
 
 <br />
 
-<span><%= link("Create invite", to: Routes.invites_path(@conn, :new, @list.id)) %></span>
+<span><%= link("Create invite", to: Routes.invites_path(@conn, :create, @list.id), method: :post) %></span>
 
 <br />
 
