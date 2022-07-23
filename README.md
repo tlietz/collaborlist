@@ -54,6 +54,9 @@ if the `invite_code` exists and if it's not expired, the client is
 routed to a register page, login page, or the list based on their 
 account status.
 
+The invite links are created dynamically in `invites_view.ex` using the `invite_code`. 
+The links aren't statically stored in a database because if the url of the website were to change in the future, a database migration would need to occur. 
+
 An invite is stored permanently until any one of the following occurs:
 - A user manually deletes the invite
 - The list that an invite is associated with is deleted

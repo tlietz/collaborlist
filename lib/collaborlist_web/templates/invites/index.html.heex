@@ -3,7 +3,7 @@
 <table>
   <thead>
     <tr>
-      <th>Invites</th>
+      <th>Invite Links</th>
       <th></th>
     </tr>
   </thead>
@@ -11,7 +11,7 @@
     <%= for invite <- @invites do %>
       <tr>
         <td>
-          <%= invite.invite_code %>
+          <%= invite_link(invite) %>
         </td>
 
         <td>
