@@ -29,13 +29,14 @@ defmodule CollaborlistWeb.Router do
   scope "/", CollaborlistWeb do
     pipe_through :browser
 
-    resources "/", ListController, only: [:index]
+    get "/", ListController, :index
   end
 
   scope "/lists", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    resources "/", ListController, only: [:create, :new]
+    get "/new", ListController, :new
+    post "/", ListController, :create
   end
 
   scope "/lists", CollaborlistWeb do
