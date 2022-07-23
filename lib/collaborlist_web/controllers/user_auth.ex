@@ -144,7 +144,6 @@ defmodule CollaborlistWeb.UserAuth do
   @doc """
   Used for routes that require the user to be a collaborator on a list.
   """
-  # TODO: write test for this function
   def require_user_list_collaborator(conn, _opts) do
     if Catalog.list_collaborator?(
          maybe_to_integer(conn.params["list_id"]),
