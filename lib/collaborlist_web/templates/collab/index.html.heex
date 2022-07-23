@@ -39,4 +39,8 @@
 
 <br />
 
+<span><%= link("Create invite", to: Routes.invites_path(@conn, :new, @list.id)) %></span>
+
+<br />
+
 <span><%= link("Back to Lists", to: Routes.list_path(@conn, :index)) %></span>

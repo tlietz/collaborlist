@@ -43,6 +43,8 @@ defmodule Collaborlist.Catalog do
   """
   def get_list!(id), do: Repo.get!(Catalog.List, id)
 
+  def get_list(id), do: Repo.get(Catalog.List, id)
+
   @doc """
   Creates a list.
 
