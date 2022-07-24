@@ -28,7 +28,7 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
-  # TODO: Sign a user in as a guest if no account is here, so that they can start using the webapp immideately
+  # TODO: Persist the guest user in a session similar to how a regular user would be
 
   ## ListController routes
 
