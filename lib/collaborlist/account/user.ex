@@ -10,6 +10,7 @@ defmodule Collaborlist.Account.User do
     field :hashed_password, :string, redact: true
     # This corresponds to the `sub` claim on Google Certs JWT
     field :google_uid, :string, redact: true
+    field :is_guest, :boolean
     field :confirmed_at, :naive_datetime
 
     has_many :invites, Collaborlist.Invites.Invite

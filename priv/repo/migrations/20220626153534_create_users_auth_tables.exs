@@ -8,6 +8,7 @@ defmodule Collaborlist.Repo.Migrations.CreateUsersAuthTables do
       add :email, :citext, null: false
       add :hashed_password, :string, default: nil
       add :google_uid, :string, default: nil
+      add :is_guest, :boolean, default: false
       add :confirmed_at, :naive_datetime
       timestamps()
     end
