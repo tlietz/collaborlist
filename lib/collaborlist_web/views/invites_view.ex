@@ -1,8 +1,8 @@
 defmodule CollaborlistWeb.InvitesView do
   use CollaborlistWeb, :view
 
-  @dev_link "http://localhost:4000/lists/"
-  @prod_link "https://www.collaborlist.com/lists/"
+  @dev_link "http://localhost:4000/"
+  @prod_link "https://www.collaborlist.com/"
 
   def invite_link(invite) do
     if Mix.env() == :prod do
@@ -13,10 +13,10 @@ defmodule CollaborlistWeb.InvitesView do
   end
 
   defp dev_link(invite) do
-    "#{@dev_link}#{invite.list_id}/invite/#{invite.invite_code}"
+    "#{@dev_link}/invites/#{invite.invite_code}"
   end
 
   defp prod_link(invite) do
-    "#{@prod_link}#{invite.list_id}/invite/#{invite.invite_code}"
+    "#{@prod_link}/invites/#{invite.invite_code}"
   end
 end

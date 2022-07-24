@@ -58,20 +58,20 @@ defmodule CollaborlistWeb.Router do
 
   ## Invite routes
 
-  scope "/lists/:list_id/invite", CollaborlistWeb do
+  scope "/", CollaborlistWeb do
     pipe_through [:browser]
 
-    get "/:invite_code", InvitesController, :process_invite
+    get "invites/:invite_code", InvitesController, :process_invite
   end
 
-  scope "/lists/:list_id/invite", CollaborlistWeb do
+  scope "/lists/:list_id/invites", CollaborlistWeb do
     pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
 
     get "/", InvitesController, :index
     post "/", InvitesController, :create
   end
 
-  scope "/lists/:list_id/invite", CollaborlistWeb do
+  scope "/lists/:list_id/invites", CollaborlistWeb do
     pipe_through [
       :browser,
       :require_authenticated_user,
