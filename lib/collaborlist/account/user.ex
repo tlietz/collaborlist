@@ -2,7 +2,7 @@ defmodule Collaborlist.Account.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @required_fields [:email, :password, :google_uid]
+  @required_fields [:email, :password, :google_uid, :is_guest]
 
   schema "users" do
     field :email, :string
@@ -43,9 +43,15 @@ defmodule Collaborlist.Account.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, @required_fields)
+    |> not_guest()
     |> validate_email()
     |> maybe_confirm_email()
     |> maybe_validate_password(opts)
+  end
+
+  defp not_guest(changeset) do
+    changeset
+    |> Map.put(:changes, changeset.changes |> Map.put(:is_guest, false))
   end
 
   defp validate_email(changeset) do
@@ -102,6 +108,15 @@ defmodule Collaborlist.Account.User do
     else
       changeset
     end
+  end
+
+  @doc """
+  A user changeset for registering a guest user
+  """
+
+  def guest_registration_changeset(user, attrs, _opts \\ []) do
+    user
+    |> cast(attrs, [:is_guest])
   end
 
   @doc """

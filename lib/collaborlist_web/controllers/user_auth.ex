@@ -111,6 +111,22 @@ defmodule CollaborlistWeb.UserAuth do
   end
 
   @doc """
+  Creates, and fetches a guest user if no current user is logged in.
+  This plug must be run after `fetch_current_user`
+  because it relies on determining whether a user is fetched or not.
+  """
+
+  def maybe_fetch_guest_user(conn, _opts) do
+    if conn.assigns[:current_user] do
+      conn
+    else
+      IO.puts("creating guest")
+      {:ok, guest_user} = Account.register_guest_user()
+      assign(conn, :current_user, guest_user)
+    end
+  end
+
+  @doc """
   Used for routes that require the user to not be authenticated.
   """
   def redirect_if_user_is_authenticated(conn, _opts) do

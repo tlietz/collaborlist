@@ -13,6 +13,11 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :guest do
+    plug :browser
+    plug :maybe_fetch_guest_user
+  end
+
   # Google sign in uses its own CSRF protection that conflicts with Phoneix's :protect_from_forgery plug
   pipeline :google_sign_in do
     plug :accepts, ["html"]
@@ -28,7 +33,7 @@ defmodule CollaborlistWeb.Router do
   ## ListController routes
 
   scope "/", CollaborlistWeb do
-    pipe_through :browser
+    pipe_through [:browser, :guest]
 
     get "/", ListController, :index
   end
@@ -61,7 +66,7 @@ defmodule CollaborlistWeb.Router do
   scope "/", CollaborlistWeb do
     pipe_through [:browser]
 
-    get "invites/:invite_code", InvitesController, :process_invite
+    get "/invites/:invite_code", InvitesController, :process_invite
   end
 
   scope "/lists/:list_id/invites", CollaborlistWeb do

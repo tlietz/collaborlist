@@ -79,6 +79,22 @@ defmodule Collaborlist.Account do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  @doc """
+  Gets a single user.
+
+  Returns nil if the User does not exist.
+
+  ## Examples
+
+      iex> get_user!(123)
+      %User{}
+
+      iex> get_user!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user(id), do: Repo.get(User, id)
+
   ## User registration
 
   @doc """
@@ -96,6 +112,12 @@ defmodule Collaborlist.Account do
   def register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def register_guest_user() do
+    %User{}
+    |> User.guest_registration_changeset(%{is_guest: true})
     |> Repo.insert()
   end
 

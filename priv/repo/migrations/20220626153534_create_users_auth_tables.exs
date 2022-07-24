@@ -5,7 +5,7 @@ defmodule Collaborlist.Repo.Migrations.CreateUsersAuthTables do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""
 
     create table(:users) do
-      add :email, :citext, null: false
+      add :email, :citext
       add :hashed_password, :string, default: nil
       add :google_uid, :string, default: nil
       add :is_guest, :boolean, default: false
