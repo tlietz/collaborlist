@@ -75,7 +75,12 @@ defmodule CollaborlistWeb.Router do
   end
 
   scope "/lists/:list_id/invites", CollaborlistWeb do
-    pipe_through [:browser, :require_authenticated_user, :require_user_list_collaborator]
+    pipe_through [
+      :browser,
+      :maybe_assign_guest_user,
+      :require_authenticated_user,
+      :require_user_list_collaborator
+    ]
 
     get "/", InvitesController, :index
     post "/", InvitesController, :create
