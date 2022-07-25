@@ -115,10 +115,22 @@ defmodule Collaborlist.Account do
     |> Repo.insert()
   end
 
+  @doc """
+  Registers a guest user
+  """
   def register_guest_user() do
     %User{}
     |> User.guest_registration_changeset(%{is_guest: true})
     |> Repo.insert()
+  end
+
+  @doc """
+  Transforms a guest into a regular user
+
+  Returns {:ok, %Struct{}} or {:error, %Ecto.Changeset{}}
+  """
+  def guest_no_more(%User{} = user, attrs) do
+    user |> User.registration_changeset(attrs) |> Repo.update()
   end
 
   @doc """
