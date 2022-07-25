@@ -90,7 +90,7 @@ defmodule CollaborlistWeb.Router do
   ## Authentication routes
 
   scope "/", CollaborlistWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    pipe_through [:browser, :redirect_if_user_is_not_guest]
 
     get "/users/register", UserRegistrationController, :new
     post "/users/register", UserRegistrationController, :create

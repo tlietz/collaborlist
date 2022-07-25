@@ -115,15 +115,27 @@ defmodule CollaborlistWeb.UserAuthTest do
     end
   end
 
-  describe "redirect_if_user_is_authenticated/2" do
-    test "redirects if user is authenticated", %{conn: conn, user: user} do
-      conn = conn |> assign(:current_user, user) |> UserAuth.redirect_if_user_is_authenticated([])
+  describe "redirect_if_user_is_not_guest/2" do
+    test "redirects if user is not a guest", %{conn: conn, user: user} do
+      conn = conn |> assign(:current_user, user) |> UserAuth.redirect_if_user_is_not_guest([])
       assert conn.halted
       assert redirected_to(conn) == "/"
     end
 
-    test "does not redirect if user is not authenticated", %{conn: conn} do
-      conn = UserAuth.redirect_if_user_is_authenticated(conn, [])
+    test "does not redirect if there is no user", %{conn: conn} do
+      conn = UserAuth.redirect_if_user_is_not_guest(conn, [])
+      refute conn.halted
+      refute conn.status
+    end
+
+    test "does not redirect if the user is a guest", %{conn: conn} do
+      guest_user = guest_user_fixture()
+
+      conn =
+        conn
+        |> assign(:current_user, guest_user)
+        |> UserAuth.redirect_if_user_is_not_guest([])
+
       refute conn.halted
       refute conn.status
     end

@@ -131,8 +131,10 @@ defmodule CollaborlistWeb.UserAuth do
   @doc """
   Used for routes that require the user to not be authenticated.
   """
-  def redirect_if_user_is_authenticated(conn, _opts) do
-    if conn.assigns[:current_user] do
+  def redirect_if_user_is_not_guest(conn, _opts) do
+    user = conn.assigns[:current_user]
+
+    if user && user.is_guest == false do
       conn
       |> redirect(to: signed_in_path(conn))
       |> halt()

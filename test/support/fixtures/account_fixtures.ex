@@ -31,6 +31,12 @@ defmodule Collaborlist.AccountFixtures do
     user
   end
 
+  def guest_user_fixture(attrs \\ %{}) do
+    {:ok, guest_user} = Collaborlist.Account.register_guest_user()
+
+    guest_user
+  end
+
   def google_user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs
