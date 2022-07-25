@@ -1,36 +1,10 @@
 <ul>
-  <%= if @current_user do %>
+  <%= if @current_user && @current_user.is_guest == false do %>
 
-    <%= if @current_user.is_guest == false do %>
       <li><%= @current_user.email %></li>
       <li><%= link("Settings", to: Routes.user_settings_path(@conn, :edit)) %></li>
       <li><%= link("Log out", to: Routes.user_session_path(@conn, :delete), method: :delete) %></li>
-    <% else %>
-    <li>Logged in as guest, if your lists to be saved and accessible from other devices, register for an account.</li>
-    <li><%= link("Register", to: Routes.user_registration_path(@conn, :new)) %></li>
-    <li><%= link("Log in", to: Routes.user_session_path(@conn, :new)) %></li>
-    <li>
-      <div
-        id="g_id_onload"
-        data-client_id="486854246467-4o5dqr6fv5jkbojbhp6flddtfqf8ch8d.apps.googleusercontent.com"
-        data-login_uri="http://localhost:4000/google/login"
-        data-auto_prompt="false"
-      >
-      </div>
-      <div
-        class="g_id_signin"
-        data-type="standard"
-        data-size="large"
-        data-theme="outline"
-        data-text="sign_in_with"
-        data-shape="rectangular"
-        data-logo_alignment="left"
-      >
-      </div>
-    </li>
-    <% end %>
   <% else %>
-    <li>Logged in as guest, if your lists to be saved and accessible from other devices, register for an account.</li>
     <li><%= link("Register", to: Routes.user_registration_path(@conn, :new)) %></li>
     <li><%= link("Log in", to: Routes.user_session_path(@conn, :new)) %></li>
     <li>
@@ -52,5 +26,6 @@
       >
       </div>
     </li>
+    <li>Logged in as guest, if you want your lists to be saved and accessible from other devices, register for a new account, or log into an existing account.</li>
   <% end %>
 </ul>
