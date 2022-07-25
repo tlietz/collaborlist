@@ -32,11 +32,20 @@ defmodule CollaborlistWeb.GoogleUserController do
             |> put_flash(:error, "Your email is already registered to an account")
             |> redirect(to: Routes.list_path(conn, :index))
           else
+            current_user = conn.assigns[:current_user]
+
             {:ok, new_google_user} =
-              Account.register_user(%{
-                email: id_token |> GoogleCerts.email(),
-                google_uid: id_token |> GoogleCerts.uid()
-              })
+              if current_user && current_user.is_guest == true do
+                Account.guest_no_more(current_user, %{
+                  email: id_token |> GoogleCerts.email(),
+                  google_uid: id_token |> GoogleCerts.uid()
+                })
+              else
+                Account.register_user(%{
+                  email: id_token |> GoogleCerts.email(),
+                  google_uid: id_token |> GoogleCerts.uid()
+                })
+              end
 
             conn
             |> UserAuth.log_in_user(new_google_user)
