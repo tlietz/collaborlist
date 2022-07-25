@@ -124,6 +124,7 @@ defmodule Collaborlist.Account do
     |> Repo.insert()
   end
 
+  # TODO: Include unit tests of all new guest user functionality once invite processing is set up.
   @doc """
   Transforms a guest into a regular user
 
