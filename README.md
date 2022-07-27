@@ -30,10 +30,9 @@ Part of the motivation for using *JWT authentication* and *session-based authori
 
 If a user is not signed into an account, they will be automatically signed in as a guest. 
 This way, they are able to use the app immideately.
-When a user that was previously a guest registers an account, the guest user's `is_guest` field is changed from `true` to `false`. 
-This allows all progress to be saved as long as the user used the guest account on only one device.
 
-To put the guest user into a session, the plug `maybe_user_guest`
+When a user that was previously a guest registers for an account, the guest user's `is_guest` field is changed from `true` to `false`. 
+This allows all progress to be saved as long as the user used the guest account on only one device.
 
 ## Invite Links
 
@@ -47,11 +46,11 @@ When a user creates an invite link, a `UUID` is generated and stored as the `inv
 The link created looks something like:
 `https://collaborlist.com/invite/qwerty12345`
 
-
 When a client navigates to the `/invite/:invite_code` endpoint, 
 if the `invite_code` exists and if it's not expired, the client is 
-routed to a register page, login page, or the list based on their 
-account status.
+routed to a page that asks them if they would like to continue 
+as a guest, login to an existing account, or register for a now account
+to collaborate on the list. 
 
 The invite links are created dynamically in `invites_view.ex` using the `invite_code`. 
 The links aren't statically stored in a database because if the url of the website were to change in the future, a database migration would need to occur. 
