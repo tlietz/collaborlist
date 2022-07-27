@@ -110,6 +110,16 @@ defmodule Collaborlist.AccountTest do
     end
   end
 
+  describe "guest_no_more/2" do
+    test "Tranforms a guest user into a regular user" do
+      guest = guest_user_fixture()
+
+      {:ok, user} = guest |> Account.guest_no_more(valid_user_attributes())
+
+      assert user.is_guest == false
+    end
+  end
+
   describe "change_user_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Account.change_user_registration(%User{})
