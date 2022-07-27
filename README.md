@@ -79,15 +79,15 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 - [x] Delete items from lists
 - [x] Create an account through the app.
 - [x] Google sign in
-- [ ] Display collaborators on a list
 - [ ] Strikethrough or checkmark list items
 - [ ] Invite to collaborate on list via link
-- [ ] User can delete invites
+- [x] User can delete invites
 - [ ] Collaborate on lists in real-time
 
 ## Future Improvements
 
 - [ ] Link app account to Google sign in.
+- [ ] Display collaborators on a list 
 - [ ] Drag and drop to reorder list items
 - [ ] Invite to collaborate on list via QR code
 - [ ] Reset lists
