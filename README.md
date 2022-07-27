@@ -87,6 +87,7 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 ## Future Improvements
 
 - [ ] Link app account to Google sign in.
+- [ ] Decouple invite codes from ecto UUIDs and make them string based.
 - [ ] Display collaborators on a list 
 - [ ] Drag and drop to reorder list items
 - [ ] Invite to collaborate on list via QR code
