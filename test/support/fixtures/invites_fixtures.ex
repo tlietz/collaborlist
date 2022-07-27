@@ -8,7 +8,7 @@ defmodule Collaborlist.InvitesFixtures do
   import Collaborlist.AccountFixtures
 
   @doc """
-  Generates a list_item and a list, then adds the list_item to that list.
+  Generates an invite
   """
   def invite_fixture(user \\ user_fixture(), list \\ list_fixture()) do
     {:ok, invite} = Collaborlist.Invites.create_invite(user, list)

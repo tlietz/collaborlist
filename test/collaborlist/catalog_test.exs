@@ -8,6 +8,7 @@ defmodule Collaborlist.CatalogTest do
   import Collaborlist.CatalogFixtures
   import Collaborlist.AccountFixtures
   import Collaborlist.ListFixtures
+  import Collaborlist.InvitesFixtures
 
   describe "lists" do
     @invalid_attrs %{title: 42, checked: "foo", striked: "bar"}
@@ -91,6 +92,24 @@ defmodule Collaborlist.CatalogTest do
       [user] = list.users
 
       assert Catalog.list_collaborator?(user, list2.id) == false
+    end
+
+    test "maybe_add_collaborator/3 returns {:ok, _} if the invite is valid" do
+      user = user_fixture()
+      list = list_fixture()
+
+      invite = invite_fixture(user, list)
+
+      assert {:ok, _} = Catalog.maybe_add_collaborator(list, user, invite.invite_code)
+    end
+
+    test "maybe_add_collaborator/3 returns {:error, _} if the invite is not valid" do
+      assert {:error, _} =
+               Catalog.maybe_add_collaborator(
+                 list_fixture(),
+                 user_fixture(),
+                 Ecto.UUID.generate()
+               )
     end
 
     test "add_collaborator/2 adds a user as a collaborator to a list" do

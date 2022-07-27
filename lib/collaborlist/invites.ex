@@ -28,12 +28,12 @@ defmodule Collaborlist.Invites do
   end
 
   @doc """
-  Gets a single invite.
+  Gets a single invite. Raises an error if the invite does not exist
   """
   def get_invite!(invite_code), do: Repo.get!(Invite, invite_code)
 
   @doc """
-  Gets a single invite.
+  Gets a single invite. Returns nil if the invite does not exist
   """
   def get_invite(invite_code), do: Repo.get(Invite, invite_code)
 
