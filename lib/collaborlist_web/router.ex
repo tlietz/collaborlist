@@ -23,7 +23,7 @@ defmodule CollaborlistWeb.Router do
     plug :fetch_current_user
   end
 
-  # TODO: Persist the guest user in a session similar to how a regular user would be
+  # TODO: Purge guests after the max forget me time is reached
 
   ## ListController routes
 
@@ -69,7 +69,8 @@ defmodule CollaborlistWeb.Router do
   ## Invite routes
 
   scope "/", CollaborlistWeb do
-    pipe_through [:browser, :maybe_assign_guest_user]
+    # TODO display a selection screen if a user is not logged in asking if they want to continue as guest, register, or login
+    pipe_through [:browser]
 
     get "/invites/:invite_code", InvitesController, :process_invite
   end
