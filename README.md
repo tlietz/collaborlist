@@ -46,10 +46,9 @@ The link created looks something like:
 `https://collaborlist.com/invites/qwerty12345`
 
 When a client navigates to the `/invites/:invite_code` endpoint, 
-if the `invite_code` exists and it's not expired, the client is 
-routed to a page that asks them if they would like to continue 
-as a guest, login to an existing account, or register for a now account
-to collaborate on the list. 
+if the `invite_code` exists and it's not expired, the currently logged in user
+will be added as a collaborator to the list that the invite was created for. 
+The client is then redirected to the index page of that list. If no user was logged in, a guest user will be logged in and added as the collaborator. 
 
 The invite links are created dynamically in `invites_view.ex` using the `invite_code`. 
 The links aren't statically stored in a database because if the url of the website were to change in the future, a database migration would need to occur. 
