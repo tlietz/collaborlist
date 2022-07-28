@@ -80,6 +80,7 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 - [x] Strikethrough or checkmark list items
 - [x] Invite to collaborate on list via link
 - [x] User can delete invites
+- [ ] Users can delete themselves
 - [ ] Collaborate on lists in real-time
 
 ## Future Improvements
@@ -87,6 +88,7 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 - [ ] Click to copy invite links
 - [ ] Purge guest accounts that exceed the max age
 - [ ] When using an invite link, if user is not logged in, route to a page that allows them to select between: continue as guest, register new account, or login to existing account 
+- [ ] Time limiting requests to prevent spammers
 - [ ] Link app account to Google sign in.
 - [x] Decouple invite codes from ecto UUIDs and make them string based.
 - [ ] Display collaborators on a list 
