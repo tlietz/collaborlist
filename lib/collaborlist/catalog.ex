@@ -8,6 +8,7 @@ defmodule Collaborlist.Catalog do
 
   alias Collaborlist.Catalog
   alias Collaborlist.Invites
+  alias Collaborlist.Invites.Invite
   alias Collaborlist.Account.User
 
   @doc """
@@ -146,6 +147,10 @@ defmodule Collaborlist.Catalog do
   @doc """
   Adds a user to a list's collaborators
   """
+  def add_collaborator(%Invite{} = invite, %User{} = user) do
+    invite = invite |> Repo.preload(:list)
+  end
+
   def add_collaborator(%Catalog.List{} = list, %User{} = user) do
     users = [user | list_collaborators(list)]
 

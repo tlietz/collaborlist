@@ -38,6 +38,17 @@ defmodule Collaborlist.Invites do
   def get_invite(invite_code), do: Repo.get(Invite, invite_code)
 
   @doc """
+  Determines if an invite code is valid
+  """
+  def invite_code_valid?(invite_code) do
+    if get_invite(invite_code) do
+      true
+    else
+      false
+    end
+  end
+
+  @doc """
   Deletes an invite
   """
   def delete_invite(%Invite{} = invite) do

@@ -45,7 +45,9 @@ defmodule CollaborlistWeb.InvitesController do
     user = conn.assigns[:current_user]
 
     if Invites.get_invite(invite_code) do
-      IO.puts("success")
+      if user && user.guest == false do
+      else
+      end
     else
       conn
       |> put_flash(:error, "Invite code invalid")

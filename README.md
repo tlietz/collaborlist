@@ -36,18 +36,17 @@ This allows all progress to be saved as long as the user used the guest account 
 
 ## Invite Links
 
-Users can create a collaboration invite link with an expiry time and 
-a maximum number of uses. 
+Users can create a collaboration invite link.
 
 In the database, the `invites` table has `invite_code` as its primary 
 key, and a column that stores the `list_id` the invite link is for.
-When a user creates an invite link, a `UUID` is generated and stored as the `invite_code`.
+When a user creates an invite link, a `UUID string` is generated and stored as the `invite_code`.
 
 The link created looks something like:
-`https://collaborlist.com/invite/qwerty12345`
+`https://collaborlist.com/invites/qwerty12345`
 
-When a client navigates to the `/invite/:invite_code` endpoint, 
-if the `invite_code` exists and if it's not expired, the client is 
+When a client navigates to the `/invites/:invite_code` endpoint, 
+if the `invite_code` exists and it's not expired, the client is 
 routed to a page that asks them if they would like to continue 
 as a guest, login to an existing account, or register for a now account
 to collaborate on the list. 
@@ -86,8 +85,9 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 
 ## Future Improvements
 
+- [ ] Upon
 - [ ] Link app account to Google sign in.
-- [ ] Decouple invite codes from ecto UUIDs and make them string based.
+- [x] Decouple invite codes from ecto UUIDs and make them string based.
 - [ ] Display collaborators on a list 
 - [ ] Drag and drop to reorder list items
 - [ ] Invite to collaborate on list via QR code

@@ -46,6 +46,13 @@ defmodule Collaborlist.InvitesTest do
       assert got.invite_code == invite.invite_code
     end
 
+    test "invite_code_valid? returns true if the code is valid, false otherwise" do
+      assert Invites.invite_code_valid?("invalid-code") == false
+
+      invite = invite_fixture()
+      assert Invites.invite_code_valid?(invite.invite_code) == true
+    end
+
     test "create_invite/2 creates an invite" do
       user = user_fixture()
       list = list_fixture(%{}, user)
