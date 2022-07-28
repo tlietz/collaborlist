@@ -42,13 +42,20 @@ defmodule CollaborlistWeb.InvitesController do
   end
 
   def process_invite(conn, %{"invite_code" => invite_code}) do
-    user = conn.assigns[:current_user]
-
     invite = Invites.get_invite(invite_code)
 
     if invite do
-      if user && user.guest == false do
-        Catalog
+      user = conn.assigns[:current_user]
+
+      if user && user.is_guest == false do
+        # Don't need to check if the list exists,
+        # because anytime a list that an invite is deleted,
+        # all invites to that list are also deleted.
+        _ = Catalog.add_collaborator(invite, user)
+
+        conn
+        |> put_flash(:info, "Invite code successfull")
+        |> redirect(to: Routes.collab_path(conn, :index, invite.list_id))
       else
       end
     else
