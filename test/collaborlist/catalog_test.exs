@@ -112,7 +112,19 @@ defmodule Collaborlist.CatalogTest do
                )
     end
 
-    test "add_collaborator/2 adds a user as a collaborator to a list" do
+    test "add_collaborator(%Invite{}, %User{})/2 adds a user as a collaborator to a list" do
+      invite = invite_fixture()
+
+      user = user_fixture()
+
+      assert Catalog.list_collaborator?(user, invite.list_id) == false
+
+      _ = Catalog.add_collaborator(invite, user)
+
+      assert Catalog.list_collaborator?(user, invite.list_id) == true
+    end
+
+    test "add_collaborator(%List{}, %User{})/2 adds a user as a collaborator to a list" do
       list = list_fixture()
 
       [user1] = list.users

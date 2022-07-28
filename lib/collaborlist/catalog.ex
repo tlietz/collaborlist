@@ -148,13 +148,19 @@ defmodule Collaborlist.Catalog do
   Adds a user to a list's collaborators
   """
   def add_collaborator(%Invite{} = invite, %User{} = user) do
-    invite = invite |> Repo.preload(:list)
+    invite_with_list =
+      invite
+      |> Repo.preload(:list)
+
+    add_collaborator(invite_with_list.list, user)
   end
 
   def add_collaborator(%Catalog.List{} = list, %User{} = user) do
-    users = [user | list_collaborators(list)]
+    list_with_collaborators = list |> Repo.preload(:users)
 
-    list
+    users = [user | list_with_collaborators.users]
+
+    list_with_collaborators
     |> Catalog.List.changeset_update_collaborators(users)
     |> Repo.update()
   end

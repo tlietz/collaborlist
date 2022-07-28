@@ -44,8 +44,11 @@ defmodule CollaborlistWeb.InvitesController do
   def process_invite(conn, %{"invite_code" => invite_code}) do
     user = conn.assigns[:current_user]
 
-    if Invites.get_invite(invite_code) do
+    invite = Invites.get_invite(invite_code)
+
+    if invite do
       if user && user.guest == false do
+        Catalog
       else
       end
     else
