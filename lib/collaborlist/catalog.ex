@@ -128,23 +128,6 @@ defmodule Collaborlist.Catalog do
   defp found_user?(_), do: true
 
   @doc """
-  Adds a user to a list's collaborators and returns:
-  {:ok, _} if the invite and corresponding changeset is valid
-
-  Otherwise returns:
-  {:error, "invite code not valid"}
-  or
-  {:error, changeset} if the changeset is invalid
-  """
-  def maybe_add_collaborator(%Catalog.List{} = list, %User{} = user, invite_code) do
-    if Invites.get_invite(invite_code) do
-      add_collaborator(list, user)
-    else
-      {:error, "invite code not valid"}
-    end
-  end
-
-  @doc """
   Adds a user to a list's collaborators
   """
   def add_collaborator(%Invite{} = invite, %User{} = user) do
