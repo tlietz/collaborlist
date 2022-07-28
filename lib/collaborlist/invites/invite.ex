@@ -2,7 +2,7 @@ defmodule Collaborlist.Invites.Invite do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key {:invite_code, :binary_id, autogenerate: true}
+  @primary_key {:invite_code, :string, autogenerate: false}
 
   schema "invites" do
     belongs_to :list, Collaborlist.Catalog.List
@@ -15,6 +15,19 @@ defmodule Collaborlist.Invites.Invite do
   def changeset(invite, attrs) do
     invite
     |> cast(attrs, [])
-    |> validate_required([:user_id, :list_id])
+    |> gen_invite_code()
+    |> validate_required([:invite_code, :user_id, :list_id])
+  end
+
+  defp gen_invite_code(changeset) do
+    changeset
+    |> Map.put(
+      :changes,
+      changeset.changes
+      |> Map.put(
+        :invite_code,
+        Ecto.UUID.generate()
+      )
+    )
   end
 end

@@ -3,7 +3,7 @@ defmodule Collaborlist.Repo.Migrations.CreateInvites do
 
   def change do
     create table(:invites, primary_key: false) do
-      add :invite_code, :uuid, primary_key: true
+      add :invite_code, :string, primary_key: true
 
       add :list_id, references(:lists, on_delete: :delete_all), null: false
       add :user_id, references(:users, on_delete: :delete_all), null: false

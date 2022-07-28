@@ -2,8 +2,9 @@ defmodule CollaborlistWeb.InvitesController do
   use CollaborlistWeb, :controller
 
   alias Collaborlist.Invites
-
   alias Collaborlist.Catalog
+
+  # TODO: Write tests for invite controller
 
   def index(conn, %{"list_id" => list_id}) do
     user = conn.assigns[:current_user]
@@ -40,7 +41,15 @@ defmodule CollaborlistWeb.InvitesController do
     |> redirect(to: Routes.invites_path(conn, :index, list_id))
   end
 
-  def process_invite(conn, %{"list_id" => list_id, "invite_code" => invite_code}) do
-    conn
+  def process_invite(conn, %{"invite_code" => invite_code}) do
+    user = conn.assigns[:current_user]
+
+    if Invites.get_invite(invite_code) do
+      IO.puts("success")
+    else
+      conn
+      |> put_flash(:error, "Invite code invalid")
+      |> redirect(to: Routes.list_path(conn, :index))
+    end
   end
 end
