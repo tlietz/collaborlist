@@ -6,12 +6,7 @@ defmodule CollaborlistWeb.InvitesControllerTest do
   import Collaborlist.InvitesFixtures
 
   alias CollaborlistWeb.UserAuth
-  alias Collaborlist.Catalog
   alias Collaborlist.Invites
-
-  @create_attrs %{title: "some title"}
-  @update_attrs %{title: "some updated title"}
-  @invalid_attrs %{title: 4, checked: "foo", striked: "bar"}
 
   setup :register_and_log_in_user
 
@@ -33,8 +28,6 @@ defmodule CollaborlistWeb.InvitesControllerTest do
     test "redirects if user is not a collaborator on the list", %{conn: conn} do
       user = user_fixture()
       list = list_fixture()
-
-      invite = invite_fixture(user, list)
 
       conn =
         log_in_user(conn, user)
@@ -86,7 +79,6 @@ defmodule CollaborlistWeb.InvitesControllerTest do
   describe "process invite" do
     test "redirects to website index when invite code is invalid", %{conn: conn} do
       user = user_fixture()
-      list = list_fixture(%{}, user)
 
       conn =
         log_in_user(conn, user)
