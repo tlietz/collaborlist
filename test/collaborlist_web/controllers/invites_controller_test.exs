@@ -65,4 +65,21 @@ defmodule CollaborlistWeb.InvitesControllerTest do
       assert html_response(conn, 200) =~ invite.invite_code
     end
   end
+
+  describe "delete invite" do
+    test "deletes chosen list", %{conn: conn} do
+      user = user_fixture()
+      list = list_fixture(%{}, user)
+      invite = invite_fixture(user, list)
+
+      conn =
+        log_in_user(conn, user)
+        |> UserAuth.fetch_current_user(%{})
+        |> delete(Routes.invites_path(conn, :delete, list.id, invite.invite_code))
+
+      assert redirected_to(conn) == Routes.invites_path(conn, :index, list.id)
+
+      assert Invites.get_invite(invite.invite_code) == nil
+    end
+  end
 end
