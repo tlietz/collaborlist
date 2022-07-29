@@ -70,7 +70,7 @@ defmodule CollaborlistWeb.Router do
 
   scope "/", CollaborlistWeb do
     # TODO display a selection screen if a user is not logged in asking if they want to continue as guest, register, or login
-    pipe_through [:browser]
+    pipe_through [:browser, :maybe_assign_guest_user]
 
     get "/invites/:invite_code", InvitesController, :process_invite
   end

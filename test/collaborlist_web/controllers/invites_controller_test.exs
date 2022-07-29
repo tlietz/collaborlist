@@ -82,4 +82,31 @@ defmodule CollaborlistWeb.InvitesControllerTest do
       assert Invites.get_invite(invite.invite_code) == nil
     end
   end
+
+  describe "process invite" do
+    test "redirects to website index when invite code is invalid", %{conn: conn} do
+      user = user_fixture()
+      list = list_fixture(%{}, user)
+
+      conn =
+        log_in_user(conn, user)
+        |> UserAuth.fetch_current_user(%{})
+        |> get(Routes.invites_path(conn, :process_invite, "invalid-code"))
+
+      assert redirected_to(conn) == Routes.list_path(conn, :index)
+    end
+
+    test "redirects to list invite belongs to when invite code is valid", %{conn: conn} do
+      user = user_fixture()
+      list = list_fixture(%{}, user)
+      invite = invite_fixture(user, list)
+
+      conn =
+        log_in_user(conn, user)
+        |> UserAuth.fetch_current_user(%{})
+        |> get(Routes.invites_path(conn, :process_invite, invite.invite_code))
+
+      assert redirected_to(conn) == Routes.collab_path(conn, :index, invite.list_id)
+    end
+  end
 end
