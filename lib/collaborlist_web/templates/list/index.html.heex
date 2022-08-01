@@ -1,27 +1,23 @@
 <h1>Listing Lists</h1>
 
-  <table>
-    <thead>
+<table>
+  <thead>
+    <tr>
+      <td>
+        <br />
+        <span></span>
+        <br />
+        <span></span>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for list <- @lists do %>
       <tr>
-        <td>
-          <br />
-          <span>
-          </span>
-          <br />
-          <span>
-          </span>
-        </td>
+        <td><%= list.title %></td>
       </tr>
-    </thead>
-    <tbody>
-      <%= for list <- @lists do %>
-        <tr>
-          <td><%= list.title %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>
 
-<span>
-</span>
-
+<span></span>

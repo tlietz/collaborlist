@@ -17,7 +17,13 @@
         <td>
           <span>
             <%= link("Delete",
-              to: Routes.invites_path(@conn, :delete, @list_id, invite.invite_code),
+              to:
+                Routes.invites_path(
+                  @conn,
+                  :delete,
+                  @list_id,
+                  invite.invite_code
+                ),
               method: :delete
             ) %>
           </span>
@@ -28,9 +34,16 @@
 </table>
 
 <span>
-  <%= link("Create Invite", to: Routes.invites_path(@conn, :create, @list_id), method: :post) %>
+  <%= link("Create Invite",
+    to: Routes.invites_path(@conn, :create, @list_id),
+    method: :post
+  ) %>
 </span>
 
 <br />
 
-<span><%= link("Back to List", to: Routes.collab_path(@conn, :index, @list_id)) %></span>
+<span>
+  <%= link("Back to List",
+    to: Routes.collab_path(@conn, :index, @list_id)
+  ) %>
+</span>
