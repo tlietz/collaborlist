@@ -7,7 +7,6 @@ defmodule Collaborlist.Catalog do
   alias Collaborlist.Repo
 
   alias Collaborlist.Catalog
-  alias Collaborlist.Invites
   alias Collaborlist.Invites.Invite
   alias Collaborlist.Account.User
 
