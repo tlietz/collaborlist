@@ -3,7 +3,7 @@
   <table>
     <thead>
       <tr>
-        <td><%= list.title %></td>
+        <td><%= @list.title %></td>
 
         <td>
           <br />
@@ -19,6 +19,10 @@
       <%= for list <- @lists do %>
         <tr>
           <td><%= list.title %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
 <span>
 </span>
