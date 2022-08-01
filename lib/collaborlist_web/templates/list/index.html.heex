@@ -1,44 +1,43 @@
 <%= if @conn.assigns[:current_user] do %>
-<h1>Listing Lists</h1>
+  <h1>Listing Lists</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>List</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%= for list <- @lists do %>
+  <table>
+    <thead>
       <tr>
-        <td><%= list.title %></td>
-
-        <td>
-          <span><%= link("Collab", to: Routes.collab_path(@conn, :index, list.id)) %></span>
-          <br />
-          <span>
-            <%= link("Change List Name", to: Routes.list_path(@conn, :edit, list.id)) %>
-          </span>
-          <br />
-          <span>
-            <%= link("Delete",
-              to: Routes.list_path(@conn, :delete, list.id),
-              method: :delete,
-              data: [confirm: "Are you sure?"]
-            ) %>
-          </span>
-        </td>
+        <th>List</th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <%= for list <- @lists do %>
+        <tr>
+          <td><%= list.title %></td>
 
-<span>
-<%= link("New List", to: Routes.list_path(@conn, :new)) %>
-</span>
+          <td>
+            <span><%= link("Collab", to: Routes.collab_path(@conn, :index, list.id)) %></span>
+            <br />
+            <span>
+              <%= link("Change List Name", to: Routes.list_path(@conn, :edit, list.id)) %>
+            </span>
+            <br />
+            <span>
+              <%= link("Delete",
+                to: Routes.list_path(@conn, :delete, list.id),
+                method: :delete,
+                data: [confirm: "Are you sure?"]
+              ) %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <span>
+    <%= link("New List", to: Routes.list_path(@conn, :new)) %>
+  </span>
 <% else %>
-<div>
-  Register and login to create lists
-</div>
+  <div>
+    Register and login to create lists
+  </div>
 <% end %>
-

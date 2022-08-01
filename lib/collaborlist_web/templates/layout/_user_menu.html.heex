@@ -1,11 +1,8 @@
-<%# TODO: Move the google sign in to somewhere else so that the screen doesnt glitch %>
-<%# TODO: Mix environment dependent data-login_uri for google sign in%>
 <ul>
   <%= if @current_user && @current_user.is_guest == false do %>
-
-      <li><%= @current_user.email %></li>
-      <li><%= link("Settings", to: Routes.user_settings_path(@conn, :edit)) %></li>
-      <li><%= link("Log out", to: Routes.user_session_path(@conn, :delete), method: :delete) %></li>
+    <li><%= @current_user.email %></li>
+    <li><%= link("Settings", to: Routes.user_settings_path(@conn, :edit)) %></li>
+    <li><%= link("Log out", to: Routes.user_session_path(@conn, :delete), method: :delete) %></li>
   <% else %>
     <li><%= link("Register", to: Routes.user_registration_path(@conn, :new)) %></li>
     <li><%= link("Log in", to: Routes.user_session_path(@conn, :new)) %></li>
@@ -28,6 +25,8 @@
       >
       </div>
     </li>
-    <li>Logged in as guest, if you want your lists to be saved and accessible from other devices, register for a new account, or log into an existing account.</li>
+    <li>
+      Logged in as guest, if you want your lists to be saved and accessible from other devices, register for a new account, or log into an existing account.
+    </li>
   <% end %>
 </ul>
