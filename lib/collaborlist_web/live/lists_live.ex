@@ -16,13 +16,12 @@ defmodule CollaborlistWeb.ListsLive do
   end
 
   def render(assigns) do
-    user = assigns[:current_user]
-
-    if user do
-      lists = Catalog.list_lists(user)
-      Phoenix.View.render(CollaborlistWeb.ListView, "index.html", lists: lists)
-    else
-      Phoenix.View.render(CollaborlistWeb.ListView, "index.html", lists: [])
-    end
+    ~H"""
+    <div>
+      <h1>The count is: <%= @val %></h1>
+      <button phx-click="dec">-</button>
+      <button phx-click="inc">+</button>
+    </div>
+    """
   end
 end
