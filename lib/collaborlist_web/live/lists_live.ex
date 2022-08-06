@@ -1,4 +1,4 @@
-defmodule CollaborlistWeb.ListsLive do
+defmodule CollaborlistWeb.ListLive do
   use CollaborlistWeb, :live_view
 
   alias Collaborlist.Catalog
