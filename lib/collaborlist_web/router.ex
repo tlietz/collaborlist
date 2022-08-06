@@ -31,6 +31,7 @@ defmodule CollaborlistWeb.Router do
     pipe_through [:browser, :maybe_assign_guest_user]
 
     live "/", ListsLive
+    get "/", ListController, :index
   end
 
   scope "/lists", CollaborlistWeb do

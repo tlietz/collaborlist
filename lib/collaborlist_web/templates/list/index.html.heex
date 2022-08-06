@@ -13,15 +13,15 @@
           <td><%= list.title %></td>
 
           <td>
-            <span><%= link("Collab", to: Routes.collab_path(@conn, :index, list.id)) %></span>
+            <span><%= link("Collab", to: Routes.collab_path(@socket, :index, list.id)) %></span>
             <br />
             <span>
-              <%= link("Change List Name", to: Routes.list_path(@conn, :edit, list.id)) %>
+              <%= link("Change List Name", to: Routes.list_path(@socket, :edit, list.id)) %>
             </span>
             <br />
             <span>
               <%= link("Delete",
-                to: Routes.list_path(@conn, :delete, list.id),
+                to: Routes.list_path(@socket, :delete, list.id),
                 method: :delete,
                 data: [confirm: "Are you sure?"]
               ) %>
@@ -33,5 +33,5 @@
   </table>
 
   <span>
-    <%= link("New List", to: Routes.list_path(@conn, :new)) %>
+    <%= link("New List", to: Routes.list_path(@socket, :new)) %>
   </span>

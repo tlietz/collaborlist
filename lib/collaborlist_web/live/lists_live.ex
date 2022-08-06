@@ -3,25 +3,26 @@ defmodule CollaborlistWeb.ListsLive do
 
   alias Collaborlist.Catalog
 
+  # TODO: get lists in `mount/3` since that is only run once per liveview, then any updates to the user's lists
+
+  on_mount {CollaborlistWeb.UserAuth, :current_user}
+
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :val, 0)}
+    user = socket.assigns[:current_user]
+    lists = Catalog.list_lists(user)
+
+    {:ok, assign(socket, :lists, lists)}
   end
 
   def handle_event("inc", _, socket) do
-    {:noreply, update(socket, :val, &(&1 + 1))}
+    {:noreply, socket}
   end
 
   def handle_event("dec", _, socket) do
-    {:noreply, update(socket, :val, &(&1 - 1))}
+    {:noreply, socket}
   end
 
   def render(assigns) do
-    ~H"""
-    <div>
-      <h1>The count is: <%= @val %></h1>
-      <button phx-click="dec">-</button>
-      <button phx-click="inc">+</button>
-    </div>
-    """
+    Phoenix.View.render(CollaborlistWeb.ListView, "index.html", assigns)
   end
 end
