@@ -21,7 +21,9 @@
           <span>
             <!-- The order of @list.id and item.id matter because the url parameters :list_id and :id 
             are derived from here-->
-            <%= link("Edit", to: Routes.collab_path(@conn, :edit, @list.id, item.id)) %>
+            <%= link("Edit",
+              to: Routes.collab_path(@conn, :edit, @list.id, item.id)
+            ) %>
           </span>
           <span>
             <%= link("Delete",
@@ -35,12 +37,20 @@
   </tbody>
 </table>
 
-<span><%= link("Add item", to: Routes.collab_path(@conn, :new, @list.id)) %></span>
+<span>
+  <%= link("Add item", to: Routes.collab_path(@conn, :new, @list.id)) %>
+</span>
 
 <br />
 
-<span><%= link("Manage Invites", to: Routes.invites_path(@conn, :index, @list.id)) %></span>
+<span>
+  <%= link("Manage Invites",
+    to: Routes.invites_path(@conn, :index, @list.id)
+  ) %>
+</span>
 
 <br />
 
-<span><%= link("Back to Lists", to: Routes.list_path(@conn, :index)) %></span>
+<span>
+  <%= link("Back to Lists", to: Routes.list_path(@conn, :index)) %>
+</span>
