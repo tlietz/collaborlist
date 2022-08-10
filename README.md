@@ -86,11 +86,11 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 ## Future Improvements
 
 - [ ] Click to copy invite links
+- [ ] Add privileges to invite linkes (viewer and collaborator)
 - [ ] Purge guest accounts that exceed the max age
 - [ ] When using an invite link, if user is not logged in, route to a page that allows them to select between: continue as guest, register new account, or login to existing account 
 - [ ] Time limiting requests to prevent spammers
 - [ ] Link app account to Google sign in.
-- [x] Decouple invite codes from ecto UUIDs and make them string based.
 - [ ] Display collaborators on a list 
 - [ ] Drag and drop to reorder list items
 - [ ] Invite to collaborate on list via QR code
