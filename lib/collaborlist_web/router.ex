@@ -11,6 +11,7 @@ defmodule CollaborlistWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug :maybe_guest_flash
   end
 
   # Google sign in uses its own CSRF protection that conflicts with Phoneix's :protect_from_forgery plug

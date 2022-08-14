@@ -129,7 +129,6 @@ defmodule CollaborlistWeb.UserAuth do
   This plug must be run after `fetch_current_user`
   because it relies on determining whether a user is fetched or not.
   """
-
   def maybe_assign_guest_user(conn, _opts) do
     if conn.assigns[:current_user] do
       conn
@@ -139,6 +138,23 @@ defmodule CollaborlistWeb.UserAuth do
       conn
       |> log_in_user(guest_user, %{"remember_me" => "true"})
       |> assign(:current_user, guest_user)
+    end
+  end
+
+  @doc """
+  Puts a flash if the user currently logge din is a guest.
+  """
+  def maybe_guest_flash(conn, _opts) do
+    user = conn.assigns[:current_user]
+
+    if user && user.is_guest do
+      conn
+      |> put_flash(
+        :info,
+        "Logged in as guest. If you want to access lists from multiple devices, log in to an account."
+      )
+    else
+      conn
     end
   end
 
