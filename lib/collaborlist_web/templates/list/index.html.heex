@@ -10,6 +10,7 @@
     <tbody>
       <%= for list <- @lists do %>
         <tr>
+        <%# TODO: show the time that a list was last edited %>
           <td><%= list.title %></td>
 
           <td>
@@ -33,5 +34,10 @@
   </table>
 
   <span>
-    <%= link("New List", to: Routes.list_path(@socket, :new)) %>
+  <b> Create New List:</b>
+
+    <%= render(
+      "form.html",
+      Map.put(assigns, :action, Routes.list_path(@socket, :create))
+    ) %>
   </span>
