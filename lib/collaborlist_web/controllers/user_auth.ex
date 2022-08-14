@@ -159,10 +159,9 @@ defmodule CollaborlistWeb.UserAuth do
   end
 
   defp put_flash_if_currently_empty(conn, key, message) do
-    conn.private.phoenix_flash
-    |> IO.inspect(label: "CONN")
+    flash = conn.private[:phoenix_flash]
 
-    if(Map.has_key?(conn.private.phoenix_flash, Atom.to_string(key))) do
+    if(flash && Map.has_key?(flash, Atom.to_string(key))) do
       conn
     else
       conn

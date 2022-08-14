@@ -326,4 +326,40 @@ defmodule CollaborlistWeb.UserAuthTest do
       refute conn.status
     end
   end
+
+  describe "maybe_guest_flash/2" do
+    test "does not put flash if user is logged into an account", %{conn: conn} do
+      conn =
+        conn
+        |> fetch_flash()
+        |> UserAuth.log_in_user(user_fixture())
+        |> UserAuth.fetch_current_user([])
+        |> UserAuth.maybe_guest_flash([])
+
+      assert get_flash(conn, :info) == nil
+    end
+
+    test "puts flash if user is a guest", %{conn: conn} do
+      conn =
+        conn
+        |> fetch_flash()
+        |> UserAuth.log_in_user(guest_user_fixture())
+        |> UserAuth.fetch_current_user([])
+        |> UserAuth.maybe_guest_flash([])
+
+      assert get_flash(conn, :info) =~ "Logged in as guest"
+    end
+
+    test "does not put flash if an :info flash already exists", %{conn: conn} do
+      conn =
+        conn
+        |> fetch_flash()
+        |> UserAuth.log_in_user(guest_user_fixture())
+        |> UserAuth.fetch_current_user([])
+        |> put_flash(:info, "info")
+        |> UserAuth.maybe_guest_flash([])
+
+      refute get_flash(conn, :info) =~ "Logged in as guest"
+    end
+  end
 end
