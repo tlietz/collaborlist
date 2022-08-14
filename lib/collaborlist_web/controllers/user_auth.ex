@@ -149,12 +149,27 @@ defmodule CollaborlistWeb.UserAuth do
 
     if user && user.is_guest do
       conn
-      |> put_flash(
+      |> put_flash_if_currently_empty(
         :info,
         "Logged in as guest. If you want to access lists from multiple devices, log in to an account."
       )
     else
       conn
+    end
+  end
+
+  defp put_flash_if_currently_empty(conn, key, message) do
+    conn.private.phoenix_flash
+    |> IO.inspect(label: "CONN")
+
+    if(Map.has_key?(conn.private.phoenix_flash, Atom.to_string(key))) do
+      conn
+    else
+      conn
+      |> put_flash(
+        key,
+        message
+      )
     end
   end
 
