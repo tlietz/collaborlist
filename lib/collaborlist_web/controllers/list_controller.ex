@@ -59,7 +59,6 @@ defmodule CollaborlistWeb.ListController do
     {:ok, _list} = Catalog.delete_list(list)
 
     conn
-    |> put_flash(:info, "List deleted successfully.")
     |> redirect(to: Routes.list_path(conn, :index))
   end
 end

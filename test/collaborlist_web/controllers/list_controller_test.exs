@@ -109,8 +109,6 @@ defmodule CollaborlistWeb.ListControllerTest do
         |> delete(Routes.list_path(conn, :delete, list))
 
       assert redirected_to(conn) == Routes.list_path(conn, :index)
-
-      assert get_flash(conn, :info) =~ "deleted"
     end
   end
 
