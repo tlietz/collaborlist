@@ -20,11 +20,10 @@ defmodule Collaborlist.Catalog do
 
   """
   def list_lists(%User{} = user) do
-    user_with_lists =
-      user
-      |> Repo.preload(:lists)
+    user =
+      Repo.preload(user, lists: from(list in Catalog.List, order_by: [desc: list.updated_at]))
 
-    user_with_lists.lists
+    user.lists
   end
 
   @doc """
