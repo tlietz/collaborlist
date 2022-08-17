@@ -16,11 +16,16 @@ defmodule CollaborlistWeb.ListLive do
     {:ok,
      socket
      |> assign(:lists, lists)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> assign(:val, 0)}
   end
 
   def handle_event("validate", _, socket) do
     {:noreply, socket}
+  end
+
+  def handle_event("dec", _, socket) do
+    {:noreply, assign(socket, val: socket.assigns.val - 1)}
   end
 
   def handle_event("save", %{"list" => list_params}, socket) do
@@ -31,7 +36,7 @@ defmodule CollaborlistWeb.ListLive do
         socket
         |> IO.inspect(label: "BEFORE")
 
-        {:noreply, assign(socket, :lists, [list | socket.assigns.lists])}
+        {:noreply, assign(socket, lists: [list | socket.assigns.lists])}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply,
@@ -44,6 +49,9 @@ defmodule CollaborlistWeb.ListLive do
 
   def render(assigns) do
     ~H"""
+    <h1>The count is: <%= @val %></h1>
+    <button phx-click="dec">-</button>
+
     <h1>Listing Lists</h1>
 
     <span>
