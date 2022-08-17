@@ -1,6 +1,5 @@
 defmodule GoogleCerts do
   @moduledoc """
-  TODO: documentation
 
   The user_id_token client function in this module.
 

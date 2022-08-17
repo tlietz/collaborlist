@@ -1,4 +1,5 @@
 defmodule Collaborlist.Catalog.List do
+  # TODO: only delete list completely when all collaborators of a list have deleted the list.
   use Ecto.Schema
   import Ecto.Changeset
 

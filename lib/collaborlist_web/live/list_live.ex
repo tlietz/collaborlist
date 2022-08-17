@@ -7,6 +7,8 @@ defmodule CollaborlistWeb.ListLive do
 
   # TODO: Write about design decision to keep track of state seperately between server and client so that all the lists do not have to be queried each time an edit is made.
 
+  # TODO: Write integration tests for client and server staying in sync when doing CRUD operations on lists
+
   def mount(_params, _session, socket) do
     user = socket.assigns[:current_user]
     lists = Catalog.list_lists(user)

@@ -4,8 +4,6 @@ defmodule CollaborlistWeb.InvitesController do
   alias Collaborlist.Invites
   alias Collaborlist.Catalog
 
-  # TODO: Write tests for invite controller
-
   def index(conn, %{"list_id" => list_id}) do
     user = conn.assigns[:current_user]
 
