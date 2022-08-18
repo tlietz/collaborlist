@@ -1,3 +1,4 @@
+# TODO: Find a way to clear up error messages
 defmodule CollaborlistWeb.CollabLive do
   use CollaborlistWeb, :live_view
 
@@ -18,6 +19,20 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:list, list)
      |> assign(:list_items, list_items)
      |> assign(:changeset, changeset)}
+  end
+
+  def handle_event("validate", _, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_event("save", %{"list_item" => item_params}, socket) do
+    case List.create_list_item(item_params, socket.assigns.list) do
+      {:ok, item} ->
+        {:noreply, assign(socket, list_items: [item | socket.assigns.list_items])}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
+    end
   end
 
   def render(assigns) do

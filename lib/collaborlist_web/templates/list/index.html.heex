@@ -30,7 +30,10 @@
           </span>
           <br />
           <span>
-            <button phx-click={Phoenix.LiveView.JS.push("delete", value: %{"list_id" => list.id})}>
+            <button
+              phx-click={Phoenix.LiveView.JS.push("delete", value: %{"list_id" => list.id})}
+              data-confirm="Are you sure?"
+            >
               Delete
             </button>
           </span>

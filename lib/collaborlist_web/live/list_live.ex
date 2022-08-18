@@ -28,7 +28,7 @@ defmodule CollaborlistWeb.ListLive do
     {:ok, _list} = Catalog.delete_list(list)
 
     lists = socket.assigns.lists
-    lists_after_delete = lists |> List.delete_at(Enum.find_index(lists, fn l -> l.id == id end))
+    lists_after_delete = lists |> List.delete_at(Enum.find(lists, fn l -> l.id == id end))
 
     {:noreply,
      assign(socket,
@@ -48,9 +48,7 @@ defmodule CollaborlistWeb.ListLive do
         {:noreply, assign(socket, lists: [list | socket.assigns.lists])}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply,
-         socket
-         |> assign(:changeset, changeset)}
+        {:noreply, assign(socket, :changeset, changeset)}
     end
   end
 

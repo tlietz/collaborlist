@@ -1,5 +1,13 @@
 <h1>Collaborting on list: <%= @list.title %></h1>
 
+<span>
+  <b>Create New list item:</b>
+
+  <%= render(
+    "live_new_item_form.html",
+    assigns
+  ) %>
+</span>
 <table>
   <thead>
     <tr>
