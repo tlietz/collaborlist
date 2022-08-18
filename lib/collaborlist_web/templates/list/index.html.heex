@@ -28,11 +28,9 @@
           </span>
           <br />
           <span>
-            <%= link("Delete",
-              to: Routes.list_path(@socket, :delete, list.id),
-              method: :delete,
-              data: [confirm: "Are you sure?"]
-            ) %>
+            <button phx-click={Phoenix.LiveView.JS.push("delete", value: %{"list_id" => list.id})}>
+              Delete
+            </button>
           </span>
         </td>
       </tr>

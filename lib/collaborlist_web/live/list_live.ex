@@ -9,6 +9,8 @@ defmodule CollaborlistWeb.ListLive do
 
   # TODO: Write integration tests for client and server staying in sync when doing CRUD operations on lists
 
+  # TODO: Ensure that when a CRUD operation happens on a list item of a list, the list `updated_at` gets updated
+
   def mount(_params, _session, socket) do
     user = socket.assigns[:current_user]
     lists = Catalog.list_lists(user)
@@ -19,6 +21,19 @@ defmodule CollaborlistWeb.ListLive do
      socket
      |> assign(:lists, lists)
      |> assign(:changeset, changeset)}
+  end
+
+  def handle_event("delete", %{"list_id" => id}, socket) do
+    list = Catalog.get_list!(id)
+    {:ok, _list} = Catalog.delete_list(list)
+
+    lists = socket.assigns.lists
+    lists_after_delete = lists |> List.delete_at(Enum.find_index(lists, fn l -> l.id == id end))
+
+    {:noreply,
+     assign(socket,
+       lists: lists_after_delete
+     )}
   end
 
   def handle_event("validate", _, socket) do
