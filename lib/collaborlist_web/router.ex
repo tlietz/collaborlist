@@ -64,7 +64,8 @@ defmodule CollaborlistWeb.Router do
       :require_user_list_collaborator
     ]
 
-    resources "/list_items/", CollabController, except: [:show]
+    live "/list_items/", CollabLive, :index
+    resources "/list_items/", CollabController, except: [:show, :index]
   end
 
   ## Invite routes
