@@ -1,10 +1,11 @@
-# TODO: find a way to clear the `error_tag` in live_new_item_form.html.heex upon submitting a new list_item
 defmodule CollaborlistWeb.CollabLive do
   use CollaborlistWeb, :live_view
 
   alias Collaborlist.Catalog
   alias Collaborlist.List.ListItem
   alias Collaborlist.List
+
+  # TODO: find a way to clear the `error_tag` in live_new_item_form.html.heex upon submitting a new list_item
 
   on_mount {CollaborlistWeb.UserAuth, :current_user}
 
