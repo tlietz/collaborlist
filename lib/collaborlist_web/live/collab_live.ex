@@ -1,4 +1,4 @@
-# TODO: Find a way to clear up error messages
+# TODO: find a way to clear the `error_tag` in live_new_item_form.html.heex upon submitting a new list_item
 defmodule CollaborlistWeb.CollabLive do
   use CollaborlistWeb, :live_view
 
