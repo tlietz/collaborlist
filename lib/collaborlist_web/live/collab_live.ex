@@ -28,6 +28,12 @@ defmodule CollaborlistWeb.CollabLive do
   def handle_event("save", %{"list_item" => item_params}, socket) do
     case List.create_list_item(item_params, socket.assigns.list) do
       {:ok, item} ->
+        item
+        |> IO.inspect(label: "")
+
+        socket.assigns.list_items
+        |> IO.inspect(label: "SOCKET")
+
         {:noreply, assign(socket, list_items: [item | socket.assigns.list_items])}
 
       {:error, %Ecto.Changeset{} = changeset} ->

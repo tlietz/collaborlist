@@ -4,8 +4,8 @@ defmodule Collaborlist.List.ListItem do
 
   schema "list_items" do
     field :content, :string
-    field :checked, :boolean
-    field :striked, :boolean
+    field :checked, :boolean, default: false
+    field :striked, :boolean, default: false
 
     belongs_to :list, Collaborlist.Catalog.List
 
