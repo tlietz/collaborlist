@@ -32,7 +32,10 @@ defmodule CollaborlistWeb.ListLive do
 
     case Catalog.create_list(user, list_params) do
       {:ok, list} ->
-        {:noreply, assign(socket, lists: [list | socket.assigns.lists])}
+        {:noreply,
+         socket
+         |> assign(lists: [list | socket.assigns.lists])
+         |> assign(:changeset, Catalog.change_list(%Catalog.List{}))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}

@@ -34,7 +34,8 @@ defmodule CollaborlistWeb.CollabLive do
     case Collaborlist.List.create_list_item(item_params, current_list) do
       {:ok, item} ->
         CollaborlistWeb.Endpoint.broadcast(topic(socket), event, item)
-        {:noreply, socket}
+
+        {:noreply, assign(socket, :changeset, Collaborlist.List.change_list_item(%ListItem{}))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
