@@ -70,7 +70,6 @@ defmodule CollaborlistWeb.CollabLive do
 
   defp delete_list_item(socket, item) do
     item.id
-    |> IO.inspect(label: "ITEM")
 
     items = socket.assigns.list_items
 
