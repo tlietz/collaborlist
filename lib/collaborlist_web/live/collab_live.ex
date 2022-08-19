@@ -55,22 +55,20 @@ defmodule CollaborlistWeb.CollabLive do
   def handle_info(msg = %{event: "save"}, socket) do
     item = msg.payload
 
-    {:noreply, add_list_item(socket, item)}
+    {:noreply, client_add_list_item(socket, item)}
   end
 
   def handle_info(msg = %{event: "delete"}, socket) do
     item = msg.payload
 
-    {:noreply, delete_list_item(socket, item)}
+    {:noreply, client_delete_list_item(socket, item)}
   end
 
-  defp add_list_item(socket, item) do
+  defp client_add_list_item(socket, item) do
     assign(socket, list_items: [item | socket.assigns.list_items])
   end
 
-  defp delete_list_item(socket, item) do
-    item.id
-
+  defp client_delete_list_item(socket, item) do
     items = socket.assigns.list_items
 
     items_after_delete =
