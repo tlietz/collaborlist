@@ -85,6 +85,7 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 
 ## Future Improvements
 
+- [ ] Drop down modal for invite links instead of a seperate page
 - [ ] Click to copy invite links
 - [ ] Sort Lists by time last edited
 - [ ] Sort Lists alphabetically
