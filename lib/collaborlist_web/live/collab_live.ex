@@ -24,8 +24,6 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:changeset, changeset)}
   end
 
-  ## "save" and "validate" form events
-
   def handle_event("validate", _, socket) do
     {:noreply, socket}
   end
