@@ -4,7 +4,6 @@ defmodule CollaborlistWeb.CollabLive do
 
   alias Collaborlist.Catalog
   alias Collaborlist.List.ListItem
-  alias Collaborlist.List
 
   alias Phoenix.PubSub
 
@@ -14,9 +13,9 @@ defmodule CollaborlistWeb.CollabLive do
     PubSub.subscribe(Collaborlist.PubSub, list_id)
 
     list = Catalog.get_list!(list_id)
-    list_items = List.list_list_items(list_id)
+    list_items = Collaborlist.List.list_list_items(list_id)
 
-    changeset = List.change_list_item(%ListItem{})
+    changeset = Collaborlist.List.change_list_item(%ListItem{})
 
     {:ok,
      socket
@@ -25,30 +24,65 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:changeset, changeset)}
   end
 
+  ## "save" and "validate" form events
+
   def handle_event("validate", _, socket) do
     {:noreply, socket}
   end
 
-  def handle_event("save", %{"list_item" => item_params}, socket) do
+  def handle_event("save" = event, %{"list_item" => item_params}, socket) do
     current_list = socket.assigns.list
 
-    case List.create_list_item(item_params, current_list) do
+    case Collaborlist.List.create_list_item(item_params, current_list) do
       {:ok, item} ->
-        new_state = assign(socket, list_items: [item | socket.assigns.list_items])
-        CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "save", new_state.assigns)
-        {:noreply, new_state}
+        CollaborlistWeb.Endpoint.broadcast(topic(socket), event, item)
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
     end
   end
 
-  defp topic(socket) do
-    Integer.to_string(socket.assigns.list.id)
+  def handle_event("delete" = event, %{"item_id" => item_id}, socket) do
+    item = Collaborlist.List.get_list_item!(item_id)
+    {:ok, _list_item} = Collaborlist.List.delete_list_item(item)
+
+    CollaborlistWeb.Endpoint.broadcast(topic(socket), event, item)
+
+    {:noreply, socket}
   end
 
-  def handle_info(msg, socket) do
-    {:noreply, assign(socket, list_items: msg.payload.list_items)}
+  def handle_info(msg = %{event: "save"}, socket) do
+    item = msg.payload
+
+    {:noreply, add_list_item(socket, item)}
+  end
+
+  def handle_info(msg = %{event: "delete"}, socket) do
+    item = msg.payload
+
+    {:noreply, delete_list_item(socket, item)}
+  end
+
+  defp add_list_item(socket, item) do
+    assign(socket, list_items: [item | socket.assigns.list_items])
+  end
+
+  defp delete_list_item(socket, item) do
+    item.id
+    |> IO.inspect(label: "ITEM")
+
+    items = socket.assigns.list_items
+
+    items_after_delete =
+      items
+      |> List.delete_at(Enum.find_index(items, fn l -> l.id == item.id end))
+
+    assign(socket, list_items: items_after_delete)
+  end
+
+  defp topic(socket) do
+    Integer.to_string(socket.assigns.list.id)
   end
 
   def render(assigns) do

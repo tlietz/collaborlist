@@ -23,19 +23,6 @@ defmodule CollaborlistWeb.ListLive do
      |> assign(:changeset, changeset)}
   end
 
-  def handle_event("delete", %{"list_id" => id}, socket) do
-    list = Catalog.get_list!(id)
-    {:ok, _list} = Catalog.delete_list(list)
-
-    lists = socket.assigns.lists
-    lists_after_delete = lists |> List.delete_at(Enum.find(lists, fn l -> l.id == id end))
-
-    {:noreply,
-     assign(socket,
-       lists: lists_after_delete
-     )}
-  end
-
   def handle_event("validate", _, socket) do
     {:noreply, socket}
   end
@@ -50,6 +37,19 @@ defmodule CollaborlistWeb.ListLive do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
     end
+  end
+
+  def handle_event("delete", %{"list_id" => id}, socket) do
+    list = Catalog.get_list!(id)
+    {:ok, _list} = Catalog.delete_list(list)
+
+    lists = socket.assigns.lists
+    lists_after_delete = lists |> List.delete_at(Enum.find_index(lists, fn l -> l.id == id end))
+
+    {:noreply,
+     assign(socket,
+       lists: lists_after_delete
+     )}
   end
 
   def render(assigns) do

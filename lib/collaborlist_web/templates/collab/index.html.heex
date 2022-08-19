@@ -33,11 +33,11 @@
               to: Routes.collab_path(@socket, :edit, @list.id, item.id)
             ) %>
           </span>
+
           <span>
-            <%= link("Delete",
-              to: Routes.collab_path(@socket, :delete, @list.id, item.id),
-              method: :delete
-            ) %>
+            <button phx-click={Phoenix.LiveView.JS.push("delete", value: %{"item_id" => item.id})}>
+              Delete
+            </button>
           </span>
         </td>
       </tr>
