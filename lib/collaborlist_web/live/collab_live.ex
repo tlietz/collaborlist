@@ -6,8 +6,6 @@ defmodule CollaborlistWeb.CollabLive do
 
   alias Phoenix.PubSub
 
-  # TODO: find a way to clear the `error_tag` in live_new_item_form.html.heex upon submitting a new list_item
-
   on_mount {CollaborlistWeb.UserAuth, :current_user}
 
   def mount(%{"list_id" => list_id}, _session, socket) do
