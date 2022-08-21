@@ -81,6 +81,72 @@ defmodule CollaborlistWeb.CollabLive do
   end
 
   def render(assigns) do
-    Phoenix.View.render(CollaborlistWeb.CollabView, "index.html", assigns)
+    ~H"""
+    <h1>Collaborting on list: <%= @list.title %></h1>
+
+    <span>
+      <b>Create New list item:</b>
+
+      <%= Phoenix.View.render(
+        CollaborlistWeb.CollabView,
+        "live_new_item_form.html",
+        assigns
+      ) %>
+    </span>
+    <table>
+      <thead>
+        <tr>
+          <th>Items</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for item <- @list_items do %>
+          <tr>
+            <td>
+              <%= item.content %>
+              <br />
+              <div>Checked: <%= item.checked %></div>
+              <div>Striked: <%= item.striked %></div>
+            </td>
+
+            <td>
+              <span>
+                <!-- The order of @list.id and item.id matter because the url parameters :list_id and :id
+            are derived from here-->
+                <%= link("Edit",
+                  to: Routes.collab_path(@socket, :edit, @list.id, item.id)
+                ) %>
+              </span>
+
+              <span>
+                <button phx-click={Phoenix.LiveView.JS.push("delete", value: %{"item_id" => item.id})}>
+                  Delete
+                </button>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <span>
+      <%= link("Add item", to: Routes.collab_path(@socket, :new, @list.id)) %>
+    </span>
+
+    <br />
+
+    <span>
+      <%= link("Manage Invites",
+        to: Routes.invites_path(@socket, :index, @list.id)
+      ) %>
+    </span>
+
+    <br />
+
+    <span>
+      <%= link("Back to Lists", to: Routes.list_path(@socket, :index)) %>
+    </span>
+    """
   end
 end

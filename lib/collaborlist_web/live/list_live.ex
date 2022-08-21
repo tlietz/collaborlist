@@ -56,6 +56,56 @@ defmodule CollaborlistWeb.ListLive do
   end
 
   def render(assigns) do
-    Phoenix.View.render(CollaborlistWeb.ListView, "index.html", assigns)
+    ~H"""
+    <h1>Listing Lists</h1>
+
+    <span>
+      <button phx-click={Phoenix.LiveView.JS.toggle(to: "#new")}>
+        Create New List
+      </button>
+
+      <div id="new">
+        <%= Phoenix.View.render(
+          CollaborlistWeb.ListView,
+          "live_form.html",
+          assigns
+        ) %>
+      </div>
+    </span>
+    <table>
+      <thead>
+        <tr>
+          <th>List</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for list <- @lists do %>
+          <tr>
+            <td><%= list.title %></td>
+
+            <td>
+              <span>
+                <%= live_redirect("Collab", to: Routes.collab_path(@socket, :index, list.id)) %>
+              </span>
+              <br />
+              <span>
+                <%= link("Change List Name", to: Routes.list_path(@socket, :edit, list.id)) %>
+              </span>
+              <br />
+              <span>
+                <button
+                  phx-click={Phoenix.LiveView.JS.push("delete", value: %{"list_id" => list.id})}
+                  data-confirm="Are you sure?"
+                >
+                  Delete
+                </button>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    """
   end
 end
