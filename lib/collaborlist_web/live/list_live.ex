@@ -11,6 +11,8 @@ defmodule CollaborlistWeb.ListLive do
 
   # TODO: Ensure that when a CRUD operation happens on a list item of a list, the list `updated_at` gets updated
 
+  # TODO: Find a way to render list and collab forms as liveviews so that they do not need to rely on the ListView and CollabView
+
   def mount(_params, _session, socket) do
     user = socket.assigns[:current_user]
     lists = Catalog.list_lists(user)
