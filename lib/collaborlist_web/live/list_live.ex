@@ -3,6 +3,8 @@ defmodule CollaborlistWeb.ListLive do
 
   alias Collaborlist.Catalog
 
+  alias Phoenix.LiveView.JS
+
   on_mount {CollaborlistWeb.UserAuth, :current_user}
 
   # TODO: Write about design decision to keep track of state seperately between server and client so that all the lists do not have to be queried each time an edit is made.
@@ -62,11 +64,11 @@ defmodule CollaborlistWeb.ListLive do
     <h1>Listing Lists</h1>
 
     <span>
-      <button phx-click={Phoenix.LiveView.JS.toggle(to: "#new")}>
+      <button phx-click={JS.toggle(to: "#new")}>
         Create New List
       </button>
 
-      <div id="new">
+      <div style="display:none" id="new">
         <%= Phoenix.View.render(
           CollaborlistWeb.ListView,
           "live_form.html",
@@ -97,7 +99,7 @@ defmodule CollaborlistWeb.ListLive do
               <br />
               <span>
                 <button
-                  phx-click={Phoenix.LiveView.JS.push("delete", value: %{"list_id" => list.id})}
+                  phx-click={JS.push("delete", value: %{"list_id" => list.id})}
                   data-confirm="Are you sure?"
                 >
                   Delete

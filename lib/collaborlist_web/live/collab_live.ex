@@ -5,6 +5,7 @@ defmodule CollaborlistWeb.CollabLive do
   alias Collaborlist.List.ListItem
 
   alias Phoenix.PubSub
+  alias Phoenix.LiveView.JS
 
   on_mount {CollaborlistWeb.UserAuth, :current_user}
 
@@ -85,13 +86,17 @@ defmodule CollaborlistWeb.CollabLive do
     <h1>Collaborting on list: <%= @list.title %></h1>
 
     <span>
-      <b>Create New list item:</b>
+      <button phx-click={JS.toggle(to: "#new")}>
+        Create New List Item
+      </button>
 
-      <%= Phoenix.View.render(
-        CollaborlistWeb.CollabView,
-        "live_new_item_form.html",
-        assigns
-      ) %>
+      <div style="display:none" id="new">
+        <%= Phoenix.View.render(
+          CollaborlistWeb.CollabView,
+          "live_new_item_form.html",
+          assigns
+        ) %>
+      </div>
     </span>
     <table>
       <thead>
@@ -120,7 +125,7 @@ defmodule CollaborlistWeb.CollabLive do
               </span>
 
               <span>
-                <button phx-click={Phoenix.LiveView.JS.push("delete", value: %{"item_id" => item.id})}>
+                <button phx-click={JS.push("delete", value: %{"item_id" => item.id})}>
                   Delete
                 </button>
               </span>
