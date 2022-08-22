@@ -94,6 +94,7 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 - [ ] Add privileges to invite links (viewer and collaborator)
 - [ ] Purge guest accounts that exceed the max age
 - [ ] When using an invite link, if user is not logged in, route to a page that allows them to select between: continue as guest, register new account, or login to existing account 
+- [ ] Display when another user is editing a list item
 - [ ] Time limiting requests to prevent spammers
 - [ ] Link app account to Google sign in.
 - [ ] Display collaborators on a list 
