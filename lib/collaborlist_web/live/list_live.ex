@@ -94,7 +94,7 @@ defmodule CollaborlistWeb.ListLive do
         <%= for list <- @lists do %>
           <tr>
             <td>
-              <form phx-change="update" phx-value-id={list.id}>
+              <form phx-change="update">
                 <input
                   type="text"
                   id={"list-" <> Integer.to_string(list.id)}
@@ -103,7 +103,7 @@ defmodule CollaborlistWeb.ListLive do
                   spellcheck="false"
                   autocomplete="off"
                 />
-                <input type="hidden" name="list_id" value={list.id} />
+                <input type="hidden" name="id" value={list.id} />
               </form>
             </td>
             <td>
