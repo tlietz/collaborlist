@@ -25,12 +25,27 @@ defmodule CollaborlistWeb.CollabLive do
   end
 
   def handle_event(
+        "item_update" = event,
+        %{"item-id" => item_id, "content" => updated_content},
+        socket
+      ) do
+    {:ok, updated_item} =
+      Collaborlist.List.update_list_item(Collaborlist.List.get_list_item!(item_id), %{
+        "content" => updated_content
+      })
+
+    CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_item)
+
+    {:noreply, socket}
+  end
+
+  def handle_event(
         "list_update" = event,
         %{"list-id" => list_id, "title" => updated_title},
         socket
       ) do
     {:ok, updated_list} =
-      Catalog.update_list(Catalog.get_list(list_id), %{"title" => updated_title})
+      Catalog.update_list(Catalog.get_list!(list_id), %{"title" => updated_title})
 
     CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_list)
 
@@ -64,6 +79,12 @@ defmodule CollaborlistWeb.CollabLive do
     {:noreply, socket}
   end
 
+  def handle_info(msg = %{event: "item_update"}, socket) do
+    updated_item = msg.payload
+
+    {:noreply, client_item_update(socket, updated_item)}
+  end
+
   def handle_info(msg = %{event: "list_update"}, socket) do
     updated_list = msg.payload
 
@@ -80,6 +101,15 @@ defmodule CollaborlistWeb.CollabLive do
     item = msg.payload
 
     {:noreply, client_delete_list_item(socket, item)}
+  end
+
+  defp client_item_update(socket, updated_item) do
+    assign(socket,
+      list_items:
+        Enum.map(socket.assigns.list_items, fn item ->
+          if item.id == updated_item.id, do: updated_item, else: item
+        end)
+    )
   end
 
   defp client_list_update(socket, updated_list) do
@@ -145,21 +175,23 @@ defmodule CollaborlistWeb.CollabLive do
         <%= for item <- @list_items do %>
           <tr>
             <td>
-              <%= item.content %>
-              <br />
+              <form phx-change="item_update">
+                <input
+                  class="collab-list-item"
+                  type="text"
+                  id={"item-" <> Integer.to_string(item.id)}
+                  name="content"
+                  value={item.content}
+                  spellcheck="false"
+                  autocomplete="off"
+                />
+                <input type="hidden" name="item-id" value={item.id} />
+              </form>
               <div>Checked: <%= item.checked %></div>
               <div>Striked: <%= item.striked %></div>
             </td>
 
             <td>
-              <span>
-                <!-- The order of @list.id and item.id matter because the url parameters :list_id and :id
-            are derived from here-->
-                <%= link("Edit",
-                  to: Routes.collab_path(@socket, :edit, @list.id, item.id)
-                ) %>
-              </span>
-
               <span>
                 <button phx-click={JS.push("delete", value: %{"item_id" => item.id})}>
                   Delete

@@ -15,6 +15,6 @@ defmodule Collaborlist.List.ListItem do
   def changeset(list_item, attrs) do
     list_item
     |> cast(attrs, [:content, :checked, :striked])
-    |> validate_required([:content, :list_id])
+    |> validate_required([:list_id])
   end
 end

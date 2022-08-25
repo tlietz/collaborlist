@@ -144,11 +144,6 @@ defmodule CollaborlistWeb.ListLive do
               <span>
                 <%= live_redirect("Collab", to: Routes.collab_path(@socket, :index, list.id)) %>
               </span>
-              <br />
-              <span>
-                <%= link("Change List Name", to: Routes.list_path(@socket, :edit, list.id)) %>
-              </span>
-              <br />
               <span>
                 <button
                   phx-click={JS.push("delete", value: %{"list_id" => list.id})}
