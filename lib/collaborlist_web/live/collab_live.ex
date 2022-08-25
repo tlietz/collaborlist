@@ -24,6 +24,15 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:changeset, changeset)}
   end
 
+  def handle_event("list_update" = event, %{"id" => list_id, "title" => updated_title}, socket) do
+    {:ok, updated_list} =
+      Catalog.update_list(Catalog.get_list(list_id), %{"title" => updated_title})
+
+    CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_list)
+
+    {:noreply, socket}
+  end
+
   def handle_event("validate", _, socket) do
     {:noreply, socket}
   end
@@ -51,6 +60,12 @@ defmodule CollaborlistWeb.CollabLive do
     {:noreply, socket}
   end
 
+  def handle_info(msg = %{event: "list_update"}, socket) do
+    updated_list = msg.payload
+
+    {:noreply, client_list_update(socket, updated_list)}
+  end
+
   def handle_info(msg = %{event: "save"}, socket) do
     item = msg.payload
 
@@ -61,6 +76,10 @@ defmodule CollaborlistWeb.CollabLive do
     item = msg.payload
 
     {:noreply, client_delete_list_item(socket, item)}
+  end
+
+  defp client_list_update(socket, updated_list) do
+    assign(socket, list: updated_list)
   end
 
   defp client_add_list_item(socket, item) do
@@ -83,7 +102,20 @@ defmodule CollaborlistWeb.CollabLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Collaborting on list: <%= @list.title %></h1>
+    <h1>
+      <form phx-change="list_update">
+        <input
+          class="list-title"
+          type="text"
+          id={"list-" <> Integer.to_string(@list.id)}
+          name="title"
+          value={@list.title}
+          spellcheck="false"
+          autocomplete="off"
+        />
+        <input type="hidden" name="id" value={@list.id} />
+      </form>
+    </h1>
 
     <span>
       <button phx-click={JS.toggle(to: "#new")}>
@@ -134,12 +166,6 @@ defmodule CollaborlistWeb.CollabLive do
         <% end %>
       </tbody>
     </table>
-
-    <span>
-      <%= link("Add item", to: Routes.collab_path(@socket, :new, @list.id)) %>
-    </span>
-
-    <br />
 
     <span>
       <%= link("Manage Invites",

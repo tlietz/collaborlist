@@ -27,9 +27,16 @@ defmodule CollaborlistWeb.ListLive do
      |> assign(:changeset, changeset)}
   end
 
-  def handle_event("update", %{"id" => list_id, "title" => updated_title}, socket) do
+  def handle_event("list_update" = event, %{"id" => list_id, "title" => updated_title}, socket) do
     case Catalog.update_list(Catalog.get_list(list_id), %{"title" => updated_title}) do
       {:ok, updated_list} ->
+        CollaborlistWeb.Endpoint.broadcast_from(
+          self(),
+          list_id,
+          event,
+          updated_list
+        )
+
         lists = socket.assigns.lists
 
         {:noreply,
@@ -78,6 +85,16 @@ defmodule CollaborlistWeb.ListLive do
      )}
   end
 
+  def handle_info(msg = %{event: "list_update"}, socket) do
+    updated_list = msg.payload
+
+    {:noreply, client_list_update(socket, updated_list)}
+  end
+
+  defp client_list_update(socket, updated_list) do
+    assign(socket, list: updated_list)
+  end
+
   def render(assigns) do
     ~H"""
     <h1>Listing Lists</h1>
@@ -106,7 +123,7 @@ defmodule CollaborlistWeb.ListLive do
         <%= for list <- @lists do %>
           <tr>
             <td>
-              <form phx-change="update">
+              <form phx-change="list_update">
                 <input
                   type="text"
                   id={"list-" <> Integer.to_string(list.id)}
