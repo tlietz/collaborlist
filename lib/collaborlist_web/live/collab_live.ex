@@ -24,7 +24,11 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:changeset, changeset)}
   end
 
-  def handle_event("list_update" = event, %{"id" => list_id, "title" => updated_title}, socket) do
+  def handle_event(
+        "list_update" = event,
+        %{"list-id" => list_id, "title" => updated_title},
+        socket
+      ) do
     {:ok, updated_list} =
       Catalog.update_list(Catalog.get_list(list_id), %{"title" => updated_title})
 
@@ -113,7 +117,7 @@ defmodule CollaborlistWeb.CollabLive do
           spellcheck="false"
           autocomplete="off"
         />
-        <input type="hidden" name="id" value={@list.id} />
+        <input type="hidden" name="list-id" value={@list.id} />
       </form>
     </h1>
 
