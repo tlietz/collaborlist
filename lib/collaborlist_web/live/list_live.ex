@@ -125,6 +125,7 @@ defmodule CollaborlistWeb.ListLive do
             <td>
               <form phx-change="list_update">
                 <input
+                  class="list-title"
                   type="text"
                   id={"list-" <> Integer.to_string(list.id)}
                   name="title"
