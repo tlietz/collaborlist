@@ -57,6 +57,10 @@ defmodule CollaborlistWeb.ListLive do
     end
   end
 
+  def handle_event("nothing", _, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event("validate", _, socket) do
     {:noreply, socket}
   end
@@ -127,7 +131,7 @@ defmodule CollaborlistWeb.ListLive do
         <%= for list <- @lists do %>
           <tr>
             <td>
-              <form phx-change="list_update">
+              <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing">
                 <input
                   class="list-title"
                   type="text"
