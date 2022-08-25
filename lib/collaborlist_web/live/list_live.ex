@@ -27,11 +27,23 @@ defmodule CollaborlistWeb.ListLive do
      |> assign(:changeset, changeset)}
   end
 
-  def handle_event("update", params, socket) do
-    params
-    |> IO.inspect(label: "PARAM")
+  def handle_event("update", %{"id" => list_id, "title" => updated_title}, socket) do
+    case Catalog.update_list(Catalog.get_list(list_id), %{"title" => updated_title}) do
+      {:ok, updated_list} ->
+        lists = socket.assigns.lists
 
-    {:noreply, socket}
+        {:noreply,
+         assign(
+           socket,
+           :lists,
+           Enum.map(lists, fn list ->
+             if list.id == updated_list.id, do: updated_list, else: list
+           end)
+         )}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
+    end
   end
 
   def handle_event("validate", _, socket) do
