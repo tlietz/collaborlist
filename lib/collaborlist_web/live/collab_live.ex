@@ -24,6 +24,10 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:changeset, changeset)}
   end
 
+  def handle_event("nothing", _, socket) do
+    {:noreply, socket}
+  end
+
   def handle_event(
         "item_update" = event,
         %{"item-id" => item_id, "content" => updated_content},
@@ -137,7 +141,7 @@ defmodule CollaborlistWeb.CollabLive do
   def render(assigns) do
     ~H"""
     <h1>
-      <form phx-change="list_update">
+      <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing">
         <input
           class="collab-list-title"
           type="text"
@@ -175,7 +179,7 @@ defmodule CollaborlistWeb.CollabLive do
         <%= for item <- @list_items do %>
           <tr>
             <td>
-              <form phx-change="item_update">
+              <form phx-change="item_update" phx-submit="nothing" onsubmit="nothing">
                 <input
                   class="collab-list-item"
                   type="text"
