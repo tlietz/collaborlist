@@ -14,7 +14,7 @@ defmodule Collaborlist.List do
 
   """
   def list_list_items(list_id) do
-    Repo.all(from li in ListItem, where: li.list_id == ^list_id, order_by: [desc: li.updated_at])
+    Repo.all(from li in ListItem, where: li.list_id == ^list_id, order_by: [desc: li.inserted_at])
   end
 
   @doc """

@@ -21,7 +21,7 @@ defmodule Collaborlist.Catalog do
   """
   def list_lists(%User{} = user) do
     user =
-      Repo.preload(user, lists: from(list in Catalog.List, order_by: [desc: list.updated_at]))
+      Repo.preload(user, lists: from(list in Catalog.List, order_by: [desc: list.inserted_at]))
 
     user.lists
   end

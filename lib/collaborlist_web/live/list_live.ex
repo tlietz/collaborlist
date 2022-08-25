@@ -27,6 +27,13 @@ defmodule CollaborlistWeb.ListLive do
      |> assign(:changeset, changeset)}
   end
 
+  def handle_event("update", params, socket) do
+    params
+    |> IO.inspect(label: "PARAM")
+
+    {:noreply, socket}
+  end
+
   def handle_event("validate", _, socket) do
     {:noreply, socket}
   end
@@ -86,8 +93,19 @@ defmodule CollaborlistWeb.ListLive do
       <tbody>
         <%= for list <- @lists do %>
           <tr>
-            <td><%= list.title %></td>
-
+            <td>
+              <form phx-change="update" phx-value-id={list.id}>
+                <input
+                  type="text"
+                  id={"list-" <> Integer.to_string(list.id)}
+                  name="title"
+                  value={list.title}
+                  spellcheck="false"
+                  autocomplete="off"
+                />
+                <input type="hidden" name="list_id" value={list.id} />
+              </form>
+            </td>
             <td>
               <span>
                 <%= live_redirect("Collab", to: Routes.collab_path(@socket, :index, list.id)) %>
