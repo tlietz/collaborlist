@@ -4,8 +4,7 @@ defmodule Collaborlist.List.ListItem do
 
   schema "list_items" do
     field :content, :string
-    field :checked, :boolean, default: false
-    field :striked, :boolean, default: false
+    field :status, Ecto.Enum, values: [:checked, :striked, :none]
 
     belongs_to :list, Collaborlist.Catalog.List
 
@@ -14,7 +13,7 @@ defmodule Collaborlist.List.ListItem do
 
   def changeset(list_item, attrs) do
     list_item
-    |> cast(attrs, [:content, :checked, :striked])
-    |> validate_required([:content, :list_id])
+    |> cast(attrs, [:content, :status])
+    |> validate_required([:list_id])
   end
 end

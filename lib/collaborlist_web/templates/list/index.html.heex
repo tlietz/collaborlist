@@ -1,12 +1,16 @@
 <h1>Listing Lists</h1>
 
 <span>
-  <b>Create New List:</b>
+  <button phx-click={Phoenix.LiveView.JS.toggle(to: "#new")}>
+    Create New List
+  </button>
 
-  <%= render(
-    "live_form.html",
-    assigns
-  ) %>
+  <div id="new">
+    <%= render(
+      "live_form.html",
+      assigns
+    ) %>
+  </div>
 </span>
 <table>
   <thead>

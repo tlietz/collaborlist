@@ -151,7 +151,7 @@ defmodule CollaborlistWeb.UserAuth do
       conn
       |> put_flash_if_currently_empty(
         :info,
-        "Logged in as guest. If you want to access lists from multiple devices, log in to an account."
+        "Logged in as guest. If you want to access your lists from multiple devices, log in to an account."
       )
     else
       conn

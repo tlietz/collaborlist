@@ -5,8 +5,7 @@ defmodule CollaborlistWeb.CollabLive do
   alias Collaborlist.List.ListItem
 
   alias Phoenix.PubSub
-
-  # TODO: find a way to clear the `error_tag` in live_new_item_form.html.heex upon submitting a new list_item
+  alias Phoenix.LiveView.JS
 
   on_mount {CollaborlistWeb.UserAuth, :current_user}
 
@@ -23,6 +22,38 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:list, list)
      |> assign(:list_items, list_items)
      |> assign(:changeset, changeset)}
+  end
+
+  def handle_event("nothing", _, socket) do
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "item_update" = event,
+        %{"item-id" => item_id, "content" => updated_content},
+        socket
+      ) do
+    {:ok, updated_item} =
+      Collaborlist.List.update_list_item(Collaborlist.List.get_list_item!(item_id), %{
+        "content" => updated_content
+      })
+
+    CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_item)
+
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "list_update" = event,
+        %{"list-id" => list_id, "title" => updated_title},
+        socket
+      ) do
+    {:ok, updated_list} =
+      Catalog.update_list(Catalog.get_list!(list_id), %{"title" => updated_title})
+
+    CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_list)
+
+    {:noreply, socket}
   end
 
   def handle_event("validate", _, socket) do
@@ -52,6 +83,18 @@ defmodule CollaborlistWeb.CollabLive do
     {:noreply, socket}
   end
 
+  def handle_info(msg = %{event: "item_update"}, socket) do
+    updated_item = msg.payload
+
+    {:noreply, client_item_update(socket, updated_item)}
+  end
+
+  def handle_info(msg = %{event: "list_update"}, socket) do
+    updated_list = msg.payload
+
+    {:noreply, client_list_update(socket, updated_list)}
+  end
+
   def handle_info(msg = %{event: "save"}, socket) do
     item = msg.payload
 
@@ -62,6 +105,19 @@ defmodule CollaborlistWeb.CollabLive do
     item = msg.payload
 
     {:noreply, client_delete_list_item(socket, item)}
+  end
+
+  defp client_item_update(socket, updated_item) do
+    assign(socket,
+      list_items:
+        Enum.map(socket.assigns.list_items, fn item ->
+          if item.id == updated_item.id, do: updated_item, else: item
+        end)
+    )
+  end
+
+  defp client_list_update(socket, updated_list) do
+    assign(socket, list: updated_list)
   end
 
   defp client_add_list_item(socket, item) do
@@ -83,6 +139,84 @@ defmodule CollaborlistWeb.CollabLive do
   end
 
   def render(assigns) do
-    Phoenix.View.render(CollaborlistWeb.CollabView, "index.html", assigns)
+    ~H"""
+    <h1>
+      <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing">
+        <input
+          class="collab-list-title"
+          type="text"
+          id={"list-" <> Integer.to_string(@list.id)}
+          name="title"
+          value={@list.title}
+          spellcheck="false"
+          autocomplete="off"
+        />
+        <input type="hidden" name="list-id" value={@list.id} />
+      </form>
+    </h1>
+
+    <span>
+      <button phx-click={JS.toggle(to: "#new")}>
+        Create New List Item
+      </button>
+
+      <div style="display:none" id="new">
+        <%= Phoenix.View.render(
+          CollaborlistWeb.CollabView,
+          "live_new_item_form.html",
+          assigns
+        ) %>
+      </div>
+    </span>
+    <table>
+      <thead>
+        <tr>
+          <th>Items</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for item <- @list_items do %>
+          <tr>
+            <td>
+              <form phx-change="item_update" phx-submit="nothing" onsubmit="nothing">
+                <input
+                  class="collab-list-item"
+                  type="text"
+                  id={"item-" <> Integer.to_string(item.id)}
+                  name="content"
+                  value={item.content}
+                  spellcheck="false"
+                  autocomplete="off"
+                />
+                <input type="hidden" name="item-id" value={item.id} />
+              </form>
+              <div>Status: <%= Atom.to_string(item.status) %></div>
+            </td>
+
+            <td>
+              <span>
+                <button phx-click={JS.push("delete", value: %{"item_id" => item.id})}>
+                  Delete
+                </button>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <span>
+      <%= link("Manage Invites",
+        to: Routes.invites_path(@socket, :index, @list.id)
+      ) %>
+    </span>
+
+    <br />
+
+    <span>
+      <%= link("Back to Lists", to: Routes.list_path(@socket, :index)) %>
+    </span>
+    """
   end
 end

@@ -4,8 +4,7 @@ defmodule Collaborlist.Repo.Migrations.CreateListItems do
   def change do
     create table(:list_items) do
       add :content, :string
-      add :checked, :boolean, default: false, null: false
-      add :striked, :boolean, default: false, null: false
+      add :status, :string, default: "none"
 
       add :list_id, references(:lists, on_delete: :delete_all), null: false
 
