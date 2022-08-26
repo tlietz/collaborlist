@@ -74,7 +74,7 @@ defmodule Collaborlist.ListTest do
       assert %Ecto.Changeset{} = List.change_list_item(list_item)
     end
 
-    test "toggle_list_item_status/2 sets the status of a list item correctly" do
+    test "toggle_list_item_status/2 toggles the status of a list item correctly" do
       list_item = list_item_fixture()
 
       {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
