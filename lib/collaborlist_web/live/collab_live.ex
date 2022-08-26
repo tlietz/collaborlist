@@ -1,4 +1,6 @@
 defmodule CollaborlistWeb.CollabLive do
+  # TODO: make the invite manager a liveview modal that automatically copies the latest invite to clipboard
+
   use CollaborlistWeb, :live_view
 
   alias Collaborlist.Catalog
