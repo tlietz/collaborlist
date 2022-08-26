@@ -9,7 +9,7 @@ defmodule Collaborlist.ListTest do
     import Collaborlist.CatalogFixtures
     import Collaborlist.ListFixtures
 
-    @invalid_attrs %{content: 42, striked: "foo", checked: "bar"}
+    @invalid_attrs %{content: 42, status: "foo"}
 
     test "list_list_items/0 returns all list_items" do
       list_item = list_item_fixture()
@@ -30,13 +30,12 @@ defmodule Collaborlist.ListTest do
     end
 
     test "create_list_item/1 with valid data creates a list_item" do
-      valid_attrs = %{content: "some content", striked: false, checked: false}
+      valid_attrs = %{content: "some content", status: :none}
 
       assert {:ok, %ListItem{} = list_item} = List.create_list_item(valid_attrs, list_fixture())
 
       assert list_item.content == "some content"
-      assert list_item.striked == false
-      assert list_item.checked == false
+      assert list_item.status == :none
       assert list_item.list_id != nil
     end
 
@@ -46,12 +45,17 @@ defmodule Collaborlist.ListTest do
 
     test "update_list_item/2 with valid data updates the list_item" do
       list_item = list_item_fixture()
-      update_attrs = %{content: "some updated content", striked: true, checked: true}
+      update_attrs = %{content: "some updated content", status: :checked}
 
       assert {:ok, %ListItem{} = list_item} = List.update_list_item(list_item, update_attrs)
+
       assert list_item.content == "some updated content"
-      assert list_item.striked == true
-      assert list_item.checked == true
+      assert list_item.status == :checked
+
+      update_attrs = %{status: :striked}
+
+      assert {:ok, %ListItem{} = list_item} = List.update_list_item(list_item, update_attrs)
+      assert list_item.status == :striked
     end
 
     test "update_list_item/2 with invalid data returns error changeset" do
