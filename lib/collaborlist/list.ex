@@ -89,4 +89,35 @@ defmodule Collaborlist.List do
   def change_list_item(%ListItem{} = list_item, attrs \\ %{}) do
     ListItem.changeset(list_item, attrs)
   end
+
+  @doc """
+  Sets a list_item's status based on its current status and the `set_status` depicted by the arrows:
+
+  "Current Status" (set_status) ->  "New Status"
+  :checked (:checked) -> :none
+  :striked (:striked) -> :none
+  :none    (:none)    -> :none
+  :none               -> `set_status`
+  :checked (:striked) -> :striked
+  :striked (:checked) -> :checked
+
+  """
+  def toggle_list_item_status(%ListItem{} = list_item, set_status) do
+    if list_item.status == set_status do
+      set_list_item_status(list_item, :none)
+    else
+      set_list_item_status(list_item, set_status)
+    end
+  end
+
+  @doc """
+  Sets a list_item's status to `set_status`
+  """
+  def set_list_item_status(%ListItem{} = list_item, set_status) do
+    unless list_item.status == set_status do
+      list_item
+      |> ListItem.changeset(%{status: set_status})
+      |> Repo.update()
+    end
+  end
 end

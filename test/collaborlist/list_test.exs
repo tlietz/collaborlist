@@ -73,5 +73,28 @@ defmodule Collaborlist.ListTest do
       list_item = list_item_fixture()
       assert %Ecto.Changeset{} = List.change_list_item(list_item)
     end
+
+    test "toggle_list_item_status/2 sets the status of a list item correctly" do
+      list_item = list_item_fixture()
+
+      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
+      assert list_item.status == :checked
+
+      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
+      assert list_item.status == :none
+
+      {:ok, list_item} = List.toggle_list_item_status(list_item, :striked)
+      assert list_item.status == :striked
+
+      {:ok, list_item} = List.toggle_list_item_status(list_item, :striked)
+      assert list_item.status == :none
+
+      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
+      {:ok, list_item} = List.toggle_list_item_status(list_item, :striked)
+      assert list_item.status == :striked
+
+      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
+      assert list_item.status == :checked
+    end
   end
 end

@@ -191,8 +191,7 @@ defmodule CollaborlistWeb.CollabLive do
                 />
                 <input type="hidden" name="item-id" value={item.id} />
               </form>
-              <div>Checked: <%= item.checked %></div>
-              <div>Striked: <%= item.striked %></div>
+              <div>Status: <%= Atom.to_string(item.status) %></div>
             </td>
 
             <td>
