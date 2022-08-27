@@ -28,6 +28,15 @@ defmodule CollaborlistWeb.CollabLive do
     {:noreply, socket}
   end
 
+  def handle_event("status_update", %{"item_id" => item_id}, socket) do
+    list_item = Collaborlist.List.get_list_item!(item_id)
+    {:ok, updated_item} = Collaborlist.List.toggle_list_item_status(list_item)
+
+    CollaborlistWeb.Endpoint.broadcast(topic(socket), "item_update", updated_item)
+
+    {:noreply, socket}
+  end
+
   def handle_event(
         "item_update" = event,
         %{"item-id" => item_id, "content" => updated_content},
@@ -178,6 +187,11 @@ defmodule CollaborlistWeb.CollabLive do
       <tbody>
         <%= for item <- @list_items do %>
           <tr>
+            <td>
+              <button phx-click={JS.push("status_update", value: %{"item_id" => item.id})}>
+                <%= item.status %>
+              </button>
+            </td>
             <td>
               <form phx-change="item_update" phx-submit="nothing" onsubmit="nothing">
                 <input
