@@ -91,9 +91,9 @@ defmodule Collaborlist.List do
   end
 
   @doc """
-  Sets a list_item's status based on its current status:
+  Sets a list_item's status to the next status in the
+  ListItem :status enum value circularly.
 
-  none -> checked -> striked -> none ...
   """
   def toggle_list_item_status(%ListItem{} = list_item) do
     set_list_item_status(list_item, next_status(list_item))
