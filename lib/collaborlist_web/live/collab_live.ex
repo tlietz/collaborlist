@@ -191,9 +191,7 @@ defmodule CollaborlistWeb.CollabLive do
                 />
                 <input type="hidden" name="item-id" value={item.id} />
               </form>
-              <div>Status: <%= Atom.to_string(item.status) %></div>
             </td>
-
             <td>
               <span>
                 <button phx-click={JS.push("delete", value: %{"item_id" => item.id})}>
