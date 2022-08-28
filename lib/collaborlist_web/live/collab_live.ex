@@ -192,7 +192,6 @@ defmodule CollaborlistWeb.CollabLive do
                 class={"status-" <> Atom.to_string(item.status)}
                 phx-click={JS.push("status_update", value: %{"item_id" => item.id})}
               >
-                <%= item.status %>
               </button>
             </td>
             <td>
