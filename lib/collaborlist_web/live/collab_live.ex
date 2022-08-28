@@ -167,9 +167,13 @@ defmodule CollaborlistWeb.CollabLive do
     </h1>
 
     <span>
-      <button phx-click={JS.toggle(to: "#new")}>
-        Create New List Item
+      <button
+        phx-click={JS.toggle(to: "#new", in: "fade-in", out: "fade-out")}
+        style="display:inline-block"
+      >
+        +
       </button>
+      <div style="display:inline-block"></div>
 
       <div style="display:none" id="new">
         <%= Phoenix.View.render(
