@@ -3,18 +3,33 @@
 
 /* List Item status buttons */
 
+.status-button {
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+}
+
 .status-none {
-  background-color: blue;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .status-none:hover {
-  background-color: lightblue;
+  background-color: rgba(234, 234, 234, 0.4);
 }
 
 .status-checked {
   background-color: green;
 }
+
+.status-checked:hover {
+  background-color: green;
+}
+
 .status-striked {
+  background-color: red;
+}
+
+.status-striked:hover {
   background-color: red;
 }
 
