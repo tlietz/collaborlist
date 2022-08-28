@@ -188,7 +188,10 @@ defmodule CollaborlistWeb.CollabLive do
         <%= for item <- @list_items do %>
           <tr>
             <td>
-              <button phx-click={JS.push("status_update", value: %{"item_id" => item.id})}>
+              <button
+                class={"status-" <> Atom.to_string(item.status)}
+                phx-click={JS.push("status_update", value: %{"item_id" => item.id})}
+              >
                 <%= item.status %>
               </button>
             </td>
