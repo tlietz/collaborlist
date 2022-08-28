@@ -77,24 +77,14 @@ defmodule Collaborlist.ListTest do
     test "toggle_list_item_status/2 toggles the status of a list item correctly" do
       list_item = list_item_fixture()
 
-      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
+      {:ok, list_item} = List.toggle_list_item_status(list_item)
       assert list_item.status == :checked
 
-      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
-      assert list_item.status == :none
-
-      {:ok, list_item} = List.toggle_list_item_status(list_item, :striked)
+      {:ok, list_item} = List.toggle_list_item_status(list_item)
       assert list_item.status == :striked
 
-      {:ok, list_item} = List.toggle_list_item_status(list_item, :striked)
+      {:ok, list_item} = List.toggle_list_item_status(list_item)
       assert list_item.status == :none
-
-      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
-      {:ok, list_item} = List.toggle_list_item_status(list_item, :striked)
-      assert list_item.status == :striked
-
-      {:ok, list_item} = List.toggle_list_item_status(list_item, :checked)
-      assert list_item.status == :checked
     end
   end
 end

@@ -91,29 +91,38 @@ defmodule Collaborlist.List do
   end
 
   @doc """
-  Sets a list_item's status based on its current status and the `set_status` depicted by the arrows:
-
-  "Current Status" (set_status) ->  "New Status"
-  :checked (:checked) -> :none
-  :striked (:striked) -> :none
-  :none    (:none)    -> :none
-  :none               -> `set_status`
-  :checked (:striked) -> :striked
-  :striked (:checked) -> :checked
+  Sets a list_item's status to the next status in the
+  ListItem :status enum value circularly.
 
   """
-  def toggle_list_item_status(%ListItem{} = list_item, set_status) do
-    if list_item.status == set_status do
-      set_list_item_status(list_item, :none)
+  def toggle_list_item_status(%ListItem{} = list_item) do
+    set_list_item_status(list_item, next_status(list_item))
+  end
+
+  defp next_status(%ListItem{} = list_item) when is_map(list_item) do
+    statuses = Ecto.Enum.values(ListItem, :status)
+    [initial_status | _] = statuses
+
+    next_status(statuses, list_item.status, initial_status)
+  end
+
+  defp next_status(statuses, list_item_status, initial_status) do
+    [status | remaining] = statuses
+
+    if status == list_item_status do
+      if remaining == [] do
+        initial_status
+      else
+        [next_status | _] = remaining
+
+        next_status
+      end
     else
-      set_list_item_status(list_item, set_status)
+      next_status(remaining, list_item_status, initial_status)
     end
   end
 
-  @doc """
-  Sets a list_item's status to `set_status`
-  """
-  def set_list_item_status(%ListItem{} = list_item, set_status) do
+  defp set_list_item_status(%ListItem{} = list_item, set_status) do
     unless list_item.status == set_status do
       list_item
       |> ListItem.changeset(%{status: set_status})

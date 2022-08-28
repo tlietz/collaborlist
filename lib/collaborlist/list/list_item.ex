@@ -4,7 +4,7 @@ defmodule Collaborlist.List.ListItem do
 
   schema "list_items" do
     field :content, :string
-    field :status, Ecto.Enum, values: [:checked, :striked, :none]
+    field :status, Ecto.Enum, values: [:none, :checked, :striked]
 
     belongs_to :list, Collaborlist.Catalog.List
 
