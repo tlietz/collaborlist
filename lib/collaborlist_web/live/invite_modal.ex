@@ -39,9 +39,7 @@ defmodule CollaborlistWeb.Live.InviteModal do
 
   defp maybe_create_invite(socket) do
     if socket.assigns.invites == [] do
-      {:ok, invite} =
-        Invites.create_invite(socket.assigns[:current_user], socket.assigns.list)
-        |> IO.inspect(label: "invite")
+      {:ok, invite} = Invites.create_invite(socket.assigns[:current_user], socket.assigns.list)
 
       socket
       |> assign(invites: [invite])
