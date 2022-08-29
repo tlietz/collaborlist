@@ -295,10 +295,6 @@ defmodule CollaborlistWeb.CollabLive do
         <% end %>
       </tbody>
     </table>
-
-    <span>
-      <%= link("Back to Lists", to: Routes.list_path(@socket, :index)) %>
-    </span>
     """
   end
 end

@@ -1,6 +1,12 @@
 /* This file is for your main application CSS */
 @import "./phoenix.css";
 
+.home-link {
+  font-weight: bold;
+  font-size: 3rem;
+  padding-left: 10rem;
+}
+
 input:hover {
   background-color: rgba(234, 234, 234, 0.4);
 }
