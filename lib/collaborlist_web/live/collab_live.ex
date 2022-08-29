@@ -275,6 +275,7 @@ defmodule CollaborlistWeb.CollabLive do
                   value={item.content}
                   spellcheck="false"
                   autocomplete="off"
+                  style="margin-bottom:0px;"
                 />
                 <input type="hidden" name="item-id" value={item.id} />
               </form>

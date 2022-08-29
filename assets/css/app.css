@@ -2,16 +2,27 @@
 @import "./phoenix.css";
 
 .list-form {
-  position: relative;
-  top: 50%;
-  transform: translateY(25%);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 /* List Item status buttons */
 .status-button {
-  width: 10%;
-  height: 10%;
-  padding-top: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  -ms-transform: rotate(45deg); /* IE 9 */
+  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+  transform: rotate(45deg) scale(1.5);
+  outline: rgb(0, 0, 0) 1px solid;
+}
+
+.status-button:hover {
+  cursor: pointer;
 }
 
 .status-none {
@@ -19,29 +30,15 @@
 }
 
 .status-none {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
   background: rgba(0, 0, 0, 0);
-  border-radius: 50%;
-  outline: rgb(0, 0, 0) 1px solid;
 }
 
 .status-none:hover {
   background-color: rgba(234, 234, 234, 0.4);
-  cursor: pointer;
 }
 
 .status-checked {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
   background: green;
-  border-radius: 50%;
-  -ms-transform: rotate(45deg); /* IE 9 */
-  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-  transform: rotate(45deg);
-  outline: rgb(0, 0, 0) 1px solid;
 }
 
 .status-checked:before {
@@ -66,19 +63,10 @@
 
 .status-checked:hover {
   background-color: green;
-  cursor: pointer;
 }
 
 .status-striked {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
   background: red;
-  border-radius: 50%;
-  -ms-transform: rotate(45deg); /* IE 9 */
-  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-  transform: rotate(45deg);
-  outline: rgb(0, 0, 0) 1px solid;
 }
 
 .status-striked:before {
@@ -103,7 +91,6 @@
 
 .status-striked:hover {
   background-color: red;
-  cursor: pointer;
 }
 
 /* Alerts and form errors used by phx.new */
