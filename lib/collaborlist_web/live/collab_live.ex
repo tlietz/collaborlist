@@ -26,6 +26,34 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:changeset, changeset)}
   end
 
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  def apply_action(socket, :index, _params) do
+    assign(socket, show_modal: false)
+  end
+
+  def apply_action(%{assigns: %{show_modal: _}} = socket, :invite_modal, _params) do
+    assign(socket, show_modal: true)
+  end
+
+  def apply_action(socket, _live_action, _params) do
+    push_patch(socket,
+      to: Routes.collab_path(socket, :index, socket.assigns.list.id),
+      replace: true
+    )
+  end
+
+  def handle_event("open_invite_modal", _, socket) do
+    {:noreply,
+     push_patch(
+       socket,
+       to: Routes.collab_path(socket, :invite_modal, socket.assigns.list.id),
+       replace: true
+     )}
+  end
+
   def handle_event("nothing", _, socket) do
     {:noreply, socket}
   end
@@ -92,6 +120,26 @@ defmodule CollaborlistWeb.CollabLive do
     CollaborlistWeb.Endpoint.broadcast(topic(socket), event, item)
 
     {:noreply, socket}
+  end
+
+  def handle_event("show_modal", _, socket) do
+    socket
+    |> show_invite_modal()
+  end
+
+  defp show_invite_modal(socket) do
+    {:noreply, socket}
+  end
+
+  def handle_info(
+        {CollaborlistWeb.Live.InviteModal, :button_clicked, %{action: "exit_modal"}},
+        socket
+      ) do
+    {:noreply,
+     push_patch(socket,
+       to: Routes.collab_path(socket, :index, socket.assigns.list.id),
+       replace: true
+     )}
   end
 
   def handle_info(msg = %{event: "item_update"}, socket) do
@@ -168,14 +216,32 @@ defmodule CollaborlistWeb.CollabLive do
 
     <span>
       <button
-        phx-click={JS.toggle(to: "#new", in: "fade-in", out: "fade-out")}
+        phx-click={JS.toggle(to: "#new-item", in: "fade-in", out: "fade-out")}
         style="display:inline-block"
       >
         +
       </button>
-      <div style="display:inline-block"></div>
 
-      <div style="display:none" id="new">
+      <button phx-click="open_invite_modal" style="display:inline-block; float:right;">
+        Invite
+      </button>
+
+      <%= if @show_modal do %>
+        <.live_component
+          module={CollaborlistWeb.Live.InviteModal}
+          id="invites"
+          title="Invite Links"
+          body=""
+          right_button="Create Invite"
+          right_button_action="create_invite"
+          left_button="Exit"
+          left_button_action="exit_modal"
+          list_id={@list.id}
+          user_id={@current_user.id}
+        />
+      <% end %>
+
+      <div style="display:none" id="new-item">
         <%= Phoenix.View.render(
           CollaborlistWeb.CollabView,
           "live_new_item_form.html",
@@ -225,14 +291,6 @@ defmodule CollaborlistWeb.CollabLive do
         <% end %>
       </tbody>
     </table>
-
-    <span>
-      <%= link("Manage Invites",
-        to: Routes.invites_path(@socket, :index, @list.id)
-      ) %>
-    </span>
-
-    <br />
 
     <span>
       <%= link("Back to Lists", to: Routes.list_path(@socket, :index)) %>

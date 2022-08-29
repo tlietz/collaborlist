@@ -77,7 +77,7 @@ defmodule CollaborlistWeb.Router do
     get "/invites/:invite_code", InvitesController, :process_invite
   end
 
-  scope "/lists/:list_id/invites", CollaborlistWeb do
+  scope "/lists/:list_id/collab/invites", CollaborlistWeb do
     pipe_through [
       :browser,
       :maybe_assign_guest_user,
@@ -85,11 +85,11 @@ defmodule CollaborlistWeb.Router do
       :require_user_list_collaborator
     ]
 
-    get "/", InvitesController, :index
+    live "/", CollabLive, :invite_modal
     post "/", InvitesController, :create
   end
 
-  scope "/lists/:list_id/invites", CollaborlistWeb do
+  scope "/lists/:list_id/collab/invites", CollaborlistWeb do
     pipe_through [
       :browser,
       :require_authenticated_user,
