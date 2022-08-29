@@ -11,14 +11,7 @@ Postgres is used as a database.
 
 ## Why Elixir?
 
-Concurrent application, and Phoenix framework has LiveView to make real-time concurrent applications.
-
-## Application Design
-
-A list that a user is working needs to display its name and potentially other metadata such as how many collaborators there are on a certain list. 
-Managing the CRUD operations on entire list is different from managing the CRUD operations on items of a list.
-A `Catalog` context is a good place for the management of lists. 
-A `List` context will manage the items of each individual list. 
+TODO: Concurrent application, and Phoenix framework has LiveView to make real-time concurrent applications.
 
 ## User Auth
 
@@ -50,7 +43,7 @@ The link created looks something like:
 `https://collaborlist.com/invites/qwerty12345`
 
 When a client navigates to the `/invites/:invite_code` endpoint, 
-if the `invite_code` exists and it's not expired, the currently logged in user
+if the `invite_code` exists, the currently logged in user
 will be added as a collaborator to the list that the invite was created for. 
 The client is then redirected to the index page of that list. If no user was logged in, a guest user will be logged in and added as the collaborator. 
 
