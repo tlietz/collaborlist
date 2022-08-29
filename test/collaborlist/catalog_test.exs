@@ -70,6 +70,22 @@ defmodule Collaborlist.CatalogTest do
       assert_raise Ecto.NoResultsError, fn -> Collaborlist.List.get_list_item!(list_item.id) end
     end
 
+    test "delete_list/2 does not delete the list entirely if there are still collaborators on it" do
+      user = user_fixture()
+
+      list = list_fixture(%{}, user)
+
+      user2 = user_fixture()
+
+      _ = Catalog.add_collaborator(list, user2)
+
+      Catalog.list_collaborators(list)
+
+      _ = Catalog.delete_list(user, list)
+
+      assert Catalog.list_collaborator?(user2, list.id) == true
+    end
+
     test "change_list/1 returns a list changeset" do
       list = list_fixture()
       assert %Ecto.Changeset{} = Catalog.change_list(list)
@@ -133,16 +149,22 @@ defmodule Collaborlist.CatalogTest do
       assert Catalog.list_collaborator?(user2, list.id) == false
 
       _ = Catalog.add_collaborator(list, user2)
+
+      assert Catalog.list_collaborator?(user1, list.id) == true
+      assert Catalog.list_collaborator?(user2, list.id) == true
+
       _ = Catalog.remove_collaborator(list, user1)
 
       assert Catalog.list_collaborator?(user1, list.id) == false
       assert Catalog.list_collaborator?(user2, list.id) == true
     end
 
-    test "list_collaborators/1 returns a list of collaborators" do
+    test "list_collaborators/1 returns a list of collaborators ids" do
       list = list_fixture()
+      user = user_fixture()
+      _ = Catalog.add_collaborator(list, user)
 
-      assert Catalog.list_collaborators(list) == list.users
+      assert Catalog.list_collaborators(list) |> Enum.count() == 2
     end
   end
 end

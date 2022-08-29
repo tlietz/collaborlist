@@ -6,7 +6,7 @@ defmodule CollaborlistWeb.InvitesControllerTest do
   import Collaborlist.InvitesFixtures
 
   alias CollaborlistWeb.UserAuth
-  alias Collaborlist.Invites
+  # alias Collaborlist.Invites
 
   setup :register_and_log_in_user
 

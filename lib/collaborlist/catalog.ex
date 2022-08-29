@@ -98,6 +98,18 @@ defmodule Collaborlist.Catalog do
   end
 
   @doc """
+  Deletes the list if the user is the last collaborator.
+  Otherwise, deletes a list to user association.
+  """
+  def delete_list(%User{} = user, %Catalog.List{} = list) do
+    if list_collaborators(list) |> Enum.count() == 1 do
+      delete_list(list)
+    else
+      remove_collaborator(list, user)
+    end
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking list changes.
 
   ## Examples
@@ -137,7 +149,7 @@ defmodule Collaborlist.Catalog do
   end
 
   def add_collaborator(%Catalog.List{} = list, %User{} = user) do
-    list_with_collaborators = list |> Repo.preload(:users)
+    list_with_collaborators = list |> Repo.preload(:users, force: true)
 
     users = [user | list_with_collaborators.users]
 
@@ -150,21 +162,22 @@ defmodule Collaborlist.Catalog do
   Removes a user as a list's collaborators
   """
   def remove_collaborator(%Catalog.List{} = list, %User{} = user) do
-    users = List.delete(list_collaborators(list), user)
-
-    list
-    |> Catalog.List.changeset_update_collaborators(users)
-    |> Repo.update()
+    Repo.delete_all(
+      from r in "users_lists", where: r.user_id == ^user.id and r.list_id == ^list.id
+    )
   end
 
   @doc """
-  Returns a list of users that are a list's collaborators
+  Returns a list of user_id`s that are a list's collaborators
   """
   def list_collaborators(%Catalog.List{} = list) do
-    list_with_collaborators =
-      list
-      |> Repo.preload(:users)
+    list_id = list.id
 
-    list_with_collaborators.users
+    query =
+      from "users_lists",
+        select: [:user_id],
+        where: [list_id: type(^list_id, :integer)]
+
+    Repo.all(query)
   end
 end
