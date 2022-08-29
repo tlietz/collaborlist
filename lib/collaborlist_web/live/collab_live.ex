@@ -202,13 +202,14 @@ defmodule CollaborlistWeb.CollabLive do
     <h1>
       <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing" class="list-form">
         <input
-          class="collab-list-title"
           type="text"
+          style="border-radius: 2rem; font-weight: bold; font-size: 2rem; border-width: 0.2rem; border-color: grey; "
           id={"list-" <> Integer.to_string(@list.id)}
           name="title"
           value={@list.title}
           spellcheck="false"
           autocomplete="off"
+          style=""
         />
         <input type="hidden" name="list-id" value={@list.id} />
       </form>
