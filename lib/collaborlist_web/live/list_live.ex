@@ -81,9 +81,6 @@ defmodule CollaborlistWeb.ListLive do
   end
 
   def handle_event("delete", %{"list_id" => id}, socket) do
-    socket
-    |> IO.inspect(label: "socket")
-
     user = socket.assigns[:current_user]
     list = Catalog.get_list!(id)
     _ = Catalog.delete_list(user, list)

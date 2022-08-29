@@ -33,7 +33,21 @@ defmodule CollaborlistWeb.Live.InviteModal do
      |> assign(Map.merge(@defaults, assigns))
      |> assign(invites: invites)
      |> assign(current_user: user)
-     |> assign(list: list)}
+     |> assign(list: list)
+     |> maybe_create_invite()}
+  end
+
+  defp maybe_create_invite(socket) do
+    if socket.assigns.invites == [] do
+      {:ok, invite} =
+        Invites.create_invite(socket.assigns[:current_user], socket.assigns.list)
+        |> IO.inspect(label: "invite")
+
+      socket
+      |> assign(invites: [invite])
+    else
+      socket
+    end
   end
 
   def render(assigns) do
