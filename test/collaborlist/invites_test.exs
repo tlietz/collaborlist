@@ -69,9 +69,8 @@ defmodule Collaborlist.InvitesTest do
 
       max_invites = Collaborlist.Helpers.max_invites()
 
-      for x <- 0..(max_invites - 1) do
-        {:ok, %Invite{} = invite} = Invites.create_invite(user, list)
-        IO.puts(Invites.list_invites(user, list.id) |> Enum.count())
+      for _ <- 0..(max_invites - 1) do
+        {:ok, %Invite{} = _invite} = Invites.create_invite(user, list)
       end
 
       assert {:error, _} = Invites.create_invite(user, list)
