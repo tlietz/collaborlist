@@ -219,7 +219,7 @@ defmodule CollaborlistWeb.CollabLive do
         phx-click={JS.toggle(to: "#new-item", in: "fade-in", out: "fade-out")}
         style="display:inline-block"
       >
-        +
+        + Add List Item
       </button>
 
       <button phx-click="open_invite_modal" style="display:inline-block; float:right;">
@@ -252,7 +252,6 @@ defmodule CollaborlistWeb.CollabLive do
     <table>
       <thead>
         <tr>
-          <th>Items</th>
           <th></th>
         </tr>
       </thead>

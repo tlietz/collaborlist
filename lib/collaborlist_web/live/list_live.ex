@@ -106,8 +106,6 @@ defmodule CollaborlistWeb.ListLive do
 
   def render(assigns) do
     ~H"""
-    <h1>Listing Lists</h1>
-
     <span>
       <button phx-click={JS.toggle(to: "#new")}>
         Create New List
@@ -124,7 +122,7 @@ defmodule CollaborlistWeb.ListLive do
     <table>
       <thead>
         <tr>
-          <th>List</th>
+          <th>Lists</th>
           <th></th>
         </tr>
       </thead>
@@ -146,7 +144,7 @@ defmodule CollaborlistWeb.ListLive do
               </form>
             </td>
             <td>
-              <span>
+              <span class="modal-title">
                 <%= live_redirect("Collab", to: Routes.collab_path(@socket, :index, list.id)) %>
               </span>
               <span>
