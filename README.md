@@ -11,14 +11,7 @@ Postgres is used as a database.
 
 ## Why Elixir?
 
-Concurrent application, and Phoenix framework has LiveView to make real-time concurrent applications.
-
-## Application Design
-
-A list that a user is working needs to display its name and potentially other metadata such as how many collaborators there are on a certain list. 
-Managing the CRUD operations on entire list is different from managing the CRUD operations on items of a list.
-A `Catalog` context is a good place for the management of lists. 
-A `List` context will manage the items of each individual list. 
+TODO: Concurrent application, and Phoenix framework has LiveView to make real-time concurrent applications.
 
 ## User Auth
 
