@@ -94,6 +94,10 @@ defmodule CollaborlistWeb.ListLive do
      )}
   end
 
+  def handle_event("collab", %{"list_id" => id}, socket) do
+    {:noreply, push_redirect(socket, to: Routes.collab_path(socket, :index, id))}
+  end
+
   def handle_info(msg = %{event: "list_update"}, socket) do
     updated_list = msg.payload
 
@@ -130,7 +134,7 @@ defmodule CollaborlistWeb.ListLive do
         <%= for list <- @lists do %>
           <tr>
             <td>
-              <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing">
+              <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing" class="list-form">
                 <input
                   class="list-title"
                   type="text"
@@ -144,16 +148,17 @@ defmodule CollaborlistWeb.ListLive do
               </form>
             </td>
             <td>
-              <span class="modal-title">
-                <%= live_redirect("Collab", to: Routes.collab_path(@socket, :index, list.id)) %>
-              </span>
-              <span>
-                <button
+              <button phx-click={JS.push("collab", value: %{"list_id" => list.id})}>
+                Collab
+              </button>
+              <span style="padding-left: 2rem;">
+                <div
                   phx-click={JS.push("delete", value: %{"list_id" => list.id})}
                   data-confirm="Are you sure?"
+                  style="display: inline-block;"
+                  class="gg-trash"
                 >
-                  Delete
-                </button>
+                </div>
               </span>
             </td>
           </tr>

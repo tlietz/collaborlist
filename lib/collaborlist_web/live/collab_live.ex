@@ -200,7 +200,7 @@ defmodule CollaborlistWeb.CollabLive do
   def render(assigns) do
     ~H"""
     <h1>
-      <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing">
+      <form phx-change="list_update" phx-submit="nothing" onsubmit="nothing" class="list-form">
         <input
           class="collab-list-title"
           type="text"
@@ -259,14 +259,14 @@ defmodule CollaborlistWeb.CollabLive do
         <%= for item <- @list_items do %>
           <tr>
             <td>
-              <button
+              <div
                 class={"status-button " <> " status-" <> Atom.to_string(item.status)}
                 phx-click={JS.push("status_update", value: %{"item_id" => item.id})}
               >
-              </button>
+              </div>
             </td>
             <td>
-              <form phx-change="item_update" phx-submit="nothing" onsubmit="nothing">
+              <form phx-change="item_update" phx-submit="nothing" onsubmit="nothing" class="list-form">
                 <input
                   class="collab-list-item"
                   type="text"
@@ -280,10 +280,13 @@ defmodule CollaborlistWeb.CollabLive do
               </form>
             </td>
             <td>
-              <span>
-                <button phx-click={JS.push("delete", value: %{"item_id" => item.id})}>
-                  Delete
-                </button>
+              <span style="padding-left: 2rem;">
+                <div
+                  style="display: inline-block;"
+                  class="gg-trash"
+                  phx-click={JS.push("delete", value: %{"item_id" => item.id})}
+                >
+                </div>
               </span>
             </td>
           </tr>
