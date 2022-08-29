@@ -89,8 +89,7 @@
 
 .modal-card {
   height: auto;
-  width: 28rem;
-  max-width: 51rem;
+  width: auto;
   margin: 0.5rem;
   border-radius: 0.4rem;
   background-color: #fff;
