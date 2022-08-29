@@ -63,6 +63,22 @@ defmodule Collaborlist.InvitesTest do
       assert invite.user_id == user.id
     end
 
+    test "create_invite/2 returns an error if more than max invites are trying to be created" do
+      user = user_fixture()
+      list = list_fixture(%{}, user)
+
+      max_invites = Collaborlist.Helpers.max_invites()
+
+      for x <- 0..(max_invites - 1) do
+        {:ok, %Invite{} = invite} = Invites.create_invite(user, list)
+        IO.puts(Invites.list_invites(user, list.id) |> Enum.count())
+      end
+
+      assert {:error, _} = Invites.create_invite(user, list)
+
+      assert Invites.list_invites(user, list.id) |> Enum.count() == max_invites
+    end
+
     test "invite_creator?/2 returns true if the user is a creator of an invite, false otherwise" do
       user = user_fixture()
       list = list_fixture()

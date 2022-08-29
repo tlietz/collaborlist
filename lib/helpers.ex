@@ -9,4 +9,8 @@ defmodule Collaborlist.Helpers do
       @dev_link
     end
   end
+
+  def max_invites() do
+    5
+  end
 end

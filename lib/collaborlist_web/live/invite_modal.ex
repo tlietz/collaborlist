@@ -15,7 +15,8 @@ defmodule CollaborlistWeb.Live.InviteModal do
     right_button_action: nil,
     right_button_param: nil,
     list_id: nil,
-    user_id: nil
+    user_id: nil,
+    error_message: nil
   }
 
   def mount(socket) do
@@ -76,6 +77,12 @@ defmodule CollaborlistWeb.Live.InviteModal do
                   <% end %>
                 </tbody>
               </table>
+              <!-- error message -->
+              <%= if @error_message != nil do %>
+                <div class="alert-danger">
+                  <%= @error_message %>
+                </div>
+              <% end %>
               <!-- Buttons -->
               <div class="modal-buttons">
                 <!-- Left Button -->
@@ -121,12 +128,16 @@ defmodule CollaborlistWeb.Live.InviteModal do
     case Invites.create_invite(user, list) do
       {:ok, invite} ->
         invites = [invite | socket.assigns.invites]
-        {:noreply, socket |> assign(invites: invites)}
 
-      {:error, %Ecto.Changeset{} = _changeset} ->
         {:noreply,
          socket
-         |> put_flash(:error, "error occured while trying to create invite link")}
+         |> assign(invites: invites)
+         |> assign(error_message: nil)}
+
+      {:error, _} ->
+        {:noreply,
+         socket
+         |> assign(error_message: "Maximum number of invites created")}
     end
   end
 

@@ -10,6 +10,8 @@ defmodule Collaborlist.Invites do
   alias Collaborlist.Account.User
   alias Collaborlist.Catalog
 
+  @max_invites Collaborlist.Helpers.max_invites()
+
   @doc """
   Returns the list of all invites.
   """
@@ -59,11 +61,15 @@ defmodule Collaborlist.Invites do
   Creates an invite.
   """
   def create_invite(%User{} = user, %Catalog.List{} = list, attrs \\ %{}) do
-    %Invite{}
-    |> Map.put(:user_id, user.id)
-    |> Map.put(:list_id, list.id)
-    |> Invite.changeset(attrs)
-    |> Repo.insert()
+    if list_invites(user, list.id) |> Enum.count() >= @max_invites do
+      {:error, "max invites exceeded"}
+    else
+      %Invite{}
+      |> Map.put(:user_id, user.id)
+      |> Map.put(:list_id, list.id)
+      |> Invite.changeset(attrs)
+      |> Repo.insert()
+    end
   end
 
   @doc """
