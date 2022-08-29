@@ -66,9 +66,12 @@ defmodule CollaborlistWeb.Live.InviteModal do
                       </td>
                       <td>
                         <span>
-                          <button phx-click={
-                            JS.push("delete", value: %{"invite_code" => invite.invite_code})
-                          }>
+                          <button
+                            phx-click={
+                              JS.push("delete", value: %{"invite_code" => invite.invite_code})
+                            }
+                            phx-target={"#modal-" <> @id}
+                          >
                             Delete
                           </button>
                         </span>
@@ -114,6 +117,22 @@ defmodule CollaborlistWeb.Live.InviteModal do
       </div>
     </div>
     """
+  end
+
+  def handle_event("delete", %{"invite_code" => invite_code}, socket) do
+    invite = Invites.get_invite!(invite_code)
+    {:ok, _invite} = Invites.delete_invite(invite)
+
+    invites = socket.assigns.invites
+
+    invites_after_delete =
+      invites
+      |> List.delete_at(Enum.find_index(invites, fn i -> i.invite_code == invite_code end))
+
+    {:noreply,
+     assign(socket,
+       invites: invites_after_delete
+     )}
   end
 
   def handle_event(
