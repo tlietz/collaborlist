@@ -215,10 +215,14 @@ defmodule CollaborlistWeb.CollabLive do
       </form>
     </h1>
 
-    <span>
+    <span style="display: flex">
       <button phx-click="save" style="display:inline-block">
         + Add List Item
       </button>
+
+      <div style="display:inline-block; margin-left: auto; margin-right: auto;">
+        Users:
+      </div>
 
       <button phx-click="open_invite_modal" style="display:inline-block; float:right;">
         Invite

@@ -17,6 +17,7 @@ defmodule Collaborlist.Application do
       {Phoenix.PubSub, name: Collaborlist.PubSub},
       # Start the Endpoint (http/https)
       CollaborlistWeb.Endpoint,
+      CollaborlistWeb.Presence,
       # Start the Google Certs genserver
       GoogleCerts.KeyCache
     ]
