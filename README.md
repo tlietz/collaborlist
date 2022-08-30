@@ -13,6 +13,23 @@ Postgres is used as a database.
 
 TODO: Concurrent application, and Phoenix framework has LiveView to make real-time concurrent applications.
 
+## Showing Which List Items Are Currently Being Edited
+
+When a user is editing a list item, the entire list item will have a slight
+grey tint for all other users collaborating on that list.
+
+This works by broadcasting an `editing` event between collaborators of a list. 
+
+There are two situations where a message will be broadcasted:
+
+1) A user presses on a `list item` and focuses the editing area.
+2) A user changes the contents of a `list item`.
+
+Once a message is broadcasted, a process will countdown a set number of seconds before
+broadcasting that the specific `list item` is no longer being edited. 
+Every message broadcast for a specific `list item` resets that timer.
+
+
 ## User Auth
 
 There is an option to sign in with Google to the application.
