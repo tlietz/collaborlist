@@ -15,8 +15,8 @@ TODO: Concurrent application, and Phoenix framework has LiveView to make real-ti
 
 ## Showing Which List Items Are Currently Being Edited
 
-When a user is editing a list item, the entire list item will have a slight
-grey tint for all other users collaborating on that list.
+When a user is editing a `list item`, the entire `list item` will have a slight
+grey tint for all other users currently collaborating on the same list.
 
 This works by broadcasting an `editing` event between collaborators of a list. 
 
