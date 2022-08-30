@@ -26,7 +26,9 @@ defmodule CollaborlistWeb.CollabLive do
      |> assign(:list, list)
      |> assign(:list_items, list_items)
      |> assign(:changeset, changeset)
-     |> assign(:edit_ids, MapSet.new())}
+     |> assign(:edit_ids, MapSet.new())
+     # A map from the current item id being edited to a reference of the process in charge of counting down when it expires
+     |> assign(:edit_id_to_ref, %{})}
   end
 
   def handle_params(params, _url, socket) do
@@ -76,7 +78,7 @@ defmodule CollaborlistWeb.CollabLive do
 
   def handle_event(
         "item_update" = event,
-        %{"item-id" => item_id, "content" => updated_content},
+        %{"item_id" => item_id, "content" => updated_content},
         socket
       ) do
     {:ok, updated_item} =
@@ -160,7 +162,11 @@ defmodule CollaborlistWeb.CollabLive do
     item_id = msg.payload
     CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "stop_edit", item_id)
 
-    {:noreply, socket}
+    edit_id_to_ref = socket.assigns.edit_id_to_ref
+
+    {:noreply,
+     socket
+     |> assign(edit_id_to_ref: Map.delete(edit_id_to_ref, item_id |> maybe_int_to_string()))}
   end
 
   def handle_info(msg = %{event: "stop_edit"}, socket) do
@@ -246,17 +252,30 @@ defmodule CollaborlistWeb.CollabLive do
     CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "start_edit", item_id)
 
     schedule_stop_editing(socket, item_id)
-
-    socket
   end
 
-  defp schedule_stop_editing(_socket, item_id) do
-    msg = %{event: "broadcast_stop_edit", payload: item_id}
-    Process.send_after(self(), msg, 1000 * @edit_timeout_seconds)
+  defp schedule_stop_editing(socket, item_id) do
+    item_id = maybe_int_to_string(item_id)
+    edit_id_to_ref = socket.assigns.edit_id_to_ref
+
+    # Another edit occurs on this item
+    if Map.has_key?(edit_id_to_ref, item_id) do
+      process_ref = edit_id_to_ref[item_id]
+      Process.cancel_timer(process_ref)
+      ref = set_stop_edit_timer(socket, item_id)
+      socket |> assign(edit_id_to_ref: Map.put(edit_id_to_ref, item_id, ref))
+    else
+      ref = set_stop_edit_timer(socket, item_id)
+      socket |> assign(edit_id_to_ref: Map.put(edit_id_to_ref, item_id, ref))
+    end
   end
 
-  defp stop_editing(socket, item_id) do
-    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "stop_edit", item_id)
+  defp set_stop_edit_timer(_socket, item_id) do
+    Process.send_after(
+      self(),
+      %{event: "broadcast_stop_edit", payload: item_id},
+      1000 * @edit_timeout_seconds
+    )
   end
 
   def render(assigns) do
@@ -330,7 +349,7 @@ defmodule CollaborlistWeb.CollabLive do
                   style="margin-bottom:0px;"
                   phx-click={JS.push("start_edit", value: %{"item_id" => item.id})}
                 />
-                <input type="hidden" name="item-id" value={item.id} />
+                <input type="hidden" name="item_id" value={item.id} />
               </form>
             </td>
             <td>
