@@ -55,17 +55,6 @@ An invite is stored permanently until any one of the following occurs:
 - The list that an invite is associated with is deleted
 - The user that created the invite is deleted
 
-
-## Database
-
-The Postgres database has 3 main resources: `User`, `List`, and `ListItem`. 
-
-The relationship between a `User` and a `List` is `many-to-many` because a `List` can have multiple users working on it, and a `User` can work on multiple lists.
-A `List` is not deleted from the database unless all `User`s working on it have deleted it.
-
-The relationship between a `List` and a `ListItem` is `one-to-many` because a `List` can have multiple list items, but each `ListItem` is associated to only one `List`.
-
-
 ## Features
 
 - [x] Create lists
@@ -77,21 +66,16 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 - [x] Strikethrough or checkmark list items
 - [x] Invite to collaborate on list via link
 - [x] User can delete invites
-- [ ] Users can delete themselves
-- [ ] Collaborate on lists in real-time
+- [x] Collaborate on lists in real-time
 
 ## Future Improvements
 
-- [ ] Drop down modal for invite links instead of a seperate page
+- [ ] Show number of users currently on a list
+- [ ] User can delete themselves
 - [ ] Click to copy invite links
-- [ ] Sort Lists by time last edited
-- [ ] Sort Lists alphabetically
-- [ ] Sort list items by time last edited
-- [ ] Sort list items alphabetically
-- [ ] Add privileges to invite links (viewer and collaborator)
+- [ ] Sort lists and list items in various ways
+- [ ] Add privilege levels (viewer and collaborator)
 - [ ] Purge guest accounts that exceed the max age
-- [ ] When using an invite link, if user is not logged in, route to a page that allows them to select between: continue as guest, register new account, or login to existing account 
-- [ ] Display when another user is editing a list item
 - [ ] Time limiting requests to prevent spammers
 - [ ] Link app account to Google sign in.
 - [ ] Display collaborators on a list 
@@ -101,9 +85,9 @@ The relationship between a `List` and a `ListItem` is `one-to-many` because a `L
 - [ ] Make copies of lists
 - [ ] Undo actions
 - [ ] Encrypt all data stored in database
-- [ ] List owners with permissions (for example, delete list for all)
 - [ ] Export lists as text file
 - [ ] Search for lists and list items
 - [ ] Email options such as notifying upon list changing
-- [ ] Invites with expiry time
-- [ ] Invites with limited number of uses
+- [ ] Invites with expiry time and limited number of uses
+- [ ] Rest API to automate list creation and editing
+- [ ] When using an invite link, if user is not logged in, route to a page that allows them to select between: continue as guest, register new account, or login to existing account 
