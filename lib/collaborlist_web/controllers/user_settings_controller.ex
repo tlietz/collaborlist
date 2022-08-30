@@ -50,6 +50,19 @@ defmodule CollaborlistWeb.UserSettingsController do
     end
   end
 
+  def delete(conn, _params) do
+    user = conn.assigns.current_user
+
+    conn =
+      conn
+      |> put_flash(:info, "Account deleted")
+      |> UserAuth.log_out_user()
+      |> redirect(to: Routes.list_path(conn, :index))
+
+    Account.delete_user(user)
+    conn
+  end
+
   def confirm_email(conn, %{"token" => token}) do
     case Account.update_user_email(conn.assigns.current_user, token) do
       :ok ->
