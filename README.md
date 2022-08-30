@@ -92,6 +92,7 @@ An invite is stored permanently until any one of the following occurs:
 
 - [x] Show if a user is currently editing a list item
 - [ ] Show number of users currently on a list
+- [ ] Show user connection status
 - [ ] Periodically purge any lists with no user collaborators
 - [ ] Periodically purge guest accounts that exceed the max age
 - [ ] Click to copy invite links
