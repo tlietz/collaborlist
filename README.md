@@ -18,17 +18,16 @@ TODO: Concurrent application, and Phoenix framework has LiveView to make real-ti
 When a user is editing a `list item`, the entire `list item` will have a slight
 grey tint for all other users currently collaborating on the same list.
 
-This works by broadcasting an `editing` event between collaborators of a list. 
+This works by broadcasting an `editing` event with a payload of `item_id` between collaborators of a list. 
 
 There are two situations where a message will be broadcasted:
 
 1) A user presses on a `list item` and focuses the editing area.
 2) A user changes the contents of a `list item`.
 
-Once a message is broadcasted, a process will countdown a set number of seconds before
-broadcasting that the specific `list item` is no longer being edited. 
+Once an `editing` message is broadcasted, each connected client that receives the `editing` messege will countdown a set amount of time before
+broadcasting a `remove_edit` event to itself.
 Every message broadcast for a specific `list item` resets that timer.
-
 
 ## User Auth
 

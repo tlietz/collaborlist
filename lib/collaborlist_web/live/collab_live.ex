@@ -9,6 +9,8 @@ defmodule CollaborlistWeb.CollabLive do
   alias Phoenix.PubSub
   alias Phoenix.LiveView.JS
 
+  @edit_timeout_seconds 1
+
   on_mount {CollaborlistWeb.UserAuth, :current_user}
 
   def mount(%{"list_id" => list_id}, _session, socket) do
@@ -157,8 +159,14 @@ defmodule CollaborlistWeb.CollabLive do
     item_id = msg.payload
 
     edited = socket.assigns.edit_ids
-    IO.puts("hello")
     {:noreply, socket |> assign(edit_ids: edited |> MapSet.put(item_id))}
+  end
+
+  def handle_info(msg = %{event: "remove_edit"}, socket) do
+    item_id = msg.payload
+
+    edited = socket.assigns.edit_ids
+    {:noreply, socket |> assign(edit_ids: edited |> MapSet.delete(item_id))}
   end
 
   def handle_info(msg = %{event: "item_update"}, socket) do
