@@ -242,7 +242,9 @@ defmodule CollaborlistWeb.CollabLive do
   end
 
   defp start_editing(socket, item_id) do
+    # broadcast start editing
     CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "start_edit", item_id)
+
     schedule_stop_editing(socket, item_id)
 
     socket
