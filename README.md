@@ -86,16 +86,17 @@ An invite is stored permanently until any one of the following occurs:
 - [x] Invite to collaborate on list via link
 - [x] User can delete invites
 - [x] Collaborate on lists in real-time
+- [x] User can delete themselves
 
 ## Future Improvements
 
-- [ ] Show number of users currently on a list
 - [x] Show if a user is currently editing a list item
-- [ ] User can delete themselves
+- [ ] Show number of users currently on a list
+- [ ] Periodically purge any lists with no user collaborators
+- [ ] Periodically purge guest accounts that exceed the max age
 - [ ] Click to copy invite links
 - [ ] Sort lists and list items in various ways
 - [ ] Add privilege levels (viewer and collaborator)
-- [ ] Purge guest accounts that exceed the max age
 - [ ] Time limiting requests to prevent spammers
 - [ ] Link app account to Google sign in.
 - [ ] Display collaborators on a list 

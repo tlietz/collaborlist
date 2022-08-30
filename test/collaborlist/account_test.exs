@@ -548,6 +548,7 @@ defmodule Collaborlist.AccountTest do
       _ = Account.delete_user(user)
 
       assert Catalog.get_list(list.id) != nil
+      Catalog.list_collaborator?(user, list.id) == false
     end
 
     test "invites that the user created are deleted" do
