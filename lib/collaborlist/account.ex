@@ -84,16 +84,15 @@ defmodule Collaborlist.Account do
 
   Returns nil if the User does not exist.
 
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
   """
   def get_user(id), do: Repo.get(User, id)
+
+  @doc """
+  Deletes a user.
+  """
+  def delete_user(%User{} = user) do
+    Repo.delete(user)
+  end
 
   ## User registration
 

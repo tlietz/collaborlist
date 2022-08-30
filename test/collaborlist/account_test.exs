@@ -2,9 +2,13 @@ defmodule Collaborlist.AccountTest do
   use Collaborlist.DataCase
 
   import Collaborlist.AccountFixtures
+  import Collaborlist.CatalogFixtures
+  import Collaborlist.InvitesFixtures
 
   alias Collaborlist.Account
   alias Collaborlist.Account.{User, UserToken}
+  alias Collaborlist.Catalog
+  alias Collaborlist.Invites
 
   describe "get_user_by_google_uid/1" do
     test "does not return the user if the google uid does not exist" do
@@ -522,6 +526,40 @@ defmodule Collaborlist.AccountTest do
       _ = Account.generate_user_session_token(user)
       {:ok, _} = Account.reset_user_password(user, %{password: "new valid password"})
       refute Repo.get_by(UserToken, user_id: user.id)
+    end
+  end
+
+  describe "delete_user/1" do
+    test "deletes user and all tokens for the given user" do
+      user = user_fixture()
+
+      _ = Account.generate_user_session_token(user)
+
+      _ = Account.delete_user(user)
+
+      assert Account.get_user(user.id) == nil
+      refute Repo.get_by(UserToken, user_id: user.id)
+    end
+
+    test "Lists that a user collaborated on still remain after deleting a user" do
+      user = user_fixture()
+      list = list_fixture(%{}, user)
+
+      _ = Account.delete_user(user)
+
+      assert Catalog.get_list(list.id) != nil
+    end
+
+    test "invites that the user created are deleted" do
+      user = user_fixture()
+      list = list_fixture(%{}, user)
+      invite1 = invite_fixture(user, list)
+      invite2 = invite_fixture(user, list)
+
+      _ = Account.delete_user(user)
+
+      assert Invites.get_invite(invite1.invite_code) == nil
+      assert Invites.get_invite(invite2.invite_code) == nil
     end
   end
 
