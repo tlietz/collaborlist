@@ -23,7 +23,8 @@ defmodule CollaborlistWeb.CollabLive do
      socket
      |> assign(:list, list)
      |> assign(:list_items, list_items)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> assign(:edit_ids, MapSet.new())}
   end
 
   def handle_params(params, _url, socket) do
@@ -54,6 +55,12 @@ defmodule CollaborlistWeb.CollabLive do
      )}
   end
 
+  def handle_event("editing", %{"item_id" => item_id}, socket) do
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "editing", item_id)
+
+    {:noreply, socket}
+  end
+
   def handle_event("nothing", _, socket) do
     {:noreply, socket}
   end
@@ -63,6 +70,8 @@ defmodule CollaborlistWeb.CollabLive do
     {:ok, updated_item} = Collaborlist.List.toggle_list_item_status(list_item)
 
     CollaborlistWeb.Endpoint.broadcast(topic(socket), "item_update", updated_item)
+
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "editing", item_id)
 
     {:noreply, socket}
   end
@@ -78,6 +87,8 @@ defmodule CollaborlistWeb.CollabLive do
       })
 
     CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_item)
+
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "editing", item_id)
 
     {:noreply, socket}
   end
@@ -142,6 +153,14 @@ defmodule CollaborlistWeb.CollabLive do
      )}
   end
 
+  def handle_info(msg = %{event: "editing"}, socket) do
+    item_id = msg.payload
+
+    edited = socket.assigns.edit_ids
+    IO.puts("hello")
+    {:noreply, socket |> assign(edit_ids: edited |> MapSet.put(item_id))}
+  end
+
   def handle_info(msg = %{event: "item_update"}, socket) do
     updated_item = msg.payload
 
@@ -197,6 +216,14 @@ defmodule CollaborlistWeb.CollabLive do
     Integer.to_string(socket.assigns.list.id)
   end
 
+  defp maybe_set_editing_class(edit_ids, item_id) do
+    if MapSet.member?(edit_ids, item_id) do
+      "edited"
+    else
+      ""
+    end
+  end
+
   def render(assigns) do
     ~H"""
     <h1>
@@ -247,7 +274,7 @@ defmodule CollaborlistWeb.CollabLive do
       </thead>
       <tbody>
         <%= for item <- @list_items do %>
-          <tr>
+          <tr class={maybe_set_editing_class(@edit_ids, item.id)}>
             <td>
               <div
                 class={"status-button " <> " status-" <> Atom.to_string(item.status)}
@@ -266,6 +293,7 @@ defmodule CollaborlistWeb.CollabLive do
                   spellcheck="false"
                   autocomplete="off"
                   style="margin-bottom:0px;"
+                  phx-click={JS.push("editing", value: %{"item_id" => item.id})}
                 />
                 <input type="hidden" name="item-id" value={item.id} />
               </form>
