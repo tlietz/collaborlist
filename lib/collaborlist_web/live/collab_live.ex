@@ -99,10 +99,10 @@ defmodule CollaborlistWeb.CollabLive do
     {:noreply, socket}
   end
 
-  def handle_event("save" = event, %{"list_item" => item_params}, socket) do
+  def handle_event("save" = event, _, socket) do
     current_list = socket.assigns.list
 
-    case Collaborlist.List.create_list_item(item_params, current_list) do
+    case Collaborlist.List.create_list_item(%{"content" => "item"}, current_list) do
       {:ok, item} ->
         CollaborlistWeb.Endpoint.broadcast(topic(socket), event, item)
 
@@ -216,10 +216,7 @@ defmodule CollaborlistWeb.CollabLive do
     </h1>
 
     <span>
-      <button
-        phx-click={JS.toggle(to: "#new-item", in: "fade-in", out: "fade-out")}
-        style="display:inline-block"
-      >
+      <button phx-click="save" style="display:inline-block">
         + Add List Item
       </button>
 
@@ -241,14 +238,6 @@ defmodule CollaborlistWeb.CollabLive do
           user_id={@current_user.id}
         />
       <% end %>
-
-      <div style="display:none" id="new-item">
-        <%= Phoenix.View.render(
-          CollaborlistWeb.CollabView,
-          "live_new_item_form.html",
-          assigns
-        ) %>
-      </div>
     </span>
     <table>
       <thead>
