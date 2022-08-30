@@ -4,7 +4,7 @@ Make lists for personal use, or collaborate on them with others, all from within
 Check items off on the list, or strikethrough them.
 The list is updated in real time.
 
-The app is made with Elixir and the Phoenix framework. Websockets are used to implement the real time functionality. 
+The app is made with Elixir and the Phoenix framework. Websockets (wrapped by Phoenix channels and LiveView) are used to implement the real time functionality. 
 Postgres is used as a database.
 
 ---
