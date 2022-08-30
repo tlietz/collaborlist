@@ -65,10 +65,13 @@ defmodule CollaborlistWeb.ListLive do
     {:noreply, socket}
   end
 
-  def handle_event("save", %{"list" => list_params}, socket) do
+  def handle_event("save", _, socket) do
     user = socket.assigns[:current_user]
 
-    case Catalog.create_list(user, list_params) do
+    case Catalog.create_list(
+           user,
+           %{"title" => "List"}
+         ) do
       {:ok, list} ->
         {:noreply,
          socket
@@ -111,17 +114,9 @@ defmodule CollaborlistWeb.ListLive do
   def render(assigns) do
     ~H"""
     <span>
-      <button phx-click={JS.toggle(to: "#new")}>
+      <button phx-click="save">
         Create New List
       </button>
-
-      <div style="display:none" id="new">
-        <%= Phoenix.View.render(
-          CollaborlistWeb.ListView,
-          "live_form.html",
-          assigns
-        ) %>
-      </div>
     </span>
     <table>
       <thead>
