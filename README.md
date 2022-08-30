@@ -1,17 +1,17 @@
 # Collaborlist
 
-Make lists for personal use, or collaborate on them with others, all from within a browser window.
-Check items off on the list, or strikethrough them.
-The list is updated in real time.
+Make lists for personal use, or collaborate on them with others in real-time, all from within a browser window.
 
-The app is made with Elixir and the Phoenix framework. Websockets (wrapped by Phoenix channels and LiveView) are used to implement the real time functionality. 
-Postgres is used as a database.
+The app is made with Elixir's Phoenix framework and LiveView. Websockets (wrapped by Phoenix `channels` and LiveView) are used to implement the real time functionality. 
+Postgres is used for the database.
 
 ---
 
 ## Why Elixir?
 
-TODO: Concurrent application, and Phoenix framework has LiveView to make real-time concurrent applications.
+This app requires multiple concurrent connections between clients with real-time updates from the server. 
+Elixir is a natural fit for this because it is built on top of the Erlang VM, which was created to manage the highly concurrent nature of telephone networks.  
+Also, Phoenix framework's LiveView makes developing real-time interactivity simpler with channels and other abstractions over websockets.
 
 ## Showing Which List Items Are Currently Being Edited
 
@@ -26,7 +26,7 @@ There are two situations where a message will be broadcasted:
 2) A user changes the contents of a `list item`.
 
 Once an `editing` message is broadcasted, the process that broadcasted the message will start a countdown to send a `remove_edit` message to all connected client.
-Every message broadcast for a specific `list item` resets that timer.
+Every message broadcast for a specific `list item` cancels the countdown process and starts a new one.
 
 Another way to implement this could be to have a single Genserver handle the countdowns and broadcasting the `remove_edit` messages. 
 The benefit of doing this is that it takes workload off each client process.
