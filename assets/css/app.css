@@ -1,6 +1,10 @@
 /* This file is for your main application CSS */
 @import "./phoenix.css";
 
+.edited {
+  background-color: rgba(234, 234, 234, 0.4);
+}
+
 .home-link {
   font-weight: bold;
   font-size: 3rem;

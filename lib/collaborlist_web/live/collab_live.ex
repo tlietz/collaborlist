@@ -9,6 +9,8 @@ defmodule CollaborlistWeb.CollabLive do
   alias Phoenix.PubSub
   alias Phoenix.LiveView.JS
 
+  @edit_timeout_seconds 1
+
   on_mount {CollaborlistWeb.UserAuth, :current_user}
 
   def mount(%{"list_id" => list_id}, _session, socket) do
@@ -23,7 +25,10 @@ defmodule CollaborlistWeb.CollabLive do
      socket
      |> assign(:list, list)
      |> assign(:list_items, list_items)
-     |> assign(:changeset, changeset)}
+     |> assign(:changeset, changeset)
+     |> assign(:edit_ids, MapSet.new())
+     # A map from the current item id being edited to a reference of the process in charge of counting down when it expires
+     |> assign(:edit_id_to_ref, %{})}
   end
 
   def handle_params(params, _url, socket) do
@@ -54,6 +59,10 @@ defmodule CollaborlistWeb.CollabLive do
      )}
   end
 
+  def handle_event("start_edit", %{"item_id" => item_id}, socket) do
+    {:noreply, socket |> start_editing(item_id |> maybe_int_to_string())}
+  end
+
   def handle_event("nothing", _, socket) do
     {:noreply, socket}
   end
@@ -69,7 +78,7 @@ defmodule CollaborlistWeb.CollabLive do
 
   def handle_event(
         "item_update" = event,
-        %{"item-id" => item_id, "content" => updated_content},
+        %{"item_id" => item_id, "content" => updated_content},
         socket
       ) do
     {:ok, updated_item} =
@@ -79,7 +88,7 @@ defmodule CollaborlistWeb.CollabLive do
 
     CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_item)
 
-    {:noreply, socket}
+    {:noreply, socket |> start_editing(item_id |> maybe_int_to_string())}
   end
 
   def handle_event(
@@ -142,6 +151,31 @@ defmodule CollaborlistWeb.CollabLive do
      )}
   end
 
+  def handle_info(msg = %{event: "start_edit"}, socket) do
+    item_id = msg.payload
+
+    edited = socket.assigns.edit_ids
+    {:noreply, socket |> assign(edit_ids: edited |> MapSet.put(item_id))}
+  end
+
+  def handle_info(msg = %{event: "broadcast_stop_edit"}, socket) do
+    item_id = msg.payload
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "stop_edit", item_id)
+
+    edit_id_to_ref = socket.assigns.edit_id_to_ref
+
+    {:noreply,
+     socket
+     |> assign(edit_id_to_ref: Map.delete(edit_id_to_ref, item_id |> maybe_int_to_string()))}
+  end
+
+  def handle_info(msg = %{event: "stop_edit"}, socket) do
+    item_id = msg.payload
+
+    edited = socket.assigns.edit_ids
+    {:noreply, socket |> assign(edit_ids: edited |> MapSet.delete(item_id))}
+  end
+
   def handle_info(msg = %{event: "item_update"}, socket) do
     updated_item = msg.payload
 
@@ -197,6 +231,53 @@ defmodule CollaborlistWeb.CollabLive do
     Integer.to_string(socket.assigns.list.id)
   end
 
+  defp maybe_set_editing_class(edit_ids, item_id) do
+    if MapSet.member?(edit_ids, item_id |> maybe_int_to_string()) do
+      "edited"
+    else
+      ""
+    end
+  end
+
+  defp maybe_int_to_string(item_id) when is_integer(item_id) do
+    Integer.to_string(item_id)
+  end
+
+  defp maybe_int_to_string(item_id) do
+    item_id
+  end
+
+  defp start_editing(socket, item_id) do
+    # broadcast start editing
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "start_edit", item_id)
+
+    schedule_stop_editing(socket, item_id)
+  end
+
+  defp schedule_stop_editing(socket, item_id) do
+    item_id = maybe_int_to_string(item_id)
+    edit_id_to_ref = socket.assigns.edit_id_to_ref
+
+    # Another edit occurs on this item
+    if Map.has_key?(edit_id_to_ref, item_id) do
+      process_ref = edit_id_to_ref[item_id]
+      Process.cancel_timer(process_ref)
+      ref = set_stop_edit_timer(socket, item_id)
+      socket |> assign(edit_id_to_ref: Map.put(edit_id_to_ref, item_id, ref))
+    else
+      ref = set_stop_edit_timer(socket, item_id)
+      socket |> assign(edit_id_to_ref: Map.put(edit_id_to_ref, item_id, ref))
+    end
+  end
+
+  defp set_stop_edit_timer(_socket, item_id) do
+    Process.send_after(
+      self(),
+      %{event: "broadcast_stop_edit", payload: item_id},
+      1000 * @edit_timeout_seconds
+    )
+  end
+
   def render(assigns) do
     ~H"""
     <h1>
@@ -247,7 +328,7 @@ defmodule CollaborlistWeb.CollabLive do
       </thead>
       <tbody>
         <%= for item <- @list_items do %>
-          <tr>
+          <tr class={maybe_set_editing_class(@edit_ids, item.id)}>
             <td>
               <div
                 class={"status-button " <> " status-" <> Atom.to_string(item.status)}
@@ -266,8 +347,9 @@ defmodule CollaborlistWeb.CollabLive do
                   spellcheck="false"
                   autocomplete="off"
                   style="margin-bottom:0px;"
+                  phx-click={JS.push("start_edit", value: %{"item_id" => item.id})}
                 />
-                <input type="hidden" name="item-id" value={item.id} />
+                <input type="hidden" name="item_id" value={item.id} />
               </form>
             </td>
             <td>
