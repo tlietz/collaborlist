@@ -57,10 +57,8 @@ defmodule CollaborlistWeb.CollabLive do
      )}
   end
 
-  def handle_event("editing", %{"item_id" => item_id}, socket) do
-    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "editing", item_id)
-
-    {:noreply, socket}
+  def handle_event("start_edit", %{"item_id" => item_id}, socket) do
+    {:noreply, socket |> start_editing(item_id |> maybe_int_to_string())}
   end
 
   def handle_event("nothing", _, socket) do
@@ -88,9 +86,7 @@ defmodule CollaborlistWeb.CollabLive do
 
     CollaborlistWeb.Endpoint.broadcast(topic(socket), event, updated_item)
 
-    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "editing", item_id)
-
-    {:noreply, socket}
+    {:noreply, socket |> start_editing(item_id |> maybe_int_to_string())}
   end
 
   def handle_event(
@@ -153,14 +149,21 @@ defmodule CollaborlistWeb.CollabLive do
      )}
   end
 
-  def handle_info(msg = %{event: "editing"}, socket) do
+  def handle_info(msg = %{event: "start_edit"}, socket) do
     item_id = msg.payload
 
     edited = socket.assigns.edit_ids
     {:noreply, socket |> assign(edit_ids: edited |> MapSet.put(item_id))}
   end
 
-  def handle_info(msg = %{event: "remove_edit"}, socket) do
+  def handle_info(msg = %{event: "broadcast_stop_edit"}, socket) do
+    item_id = msg.payload
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "stop_edit", item_id)
+
+    {:noreply, socket}
+  end
+
+  def handle_info(msg = %{event: "stop_edit"}, socket) do
     item_id = msg.payload
 
     edited = socket.assigns.edit_ids
@@ -223,11 +226,35 @@ defmodule CollaborlistWeb.CollabLive do
   end
 
   defp maybe_set_editing_class(edit_ids, item_id) do
-    if MapSet.member?(edit_ids, item_id) do
+    if MapSet.member?(edit_ids, item_id |> maybe_int_to_string()) do
       "edited"
     else
       ""
     end
+  end
+
+  defp maybe_int_to_string(item_id) when is_integer(item_id) do
+    Integer.to_string(item_id)
+  end
+
+  defp maybe_int_to_string(item_id) do
+    item_id
+  end
+
+  defp start_editing(socket, item_id) do
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "start_edit", item_id)
+    schedule_stop_editing(socket, item_id)
+
+    socket
+  end
+
+  defp schedule_stop_editing(_socket, item_id) do
+    msg = %{event: "broadcast_stop_edit", payload: item_id}
+    Process.send_after(self(), msg, 1000 * @edit_timeout_seconds)
+  end
+
+  defp stop_editing(socket, item_id) do
+    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "stop_edit", item_id)
   end
 
   def render(assigns) do
@@ -299,7 +326,7 @@ defmodule CollaborlistWeb.CollabLive do
                   spellcheck="false"
                   autocomplete="off"
                   style="margin-bottom:0px;"
-                  phx-click={JS.push("editing", value: %{"item_id" => item.id})}
+                  phx-click={JS.push("start_edit", value: %{"item_id" => item.id})}
                 />
                 <input type="hidden" name="item-id" value={item.id} />
               </form>

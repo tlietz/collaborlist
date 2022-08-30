@@ -25,12 +25,11 @@ There are two situations where a message will be broadcasted:
 1) A user presses on a `list item` and focuses the editing area.
 2) A user changes the contents of a `list item`.
 
-Once an `editing` message is broadcasted, the process that broadcasted the message will spawn a named process that includes the `item_id`(so that it can be found later when resetting the timer), with a countdown to send a `remove_edit` message.
-broadcasting a `remove_edit` event to itself.
+Once an `editing` message is broadcasted, the process that broadcasted the message will start a countdown to send a `remove_edit` message to all connected client.
 Every message broadcast for a specific `list item` resets that timer.
 
 Another way to implement this could be to have a single Genserver handle the countdowns and broadcasting the `remove_edit` messages. 
-The benefit of doing this is that there will be less processes overall.
+The benefit of doing this is that it takes workload off each client process.
 However, the downside is that the Genserver could become a bottleneck because each broadcast must happen synchronously in a queue. 
 
 ## User Auth
