@@ -73,8 +73,6 @@ defmodule CollaborlistWeb.CollabLive do
 
     CollaborlistWeb.Endpoint.broadcast(topic(socket), "item_update", updated_item)
 
-    CollaborlistWeb.Endpoint.broadcast_from(self(), topic(socket), "editing", item_id)
-
     {:noreply, socket}
   end
 
