@@ -88,7 +88,7 @@ An invite is stored permanently until any one of the following occurs:
 ## Future Improvements
 
 - [ ] Show number of users currently on a list
-- [ ] Show if a user is currently editing a list item
+- [x] Show if a user is currently editing a list item
 - [ ] User can delete themselves
 - [ ] Click to copy invite links
 - [ ] Sort lists and list items in various ways
