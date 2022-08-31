@@ -1,6 +1,6 @@
 defmodule Collaborlist.Helpers do
   @dev_link "http://localhost:4000"
-  @prod_link "https://www.collaborlist.gigalixirapp.com"
+  @prod_link "https://collaborlist.gigalixirapp.com"
 
   def root_url() do
     if Mix.env() == :prod do
