@@ -4,7 +4,7 @@ import "../css/app.css";
 
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
-// import "./user_socket.js"
+// import "./user_socket.js";
 
 // You can include dependencies in two ways.
 //
@@ -27,22 +27,22 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
 let csrfToken = document
-    .querySelector("meta[name='csrf-token']")
-    .getAttribute("content");
+  .querySelector("meta[name='csrf-token']")
+  .getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, {
-    params: { _csrf_token: csrfToken },
+  params: { _csrf_token: csrfToken },
 });
 
 // Show progress bar on live navigation and form submits
 topbar.config({
-    barColors: { 0: "#29d" },
-    shadowColor: "rgba(0, 0, 0, .3)",
+  barColors: { 0: "#29d" },
+  shadowColor: "rgba(0, 0, 0, .3)",
 });
 window.addEventListener("phx:page-loading-start", (info) =>
-    topbar.show(),
+  topbar.show(),
 );
 window.addEventListener("phx:page-loading-stop", (info) =>
-    topbar.hide(),
+  topbar.hide(),
 );
 
 // connect if there are any LiveViews on the page

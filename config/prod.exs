@@ -11,7 +11,7 @@ import Config
 # before starting your production server.
 config :collaborlist, CollaborlistWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
-  url: [host: "example.com", port: 443]
+  url: [host: "example.com", port: 80]
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -51,3 +51,18 @@ config :collaborlist, :http_processor, GoogleCerts.HTTPProcessor.HTTPoisonProces
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
+
+config :collaborlist, CollaborlistWeb.Endpoint,
+  # Possibly not needed, but doesn't hurt
+  http: [port: {:system, "PORT"}],
+  url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 443],
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
+  server: true,
+  check_origin: ["https://" <> System.get_env("APP_NAME") <> ".gigalixirapp.com"]
+
+config :collaborlist, Collaborlist.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL"),
+  ssl: true,
+  # Free tier db only allows 1 connection
+  pool_size: 1
