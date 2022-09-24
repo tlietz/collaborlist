@@ -35,7 +35,7 @@ The benefit of doing this is that it takes workload off each client process.
 However, the downside is that the Genserver could become a bottleneck because each broadcast must happen synchronously in a queue. 
 
 
-https://user-images.githubusercontent.com/25965706/192102746-e015cd47-75d6-4593-9821-99f0ccf4ce11.mov
+https://user-images.githubusercontent.com/25965706/192104300-dcb60ff5-775c-4021-85a7-f409c2bd019f.mov
 
 
 ## User Auth
