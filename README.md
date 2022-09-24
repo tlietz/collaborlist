@@ -5,7 +5,9 @@ Make lists for personal use, or collaborate on them with others in real-time, al
 The app is made with Elixir's Phoenix framework and LiveView. Websockets (wrapped by Phoenix `channels` and LiveView) are used to implement the real time functionality. 
 Postgres is used for the database.
 
----
+
+https://user-images.githubusercontent.com/25965706/192103782-3dd74434-907c-45ad-bf35-7c7e2172aa03.mov
+
 
 ## Why Elixir?
 
@@ -32,6 +34,10 @@ Another way to implement this could be to have a single Genserver handle the cou
 The benefit of doing this is that it takes workload off each client process.
 However, the downside is that the Genserver could become a bottleneck because each broadcast must happen synchronously in a queue. 
 
+
+https://user-images.githubusercontent.com/25965706/192102746-e015cd47-75d6-4593-9821-99f0ccf4ce11.mov
+
+
 ## User Auth
 
 There is an option to sign in with Google to the application.
@@ -42,13 +48,15 @@ and any authorization is done via a session-based workflow.
 
 Part of the motivation for using *JWT authentication* and *session-based authorization* was the information given in this article: ["Stop using JWT for session"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/).
 
-## Guest User
-
-If a user is not signed into an account, they will be automatically signed in as a guest. 
+If a user is not signed into an account, they will be automatically signed in as a `guest`. 
 This way, they are able to use the app immideately.
 
 When a user that was previously a guest registers for an account, the guest user's `is_guest` field is changed from `true` to `false`. 
 This allows all progress to be saved as long as the user used the guest account on only one device.
+
+
+https://user-images.githubusercontent.com/25965706/192103794-2c1b0243-1c00-43f8-a4ea-f39022229a29.mov
+
 
 ## Invite Links
 
@@ -73,6 +81,10 @@ An invite is stored permanently until any one of the following occurs:
 - A user manually deletes the invite
 - The list that an invite is associated with is deleted
 - The user that created the invite is deleted
+
+
+https://user-images.githubusercontent.com/25965706/192102779-64c8a723-096b-467e-b573-41651cff0c5f.mov
+
 
 ## Features
 
