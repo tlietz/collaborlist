@@ -145,7 +145,7 @@ defmodule CollaborlistWeb.UserAuthTest do
     test "redirects if user is not authenticated", %{conn: conn} do
       conn = conn |> fetch_flash() |> UserAuth.require_authenticated_user([])
       assert conn.halted
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert redirected_to(conn) == Routes.list_path(conn, :index)
       assert get_flash(conn, :error) == "You must log in to access this page."
     end
 
@@ -194,7 +194,7 @@ defmodule CollaborlistWeb.UserAuthTest do
         |> UserAuth.require_user_list_collaborator([])
 
       assert conn.halted
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert redirected_to(conn) == Routes.list_path(conn, :index)
       assert get_flash(conn, :error) =~ "collaborator on the list"
     end
 
@@ -261,7 +261,7 @@ defmodule CollaborlistWeb.UserAuthTest do
         |> UserAuth.require_user_invite_creator([])
 
       assert conn.halted
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert redirected_to(conn) == Routes.list_path(conn, :index)
       assert get_flash(conn, :error) =~ "invite creator"
     end
 
