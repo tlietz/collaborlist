@@ -27,10 +27,10 @@ There are two situations where a message will be broadcasted:
 1) A user presses on a `list item` and focuses the editing area.
 2) A user changes the contents of a `list item`.
 
-Once an `editing` message is broadcasted, the process that broadcasted the message will start a countdown to send a `remove_edit` message to all connected client.
-Every message broadcast for a specific `list item` cancels the countdown process and starts a new one.
+Once an `editing` message is broadcasted, the `broadcast process` that broadcasted the message will start a `countdown process` that sends a `remove_edit` message to all connected clients when time is up.
+The `broadcast process` cancels the `countdown process` whenerver a message is broadcast for a specific `list item` cancels the `countdown process`. The `broadcast process` then starts a new `countdown process`.
 
-Another way to implement this could be to have a single Genserver handle the countdowns and broadcasting the `remove_edit` messages. 
+Another way to implement this could be to have a single Genserver handle the countdowns and broadcast the `remove_edit` messages. 
 The benefit of doing this is that it takes workload off each client process.
 However, the downside is that the Genserver could become a bottleneck because each broadcast must happen synchronously in a queue. 
 
@@ -41,10 +41,10 @@ https://user-images.githubusercontent.com/25965706/192104300-dcb60ff5-775c-4021-
 ## User Auth
 
 There is an option to sign in with Google to the application.
-It is JWT-based and is used for authentication only. 
+It is JWT-based and is used for *authentication* only. 
 Once a user is authenticated with Google sign in, 
 they are given a `session_id` cookie, 
-and any authorization is done via a session-based workflow. 
+and any *authorization* is done via a session-based workflow. 
 
 Part of the motivation for using *JWT authentication* and *session-based authorization* was the information given in this article: ["Stop using JWT for session"](http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/).
 
