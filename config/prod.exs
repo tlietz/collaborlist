@@ -55,14 +55,13 @@ config :collaborlist, :http_processor, GoogleCerts.HTTPProcessor.HTTPoisonProces
 config :collaborlist, CollaborlistWeb.Endpoint,
   # Possibly not needed, but doesn't hurt
   http: [port: {:system, "PORT"}],
-  url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 443],
+  url: [host: System.get_env("APP_NAME") <> ".tlietz.com", port: 443],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
   server: true,
-  check_origin: ["https://" <> System.get_env("APP_NAME") <> ".gigalixirapp.com"]
+  check_origin: ["https://" <> System.get_env("APP_NAME") <> ".tlietz.com"]
 
 config :collaborlist, Collaborlist.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
-  # Free tier db only allows 1 connection
-  pool_size: 1
+  pool_size: 10
