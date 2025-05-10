@@ -11,7 +11,7 @@ import Config
 # before starting your production server.
 config :collaborlist, CollaborlistWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
-  url: [host: "example.com", port: 80]
+  url: [host: "127.0.0.1", port: 80]
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -52,15 +52,20 @@ config :collaborlist, :http_processor, GoogleCerts.HTTPProcessor.HTTPoisonProces
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
 
+# config :collaborlist, CollaborlistWeb.Endpoint,
+#   # Possibly not needed, but doesn't hurt
+#   http: [port: {:system, "PORT"}],
+#   url: [host: System.get_env("APP_NAME") <> ".tlietz.com", port: 443],
+#   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
+#   server: true,
+#   check_origin: ["https://" <> System.get_env("APP_NAME") <> ".tlietz.com"]
 config :collaborlist, CollaborlistWeb.Endpoint,
-  # Possibly not needed, but doesn't hurt
-  http: [port: {:system, "PORT"}],
-  url: [host: System.get_env("APP_NAME") <> ".tlietz.com", port: 443],
-  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
-  server: true,
-  check_origin: ["https://" <> System.get_env("APP_NAME") <> ".tlietz.com"]
+  http: [ip: {0, 0, 0, 0}, port: 4000],
+  check_origin: false,
+  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
 config :collaborlist, Collaborlist.Repo,
+  start_apps_before_migration: [:ssl],
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
   ssl: true,
