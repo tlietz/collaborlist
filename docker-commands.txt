@@ -1,0 +1,7 @@
+export $(grep -v '^#' .env | xargs)
+
+sudo docker build --build-arg APP_NAME=$APP_NAME --build-arg DATABASE_URL=$DATABASE_URL --build-arg SECRET_KEY_BASE=$SECRET_KEY_BASE --build-arg PHX_HOST=$PHX_HOST -t collaborlist:v1 .
+
+sudo docker run -p 4000:4000 -p 4001:443 -p 4003:80 --env-file .env collaborlist:v1
+
+
