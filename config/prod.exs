@@ -11,7 +11,7 @@ import Config
 # before starting your production server.
 config :collaborlist, CollaborlistWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
-  url: [host: "127.0.0.1", port: 80]
+  url: [host: "collaborlist.tlietz.com", port: 4000]
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -62,6 +62,8 @@ config :collaborlist, :http_processor, GoogleCerts.HTTPProcessor.HTTPoisonProces
 config :collaborlist, CollaborlistWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
+  server: true,
+  check_origin: ["https://" <> System.get_env("APP_NAME") <> ".tlietz.com"],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
 config :collaborlist, Collaborlist.Repo,

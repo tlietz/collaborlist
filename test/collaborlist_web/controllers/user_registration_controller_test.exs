@@ -48,7 +48,7 @@ defmodule CollaborlistWeb.UserRegistrationControllerTest do
       response = html_response(conn, 200)
       assert response =~ "<h1>Register</h1>"
       assert response =~ "must have the @ sign and no spaces"
-      assert response =~ "should be at least 12 character"
+      assert response =~ "should be at least 6 character"
     end
   end
 end
