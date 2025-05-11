@@ -32,7 +32,7 @@ defmodule GoogleCerts.Authentication do
   defp aud_valid?(jwt = %JOSE.JWT{}) do
     aud = jwt.fields["aud"]
 
-    if aud == "486854246467-4o5dqr6fv5jkbojbhp6flddtfqf8ch8d.apps.googleusercontent.com" do
+    if aud == "471521022958-q33a8d4n0tf88medfg1se6vu1vm9j83t.apps.googleusercontent.com" do
       {true, aud}
     else
       {false, "verfication failed: token `aud` field does not match application client ID"}
