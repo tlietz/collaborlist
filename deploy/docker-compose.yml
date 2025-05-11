@@ -1,0 +1,37 @@
+services:
+  web:
+    image: collaborlist:v1
+    ports:
+      - 4000:4000
+    env_file: "webapp.env"
+    networks:
+        main:
+            aliases:
+                - web
+  proxy:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    links:
+      - web:web
+    depends_on:
+      - web
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/conf/live:/etc/nginx/ssl/live/:ro
+      - ./certbot/conf/archive:/etc/nginx/ssl/archive/:ro
+      - ./certbot/www/:/var/www/certbot/:ro
+    networks:
+        main:
+            aliases:
+                - proxy
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+
+networks:
+  main:
